@@ -5,7 +5,9 @@
   "framework": "create-react-app",
   "outputDirectory": "build",
   "regions": ["iad1"],
-  "env": {
-    "NODE_OPTIONS": "--openssl-legacy-provider"
+  "functions": {
+    "**/*.js": {
+      "maxDuration": 10
+    }
   }
 }
