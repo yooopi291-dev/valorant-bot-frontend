@@ -10,7 +10,9 @@
       "destination": "/index.html"
     }
   ],
-  "env": {
-    "CI": "false"
+  "functions": {
+    "**/*.js": {
+      "runtime": "nodejs20.x"
+    }
   }
 }
