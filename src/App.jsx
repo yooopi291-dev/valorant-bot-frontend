@@ -55,7 +55,7 @@ function App() {
   const [ordersLoading, setOrdersLoading] = useState(false);
   
   const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
-  const USER_ID = tg?.initDataUnsafe?.user?.id || 'unknown';
+  const USER_ID = String(tg?.initDataUnsafe?.user?.id ?? 'unknown');
   const USERNAME = tg?.initDataUnsafe?.user?.username || '';
   const FIRST_NAME = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
 
