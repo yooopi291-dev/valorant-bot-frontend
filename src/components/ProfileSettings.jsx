@@ -1,119 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ProfileSettings.css';
 
-// В начало ProfileSettings.jsx добавьте:
-const [isDarkMode, setIsDarkMode] = useState(false);
+const STORAGE_THEME = 'valorant_theme';
+const STORAGE_LANG = 'valorant_lang';
 
-useEffect(() => {
-  const savedTheme = localStorage.getItem('valorant_theme');
-  if (savedTheme === 'dark') {
-    setIsDarkMode(true);
-    document.body.classList.add('dark-theme');
-  }
-}, []);
+const tg = window.Telegram?.WebApp;
 
-const toggleTheme = () => {
-  const newTheme = !isDarkMode;
-  setIsDarkMode(newTheme);
-  
-  if (newTheme) {
-    document.body.classList.add('dark-theme');
-    localStorage.setItem('valorant_theme', 'dark');
-  } else {
-    document.body.classList.remove('dark-theme');
-    localStorage.setItem('valorant_theme', 'light');
-  }
-};
+export default function ProfileSettings({ user, onBack, lang, setLang }) {
+  const [notifications, setNotifications] = useState(true);
+  const [emailUpdates, setEmailUpdates] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
-// В JSX замените переключатель темной темы:
-<div className="setting-item">
-  <div className="setting-info">
-    <h4 className="setting-title">Тёмная тема</h4>
-    <p className="setting-description">Переключение темы оформления</p>
-  </div>
-  <label className="switch">
-    <input 
-      type="checkbox" 
-      checked={isDarkMode}
-      onChange={toggleTheme}
-    />
-    <span className="slider"></span>
-  </label>
-</div>
+  // init theme + lang
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem(STORAGE_THEME);
+      const isDark = savedTheme === 'dark';
+      setDarkMode(isDark);
+      document.body.classList.toggle('dark', isDark);
 
-const ProfileSettings = ({ user, onBack }) => {
-  const [settings, setSettings] = useState({
-    notifications: true,
-    emailUpdates: false,
-    darkMode: false,
-    language: 'ru'
-  });
+      const savedLang = localStorage.getItem(STORAGE_LANG);
+      if (savedLang && setLang) setLang(savedLang);
+    } catch {
+      // ignore
+    }
+  }, []);
 
-  const handleSettingChange = (key, value) => {
-    setSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+  useEffect(() => {
+    document.body.classList.toggle('dark', darkMode);
+    try {
+      localStorage.setItem(STORAGE_THEME, darkMode ? 'dark' : 'light');
+    } catch {
+      // ignore
+    }
+  }, [darkMode]);
+
+  const onSave = () => {
+    tg?.showAlert?.('✅ Сохранено');
   };
 
   return (
     <div className="profile-settings-container">
       <div className="settings-header">
-        <button className="back-button" onClick={onBack}>
-          ‹
-        </button>
-        <h2 className="settings-title">Моя страница</h2>
+        <button className="back-button" onClick={onBack}>‹</button>
+        <h2 className="settings-title">Настройки</h2>
         <div className="settings-actions">
-          <button className="save-btn">Сохранить</button>
+          <button className="save-btn" onClick={onSave} type="button">Сохранить</button>
         </div>
       </div>
 
       <div className="user-profile-section">
-        <div className="profile-avatar-large">
-          {user.name.charAt(0)}
-        </div>
+        <div className="profile-avatar-large">{(user?.name || 'U').charAt(0)}</div>
         <div className="profile-info">
-          <h3 className="profile-name">{user.name}</h3>
-          <p className="profile-id">ID: {user.id}</p>
-          {user.username && (
-            <p className="profile-username">@{user.username}</p>
-          )}
+          <h3 className="profile-name">{user?.name || 'Игрок'}</h3>
+          <p className="profile-id">ID: {user?.id}</p>
+          {user?.username ? <p className="profile-username">@{user.username}</p> : null}
         </div>
-        <button className="edit-profile-btn">✏️ Редактировать</button>
       </div>
 
       <div className="settings-section">
-        <h3 className="section-title">Настройки уведомлений</h3>
-        
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Push-уведомления</h4>
-            <p className="setting-description">Звук и вибрация при новых заказах</p>
-          </div>
-          <label className="switch">
-            <input 
-              type="checkbox" 
-              checked={settings.notifications}
-              onChange={(e) => handleSettingChange('notifications', e.target.checked)}
-            />
-            <span className="slider"></span>
-          </label>
-        </div>
-
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Email-рассылка</h4>
-            <p className="setting-description">Новости и акции на почту</p>
-          </div>
-          <label className="switch">
-            <input 
-              type="checkbox" 
-              checked={settings.emailUpdates}
-              onChange={(e) => handleSettingChange('emailUpdates', e.target.checked)}
-            />
-            <span className="slider"></span>
-          </label>
-        </div>
+        <h3 className="section-title">Внешний вид</h3>
 
         <div className="setting-item">
           <div className="setting-info">
@@ -121,86 +67,56 @@ const ProfileSettings = ({ user, onBack }) => {
             <p className="setting-description">Переключение темы оформления</p>
           </div>
           <label className="switch">
-            <input 
-              type="checkbox" 
-              checked={settings.darkMode}
-              onChange={(e) => handleSettingChange('darkMode', e.target.checked)}
-            />
+            <input type="checkbox" checked={darkMode} onChange={(e) => setDarkMode(e.target.checked)} />
+            <span className="slider"></span>
+          </label>
+        </div>
+
+        <div className="setting-item">
+          <div className="setting-info">
+            <h4 className="setting-title">Язык</h4>
+            <p className="setting-description">Русский / English</p>
+          </div>
+          <select
+            className="language-select"
+            value={lang || 'ru'}
+            onChange={(e) => {
+              const v = e.target.value;
+              setLang?.(v);
+              try { localStorage.setItem(STORAGE_LANG, v); } catch {}
+            }}
+          >
+            <option value="ru">Русский</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="settings-section">
+        <h3 className="section-title">Уведомления</h3>
+
+        <div className="setting-item">
+          <div className="setting-info">
+            <h4 className="setting-title">Push-уведомления</h4>
+            <p className="setting-description">Новые заказы и сообщения</p>
+          </div>
+          <label className="switch">
+            <input type="checkbox" checked={notifications} onChange={(e) => setNotifications(e.target.checked)} />
+            <span className="slider"></span>
+          </label>
+        </div>
+
+        <div className="setting-item">
+          <div className="setting-info">
+            <h4 className="setting-title">Email-рассылка</h4>
+            <p className="setting-description">Новости и акции</p>
+          </div>
+          <label className="switch">
+            <input type="checkbox" checked={emailUpdates} onChange={(e) => setEmailUpdates(e.target.checked)} />
             <span className="slider"></span>
           </label>
         </div>
       </div>
-
-      <div className="settings-section">
-        <h3 className="section-title">Язык и регион</h3>
-        
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Язык интерфейса</h4>
-            <p className="setting-description">Выберите предпочитаемый язык</p>
-          </div>
-          <select 
-            className="language-select"
-            value={settings.language}
-            onChange={(e) => handleSettingChange('language', e.target.value)}
-          >
-            <option value="ru">Русский</option>
-            <option value="en">English</option>
-            <option value="es">Español</option>
-          </select>
-        </div>
-
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Регион магазина</h4>
-            <p className="setting-description">Для корректного отображения цен</p>
-          </div>
-          <div className="region-display">🇷🇺 Россия (RUB)</div>
-        </div>
-      </div>
-
-      <div className="settings-section">
-        <h3 className="section-title">Безопасность</h3>
-        
-        <button className="security-btn">
-          <span className="btn-icon">🔒</span>
-          <span className="btn-text">Сменить пароль</span>
-          <span className="btn-arrow">›</span>
-        </button>
-
-        <button className="security-btn">
-          <span className="btn-icon">📱</span>
-          <span className="btn-text">Двухфакторная аутентификация</span>
-          <span className="btn-arrow">›</span>
-        </button>
-
-        <button className="security-btn">
-          <span className="btn-icon">👁️</span>
-          <span className="btn-text">История входов</span>
-          <span className="btn-arrow">›</span>
-        </button>
-      </div>
-
-      <div className="settings-section danger">
-        <h3 className="section-title">Опасные действия</h3>
-        
-        <button className="danger-btn">
-          <span className="btn-icon">🗑️</span>
-          <span className="btn-text">Удалить историю просмотров</span>
-        </button>
-
-        <button className="danger-btn">
-          <span className="btn-icon">🚫</span>
-          <span className="btn-text">Отключить аккаунт</span>
-        </button>
-
-        <button className="danger-btn delete">
-          <span className="btn-icon">💥</span>
-          <span className="btn-text">Удалить аккаунт</span>
-        </button>
-      </div>
     </div>
   );
-};
-
-export default ProfileSettings;
+}

@@ -11,6 +11,7 @@ import ProfileOrders from './components/ProfileOrders';
 import ProfileSettings from './components/ProfileSettings';
 import ProfileViewed from './components/ProfileViewed';
 import ReferralLink from './components/ReferralLink';
+import { t } from './i18n';
 
 const tg = window.Telegram?.WebApp;
 
@@ -19,6 +20,10 @@ const regions = ['CIS', 'EU', 'NA', 'APAC'];
 const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
 
 function App() {
+  // язык интерфейса
+  const [lang, setLang] = useState(localStorage.getItem('valorant_lang') || 'ru');
+  const labels = t(lang);
+
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
   const [profileSubView, setProfileSubView] = useState('menu'); // 'menu', 'orders', 'settings', 'viewed'
@@ -53,6 +58,30 @@ function App() {
   const USER_ID = tg?.initDataUnsafe?.user?.id || 'unknown';
   const USERNAME = tg?.initDataUnsafe?.user?.username || '';
   const FIRST_NAME = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
+
+  const handleNavigate = (view) => {
+    setActiveView(view);
+    if (view !== 'profile') setProfileSubView('menu');
+  };
+
+  // сохраняем язык
+  useEffect(() => {
+    try {
+      localStorage.setItem('valorant_lang', lang);
+    } catch {
+      // ignore
+    }
+  }, [lang]);
+
+  // применяем сохраненную тему один раз
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem('valorant_theme');
+      document.body.classList.toggle('dark', savedTheme === 'dark');
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
@@ -357,11 +386,14 @@ function App() {
       case 'viewed':
         setProfileSubView('viewed');
         break;
+      case 'favorites':
+        setActiveView('favorites');
+        break;
       case 'support':
-        if (tg) tg.openLink('https://t.me/ricksxxx');
+        tg?.openLink?.('https://t.me/ricksxxx');
         break;
       case 'community':
-        if (tg) tg.openLink('https://t.me/valorant_servicebot');
+        tg?.openLink?.('https://t.me/valorant_servicebot');
         break;
       default:
         setProfileSubView('menu');
@@ -405,6 +437,7 @@ function App() {
                 <ProductCard
                   key={account._id}
                   account={account}
+                  backendUrl={BACKEND_URL}
                   onAddToCart={addToCart}
                   onToggleFavorite={toggleFavorite}
                   onViewDetails={handleViewDetails}
@@ -460,6 +493,7 @@ function App() {
                   <ProductCard
                     key={account._id}
                     account={account}
+                    backendUrl={BACKEND_URL}
                     onAddToCart={addToCart}
                     onToggleFavorite={toggleFavorite}
                     onViewDetails={handleViewDetails}
@@ -496,6 +530,7 @@ function App() {
                   <ProductCard
                     key={account._id}
                     account={account}
+                    backendUrl={BACKEND_URL}
                     onAddToCart={addToCart}
                     onToggleFavorite={toggleFavorite}
                     onViewDetails={handleViewDetails}
@@ -728,6 +763,8 @@ function App() {
               <ProfileSettings 
                 user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME }}
                 onBack={() => setProfileSubView('menu')}
+                lang={lang}
+                setLang={setLang}
               />
             );
             
@@ -779,8 +816,9 @@ function App() {
       
       <NavigationBar 
         activeView={activeView}
-        onNavigate={setActiveView}
+        onNavigate={handleNavigate}
         cartCount={cart.length}
+        labels={labels}
       />
     </div>
   );
