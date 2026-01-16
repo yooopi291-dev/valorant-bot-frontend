@@ -351,3 +351,10 @@ input:checked + .slider:before {
 .danger-btn.delete .btn-text {
   color: white;
 }
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}

@@ -8,7 +8,6 @@ const tg = window.Telegram?.WebApp;
 
 export default function ProfileSettings({ user, onBack, lang, setLang }) {
   const [notifications, setNotifications] = useState(true);
-  const [emailUpdates, setEmailUpdates] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
   // init theme + lang
@@ -50,7 +49,13 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
       </div>
 
       <div className="user-profile-section">
-        <div className="profile-avatar-large">{(user?.name || 'U').charAt(0)}</div>
+        <div className="profile-avatar-large">
+          {user?.photo_url ? (
+            <img src={user.photo_url} alt="avatar" className="avatar-img" />
+          ) : (
+            (user?.name || 'U').charAt(0)
+          )}
+        </div>
         <div className="profile-info">
           <h3 className="profile-name">{user?.name || 'Игрок'}</h3>
           <p className="profile-id">ID: {user?.id}</p>
@@ -104,19 +109,7 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
             <input type="checkbox" checked={notifications} onChange={(e) => setNotifications(e.target.checked)} />
             <span className="slider"></span>
           </label>
-        </div>
-
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Email-рассылка</h4>
-            <p className="setting-description">Новости и акции</p>
-          </div>
-          <label className="switch">
-            <input type="checkbox" checked={emailUpdates} onChange={(e) => setEmailUpdates(e.target.checked)} />
-            <span className="slider"></span>
-          </label>
-        </div>
-      </div>
+        </div>      </div>
     </div>
   );
 }

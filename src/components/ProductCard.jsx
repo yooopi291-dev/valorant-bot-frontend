@@ -74,10 +74,7 @@ export default function ProductCard({
 
         {!compact && account?.description && (
           <p className="product-description">
-            {String(account.description ?? '').length > 70
-  ? `${String(account.description ?? '').substring(0, 70)}...`
-  : String(account.description ?? '')
-}
+            {String(account.description || "").length > 70 ? String(account.description || "").slice(0, 70) + "..." : String(account.description || "")}
           </p>
         )}
 

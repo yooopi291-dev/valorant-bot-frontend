@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './ReferralLink.css';
 
-const ReferralLink = ({ userId, username }) => {
-  const [copied, setCopied] = useState(false);
-  
-  const referralLink = `https://t.me/valorant_servicebot?start=ref_${userId}`;
-  const safeUserId = String(userId ?? '');
-  const displayLink = `t.me/valorant_servicebot?start=ref_${safeUserId.substring(0, 8)}...`;
+const BOT_USERNAME = 'valorant_servicebot';
 
+const ReferralLink = ({ userId }) => {
+  const [copied, setCopied] = useState(false);
+
+  const safeUserId = String(userId ?? '');
+  const referralLink = `https://t.me/${BOT_USERNAME}?start=ref_${safeUserId}`;
+  const displayLink = referralLink.replace("https://", "");
 
   const handleCopy = async () => {
     try {
@@ -15,7 +16,6 @@ const ReferralLink = ({ userId, username }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      // Fallback для старых браузеров
       const textArea = document.createElement('textarea');
       textArea.value = referralLink;
       document.body.appendChild(textArea);
@@ -36,7 +36,7 @@ const ReferralLink = ({ userId, username }) => {
           <p className="referral-subtitle">+500 ₽ за каждого приглашённого</p>
         </div>
       </div>
-      
+
       <div className="referral-benefits">
         <div className="benefit-item">
           <span className="benefit-icon">💰</span>
@@ -45,7 +45,7 @@ const ReferralLink = ({ userId, username }) => {
             <span>на баланс после первой покупки друга</span>
           </div>
         </div>
-        
+
         <div className="benefit-item">
           <span className="benefit-icon">🎮</span>
           <div className="benefit-text">
@@ -54,34 +54,25 @@ const ReferralLink = ({ userId, username }) => {
           </div>
         </div>
       </div>
-      
+
       <div className="referral-link-container">
         <div className="link-label">Ваша реферальная ссылка:</div>
         <div className="link-box">
-          <code className="referral-link">{displayLink}</code>
-          <button 
+          <code className="referral-link" title={displayLink}>{displayLink}</code>
+          <button
             className={`copy-btn ${copied ? 'copied' : ''}`}
             onClick={handleCopy}
+            type="button"
           >
-            {copied ? '✓ Скопировано' : '📋 Копировать'}
+            {copied ? '✓' : '📋'}
           </button>
         </div>
         <div className="link-hint">
           Отправьте эту ссылку другу. После его первой покупки вы получите бонус.
         </div>
       </div>
-      
-      <div className="referral-stats">
-        <div className="stat-item">
-          <div className="stat-value">0</div>
-          <div className="stat-label">Приглашено</div>
-        </div>
-        <div className="stat-divider"></div>
-        <div className="stat-item">
-          <div className="stat-value">0 ₽</div>
-          <div className="stat-label">Заработано</div>
-        </div>
-      </div>
+
+      {/* Статистику рефералов добавим после доработок backend */}
     </div>
   );
 };

@@ -18,14 +18,14 @@ const ProfileMenu = ({
           id: 'referral',
           icon: '🎁',
           title: 'Пригласить друга',
-          subtitle: '+500 ₽ за каждого',
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов''+500 ₽ за каждого',
           component: referralComponent
         },
         {
           id: 'support',
           icon: '💬',
           title: 'Поддержка',
-          subtitle: '@ricksxxx',
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов''@ricksxxx',
           arrow: true
         }
       ]
@@ -37,7 +37,7 @@ const ProfileMenu = ({
           id: 'orders',
           icon: '📦',
           title: 'Заказы',
-          subtitle: `${ordersCount} заказов`,
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов'`${ordersCount} заказов`,
           badge: ordersCount > 0 ? ordersCount : null,
           arrow: true
         },
@@ -45,14 +45,14 @@ const ProfileMenu = ({
           id: 'reviews',
           icon: '⭐',
           title: 'Отзывы',
-          subtitle: 'Оцените покупку',
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов''Оцените покупку',
           arrow: true
         },
         {
           id: 'favorites',
           icon: '❤️',
           title: 'Избранное',
-          subtitle: `${favoritesCount} товаров`,
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов'`${favoritesCount} товаров`,
           badge: favoritesCount > 0 ? favoritesCount : null,
           arrow: true
         },
@@ -60,7 +60,7 @@ const ProfileMenu = ({
           id: 'viewed',
           icon: '👁️',
           title: 'Просмотренные товары',
-          subtitle: `${viewedCount} товаров`,
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов'`${viewedCount} товаров`,
           badge: viewedCount > 0 ? viewedCount : null,
           arrow: true
         }
@@ -69,50 +69,11 @@ const ProfileMenu = ({
     {
       title: 'Профиль',
       items: [
-        {
-          id: 'status',
-          icon: '🎮',
-          title: 'Статус',
-          subtitle: 'Новичок',
-          customContent: (
-            <div className="status-badge">Новичок</div>
-          )
-        },
-        {
+                {
           id: 'settings',
           icon: '👤',
           title: 'Моя страница',
-          subtitle: 'Настройки профиля',
-          arrow: true
-        }
-      ]
-    },
-    {
-      title: 'Настройки',
-      items: [
-        {
-          id: 'privacy',
-          icon: '🔒',
-          title: 'Конфиденциальность',
-          arrow: true
-        },
-        {
-          id: 'notifications',
-          icon: '🔔',
-          title: 'Уведомления',
-          arrow: true
-        },
-        {
-          id: 'terms',
-          icon: '📄',
-          title: 'Оферта',
-          arrow: true
-        },
-        {
-          id: 'community',
-          icon: '👥',
-          title: 'Сообщество Valorant',
-          subtitle: 'Telegram-чат',
+          subtitle: 'Недавно смотрели''Сохраненные''История заказов''Настройки профиля',
           arrow: true
         }
       ]
@@ -123,7 +84,11 @@ const ProfileMenu = ({
     <div className="profile-menu-container">
       <div className="profile-header">
         <div className="avatar">
-          {user.name.charAt(0)}
+          {user?.photo_url ? (
+            <img src={user.photo_url} alt="avatar" className="avatar-img" />
+          ) : (
+            (user?.name || 'U').charAt(0)
+          )}
         </div>
         <div className="user-info">
           <h2 className="user-name">{user.name}</h2>
@@ -184,7 +149,7 @@ const ProfileMenu = ({
 
       <div className="profile-footer">
         <p className="footer-text">
-          Приложение Valorant Store
+          Приложение Valorant Service
         </p>
         <p className="footer-version">
           Версия 1.0.0

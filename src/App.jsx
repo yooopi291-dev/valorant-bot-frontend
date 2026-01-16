@@ -389,6 +389,9 @@ function App() {
       case 'favorites':
         setActiveView('favorites');
         break;
+      case 'reviews':
+        tg?.showAlert?.('⭐ Отзывы будут добавлены позже');
+        break;
       case 'support':
         tg?.openLink?.('https://t.me/ricksxxx');
         break;
@@ -406,7 +409,7 @@ function App() {
       case 'home':
         return (
           <div className="home-container">
-            <h1 className="app-title">Valorant Store</h1>
+            <h1 className="app-title">Valorant Service</h1>
             <p className="app-subtitle">Аккаунты и бусты</p>
             
             <PromoBanner 
@@ -448,13 +451,7 @@ function App() {
             </div>
             
             <div className="quick-actions">
-              <button 
-                className="action-btn"
-                onClick={() => setActiveView('catalog')}
-              >
-                🚀 Заказать буст
-              </button>
-              <button 
+                            <button 
                 className="action-btn secondary"
                 onClick={() => setActiveView('catalog')}
               >
@@ -761,7 +758,7 @@ function App() {
           case 'settings':
             return (
               <ProfileSettings 
-                user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME }}
+                user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME, photo_url: tg?.initDataUnsafe?.user?.photo_url }}
                 onBack={() => setProfileSubView('menu')}
                 lang={lang}
                 setLang={setLang}
@@ -782,7 +779,7 @@ function App() {
           default:
             return (
               <ProfileMenu 
-                user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME }}
+                user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME, photo_url: tg?.initDataUnsafe?.user?.photo_url }}
                 ordersCount={userOrders.length}
                 favoritesCount={favorites.length}
                 viewedCount={viewedItems.length}
@@ -801,7 +798,7 @@ function App() {
       default:
         return (
           <div className="home-container">
-            <h1>Valorant Store</h1>
+            <h1>Valorant Service</h1>
             <p>Добро пожаловать!</p>
           </div>
         );
