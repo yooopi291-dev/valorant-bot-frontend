@@ -1,0 +1,87 @@
+import React, { useState } from 'react';
+import './ReferralLink.css';
+
+const ReferralLink = ({ userId, username }) => {
+  const [copied, setCopied] = useState(false);
+  
+  const referralLink = `https://t.me/valorant_servicebot?start=ref_${userId}`;
+  const displayLink = `t.me/valorant_servicebot?start=ref_${userId.substring(0, 8)}...`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      // Fallback для старых браузеров
+      const textArea = document.createElement('textarea');
+      textArea.value = referralLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <div className="referral-card">
+      <div className="referral-header">
+        <div className="referral-icon">🎁</div>
+        <div className="referral-title-group">
+          <h3 className="referral-title">Пригласить друга</h3>
+          <p className="referral-subtitle">+500 ₽ за каждого приглашённого</p>
+        </div>
+      </div>
+      
+      <div className="referral-benefits">
+        <div className="benefit-item">
+          <span className="benefit-icon">💰</span>
+          <div className="benefit-text">
+            <strong>Вы получаете 500 ₽</strong>
+            <span>на баланс после первой покупки друга</span>
+          </div>
+        </div>
+        
+        <div className="benefit-item">
+          <span className="benefit-icon">🎮</span>
+          <div className="benefit-text">
+            <strong>Друг получает скидку 5%</strong>
+            <span>на первый заказ с промокодом START</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="referral-link-container">
+        <div className="link-label">Ваша реферальная ссылка:</div>
+        <div className="link-box">
+          <code className="referral-link">{displayLink}</code>
+          <button 
+            className={`copy-btn ${copied ? 'copied' : ''}`}
+            onClick={handleCopy}
+          >
+            {copied ? '✓ Скопировано' : '📋 Копировать'}
+          </button>
+        </div>
+        <div className="link-hint">
+          Отправьте эту ссылку другу. После его первой покупки вы получите бонус.
+        </div>
+      </div>
+      
+      <div className="referral-stats">
+        <div className="stat-item">
+          <div className="stat-value">0</div>
+          <div className="stat-label">Приглашено</div>
+        </div>
+        <div className="stat-divider"></div>
+        <div className="stat-item">
+          <div className="stat-value">0 ₽</div>
+          <div className="stat-label">Заработано</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ReferralLink;

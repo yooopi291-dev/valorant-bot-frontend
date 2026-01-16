@@ -1,0 +1,120 @@
+.navigation-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  display: flex;
+  padding: 8px 0;
+  border-top: 1px solid #e5e5e5;
+  z-index: 1000;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px);
+}
+
+.nav-item.active {
+  color: #ff4655;
+}
+
+.nav-icon {
+  position: relative;
+  margin-bottom: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-icon svg {
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-icon svg {
+  stroke: #ff4655;
+  filter: drop-shadow(0 2px 4px rgba(255, 70, 85, 0.3));
+}
+
+.nav-label {
+  font-size: 11px;
+  color: #8a8a8e;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-label {
+  color: #ff4655;
+  font-weight: 600;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #ff4655;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Анимация для активной иконки */
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: #ff4655;
+  border-radius: 0 0 3px 3px;
+  opacity: 0;
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

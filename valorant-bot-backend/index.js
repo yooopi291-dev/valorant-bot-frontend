@@ -29,6 +29,15 @@ console.log('=== Valorant Bot Starting ===');
 const app = express();
 app.use(express.json());
 
+// ========== ДОБАВЬТЕ ЭТОТ КОД ПОСЛЕ app.use(express.json()); ==========
+const cors = require('cors');
+
+// Разрешаем запросы с вашего фронтенда и Telegram
+app.use(cors({
+  origin: ['https://valorant-mini-app.vercel.app', 'https://web.telegram.org'],
+  credentials: true
+}));
+
 // Проверка токена
 if (!process.env.TELEGRAM_TOKEN) {
   console.error('❌ TELEGRAM_TOKEN не найден');
@@ -2388,6 +2397,124 @@ app.get('/api/orders/user/:userId', async (req, res) => {
     res.json(orders);
   } catch (error) {
     res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+app.post('/api/orders/cart', async (req, res) => {
+  try {
+    const { userId, items, promoCode, discount, total } = req.body;
+    
+    // Создаем заказ для каждого товара в корзине
+    const orderPromises = items.map(async (item) => {
+      // Проверяем доступность аккаунта
+      const account = await Account.findById(item.accountId);
+      if (!account || account.is_sold) {
+        throw new Error(`Аккаунт "${item.title}" недоступен`);
+      }
+      
+      // Создаем заказ
+      const order = new Order({
+        user_id: userId,
+        account_id: item.accountId,
+        type: 'account',
+        amount_rub: item.price_rub * item.quantity,
+        quantity: item.quantity,
+        status: 'pending',
+        promo_code: promoCode,
+        discount_applied: discount / items.length // распределяем скидку
+      });
+      
+      await order.save();
+      
+      // Помечаем аккаунт как проданный
+      await Account.findByIdAndUpdate(item.accountId, { is_sold: true });
+      
+      return order;
+    });
+    
+    const orders = await Promise.all(orderPromises);
+    
+    res.json({
+      success: true,
+      orderId: orders[0]._id, // ID первого заказа для отображения
+      ordersCount: orders.length,
+      total: total
+    });
+    
+  } catch (err) {
+    console.error('Ошибка оформления корзины:', err);
+    res.status(500).json({ 
+      success: false, 
+      error: err.message 
+    });
+  }
+});
+
+// 2. Эндпоинт для уведомления админа
+app.post('/api/notify/admin', async (req, res) => {
+  try {
+    const { orderId, userId, username, cartCount, total } = req.body;
+    
+    // Отправляем сообщение админу в Telegram
+    const adminMessage = `🛒 НОВЫЙ ЗАКАЗ ИЗ КОРЗИНЫ!\n\n` +
+      `📦 Заказов: ${cartCount}\n` +
+      `💰 Сумма: ${total} ₽\n` +
+      `👤 Пользователь: ${userId}${username ? ` (@${username})` : ''}\n` +
+      `🆔 ID заказа: ${orderId}\n` +
+      `⏰ Время: ${new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })}`;
+    
+    // Отправляем всем админам из ADMIN_IDS
+    const adminPromises = ADMIN_IDS.map(adminId => 
+      bot.sendMessage(adminId, adminMessage)
+    );
+    
+    await Promise.all(adminPromises);
+    
+    res.json({ success: true });
+    
+  } catch (err) {
+    console.error('Ошибка уведомления админа:', err);
+    res.json({ success: false });
+  }
+});
+
+// 3. Эндпоинт для проверки промокодов
+app.post('/api/promo/validate', async (req, res) => {
+  try {
+    const { code, userId, total } = req.body;
+    
+    // Проверяем промокод "start" (5% скидка на первый заказ)
+    if (code.toLowerCase() === 'start') {
+      // Проверяем, есть ли у пользователя уже заказы
+      const userOrders = await Order.countDocuments({ user_id: userId });
+      
+      if (userOrders === 0) {
+        // Первый заказ - даем скидку 5%
+        const discount = Math.floor(total * 0.05);
+        res.json({
+          valid: true,
+          discount: discount,
+          message: 'Скидка 5% на первый заказ!'
+        });
+      } else {
+        res.json({
+          valid: false,
+          message: 'Промокод "start" только для первого заказа'
+        });
+      }
+    } else {
+      res.json({
+        valid: false,
+        message: 'Неверный промокод'
+      });
+    }
+    
+  } catch (err) {
+    console.error('Ошибка проверки промокода:', err);
+    res.status(500).json({ 
+      valid: false, 
+      message: 'Ошибка сервера' 
+    });
   }
 });
 
