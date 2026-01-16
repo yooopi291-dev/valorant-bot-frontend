@@ -3,43 +3,24 @@ import axios from 'axios';
 
 const tg = window.Telegram.WebApp;
 
-const regions = ['CIS', 'EU', 'NA', 'APAC'];
-const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
+const BACKEND_URL = 'https://valorant-bot-backend.onrender.com'; // Твой Render URL
 
 function App() {
-  const [step, setStep] = useState(1); // 1 — форма, 2 — каталог/бустеры, 3 — детали, 4 — подтверждение
-  const [formData, setFormData] = useState({
-    service: 'account', // 'account' или 'boost'
-    rank: '',
-    region: '',
-    wishes: '',
-  });
-  const [filters, setFilters] = useState({ region: '', rank: '' });
-  const [accounts, setAccounts] = useState([]); // Реальные аккаунты с сервера
-  const [boosters, setBoosters] = useState([]); // Реальные бустеры (пока тестовые)
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [view, setView] = useState('menu'); // 'menu', 'catalog', 'details', 'boost', 'orders', 'profile'
+  const [accounts, setAccounts] = useState([]); // Аккаунты с бэкенда
+  const [orders, setOrders] = useState([]); // Заказы пользователя
+  const [selectedAccount, setSelectedAccount] = useState(null); // Выбранный аккаунт
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
+  const [formData, setFormData] = useState({ rank: '', region: '', wishes: '' });
 
   useEffect(() => {
     tg.ready();
     tg.expand();
 
-    tg.MainButton.text = step === 1 ? 'Далее' : step === 3 ? 'Подтвердить' : 'Создать заказ';
-    tg.MainButton.onClick(handleMainButtonClick);
-    tg.MainButton.show();
-
-    // Загружаем данные только на нужном шаге
-    if (step === 2) {
-      if (formData.service === 'account') {
-        loadAccounts();
-      } else if (formData.service === 'boost') {
-        loadBoosters();
-      }
-    }
-  }, [step, filters]);
+    if (view === 'catalog') loadAccounts();
+    if (view === 'orders') loadOrders();
+  }, [view]);
 
   const loadAccounts = async () => {
     setLoading(true);
@@ -48,21 +29,21 @@ function App() {
       const res = await axios.get(`${BACKEND_URL}/api/accounts`);
       setAccounts(res.data);
     } catch (err) {
-      console.error('Ошибка загрузки аккаунтов:', err);
-      setError('Не удалось загрузить каталог. Попробуйте позже.');
+      setError('Не удалось загрузить каталог');
     }
     setLoading(false);
   };
 
-  const loadBoosters = async () => {
+  const loadOrders = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await axios.get(`${BACKEND_URL}/api/boosters`);
-      setBoosters(res.data);
+      const res = await axios.get(`${BACKEND_URL}/api/orders/user`, {
+        params: { userId: tg.initDataUnsafe.user?.id || 'unknown' }
+      });
+      setOrders(res.data);
     } catch (err) {
-      console.error('Ошибка загрузки бустеров:', err);
-      setError('Не удалось загрузить бустеров.');
+      setError('Не удалось загрузить заказы');
     }
     setLoading(false);
   };
@@ -71,187 +52,156 @@ function App() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFilterChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
+  const submitBoost = async () => {
+    try {
+      const payload = {
+        initData: tg.initData,
+        userId: tg.initDataUnsafe.user?.id || 'unknown',
+        fromRank: formData.rank,
+        region: formData.region,
+        wishes: formData.wishes,
+      };
 
-  const submitForm = () => {
-    if (!formData.rank || !formData.region) {
-      tg.showAlert('Выберите ранг и регион');
-      return;
-    }
-    setStep(2);
-  };
-
-  const viewDetails = (item) => {
-    setSelectedItem(item);
-    setStep(3);
-  };
-
-  const handleMainButtonClick = async () => {
-    if (step === 1) {
-      submitForm();
-    } else if (step === 3) {
-      setStep(4);
-      tg.MainButton.text = 'Создать заказ';
-    } else if (step === 4 && selectedItem) {
-      try {
-        const payload = {
-          initData: tg.initData,
-          userId: tg.initDataUnsafe?.user?.id || 'unknown',
-          service: formData.service,
-          itemId: selectedItem._id || selectedItem.id,
-          rank: formData.rank,
-          region: formData.region,
-          wishes: formData.wishes,
-        };
-
-        const endpoint = formData.service === 'account' ? '/api/orders/account' : '/api/orders/boost';
-        const res = await axios.post(`${BACKEND_URL}${endpoint}`, payload);
-
-        if (res.data.success) {
-          tg.showAlert('Заказ успешно создан! Ожидайте подтверждения.');
-          tg.close();
-        } else {
-          tg.showAlert('Ошибка: ' + (res.data.error || 'Неизвестная ошибка'));
-        }
-      } catch (err) {
-        console.error('Ошибка отправки заказа:', err);
-        tg.showAlert('Не удалось создать заказ. Попробуйте позже.');
+      const res = await axios.post(`${BACKEND_URL}/api/orders/boost`, payload);
+      if (res.data.success) {
+        tg.showAlert('Заказ буста создан!');
+        setView('menu');
+      } else {
+        tg.showAlert('Ошибка');
       }
+    } catch (err) {
+      tg.showAlert('Ошибка отправки');
+    }
+  };
+
+  const buyAccount = async () => {
+    if (!selectedAccount) return;
+
+    try {
+      const payload = {
+        initData: tg.initData,
+        userId: tg.initDataUnsafe.user?.id || 'unknown',
+        accountId: selectedAccount._id,
+      };
+
+      const res = await axios.post(`${BACKEND_URL}/api/orders/account`, payload);
+      if (res.data.success) {
+        tg.showAlert('Заказ создан! Ожидайте подтверждения.');
+        setView('menu');
+      } else {
+        tg.showAlert('Ошибка');
+      }
+    } catch (err) {
+      tg.showAlert('Ошибка отправки');
     }
   };
 
   return (
-    <div style={{ padding: 20, minHeight: '100vh', background: tg.themeParams.bg_color, color: tg.themeParams.text_color }}>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+    <div style={{ padding: 16, background: tg.themeParams.bg_color, color: tg.themeParams.text_color }}>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {step === 1 && (
+      {view === 'menu' && (
         <>
-          <h1 style={{ textAlign: 'center', marginBottom: 20 }}>Новый заказ</h1>
+          <h1 style={{ textAlign: 'center' }}>Добро пожаловать!</h1>
+          <button onClick={() => setView('catalog')} style={{ width: '100%', marginBottom: 8, padding: 12, background: '#3390ec', color: 'white', border: 'none', borderRadius: 8 }}>
+            🛒 Каталог аккаунтов
+          </button>
+          <button onClick={() => setView('boost')} style={{ width: '100%', marginBottom: 8, padding: 12, background: '#3390ec', color: 'white', border: 'none', borderRadius: 8 }}>
+            🚀 Заказать буст
+          </button>
+          <button onClick={() => setView('orders')} style={{ width: '100%', marginBottom: 8, padding: 12, background: '#3390ec', color: 'white', border: 'none', borderRadius: 8 }}>
+            📦 Мои заказы
+          </button>
+          <button onClick={() => setView('profile')} style={{ width: '100%', marginBottom: 8, padding: 12, background: '#3390ec', color: 'white', border: 'none', borderRadius: 8 }}>
+            👤 Профиль
+          </button>
+        </>
+      )}
 
-          <label>Тип услуги</label>
-          <select name="service" value={formData.service} onChange={handleFormChange} style={{ width: '100%', marginBottom: 16 }}>
-            <option value="account">Купить аккаунт</option>
-            <option value="boost">Буст ранга</option>
-          </select>
+      {view === 'catalog' && (
+        <>
+          <h1>Каталог аккаунтов</h1>
+          {loading ? <p>Загрузка...</p> : accounts.length === 0 ? (
+            <p>Каталог пуст</p>
+          ) : (
+            accounts.map(acc => (
+              <div key={acc._id} style={{
+                border: '1px solid #444',
+                padding: 16,
+                marginBottom: 16,
+                borderRadius: 12,
+              }}>
+                <h3>{acc.title}</h3>
+                <p>Ранг: {acc.rank}</p>
+                <p>Цена: {acc.price_rub} ₽</p>
+                <p>Регион: {acc.region}</p>
+                {acc.image_url && <img src={acc.image_url} alt={acc.title} style={{ maxWidth: '100%' }} />}
+                <button onClick={() => {
+                  setSelectedItem(acc);
+                  setView('details');
+                }}>Просмотреть</button>
+              </div>
+            ))
+          )}
+          <button onClick={() => setView('menu')}>Назад</button>
+        </>
+      )}
 
-          <label>Ранг</label>
-          <select name="rank" value={formData.rank} onChange={handleFormChange} style={{ width: '100%', marginBottom: 16 }}>
+      {view === 'details' && selectedItem && (
+        <>
+          <h1>Детали аккаунта</h1>
+          <h3>{selectedItem.title}</h3>
+          <p>Ранг: {selectedItem.rank}</p>
+          <p>Цена: {selectedItem.price_rub} ₽</p>
+          <p>Регион: {selectedItem.region}</p>
+          <p>Описание: {selectedItem.description || 'Нет'}</p>
+          {selectedItem.image_url && <img src={selectedItem.image_url} alt={selectedItem.title} style={{ maxWidth: '100%' }} />}
+          <button onClick={buyAccount}>Купить</button>
+          <button onClick={() => setView('catalog')}>Назад</button>
+        </>
+      )}
+
+      {view === 'boost' && (
+        <>
+          <h1>Заказать буст</h1>
+          <select name="rank" value={formData.rank} onChange={handleFormChange}>
             <option value="">Выберите ранг</option>
             {ranks.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
-
-          <label>Регион</label>
-          <select name="region" value={formData.region} onChange={handleFormChange} style={{ width: '100%', marginBottom: 16 }}>
+          <select name="region" value={formData.region} onChange={handleFormChange}>
             <option value="">Выберите регион</option>
             {regions.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
-
-          <label>Пожелания</label>
-          <textarea
-            name="wishes"
-            value={formData.wishes}
-            onChange={handleFormChange}
-            placeholder="Скины, агенты, время, доп. пожелания..."
-            rows={4}
-            style={{ width: '100%', marginBottom: 16 }}
-          />
+          <textarea name="wishes" value={formData.wishes} onChange={handleFormChange} placeholder="Пожелания..." />
+          <button onClick={submitBoost}>Отправить</button>
+          <button onClick={() => setView('menu')}>Назад</button>
         </>
       )}
 
-      {step === 2 && (
+      {view === 'orders' && (
         <>
-          <h2 style={{ textAlign: 'center' }}>
-            {formData.service === 'account' ? 'Каталог аккаунтов' : 'Доступные бустеры'}
-          </h2>
-
-          <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-            <select name="region" value={filters.region} onChange={handleFilterChange} style={{ flex: 1 }}>
-              <option value="">Регион</option>
-              {regions.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-
-            <select name="rank" value={filters.rank} onChange={handleFilterChange} style={{ flex: 1 }}>
-              <option value="">Ранг</option>
-              {ranks.map(r => <option key={r} value={r}>{r}</option>)}
-            </select>
-          </div>
-
-          {loading ? (
-            <p style={{ textAlign: 'center' }}>Загрузка...</p>
+          <h1>Мои заказы</h1>
+          {loading ? <p>Загрузка...</p> : orders.length === 0 ? (
+            <p>Нет заказов</p>
           ) : (
-            (formData.service === 'account' ? accounts : boosters).length === 0 ? (
-              <p style={{ textAlign: 'center' }}>Ничего не найдено</p>
-            ) : (
-              (formData.service === 'account' ? accounts : boosters).map(item => (
-                <div
-                  key={item._id || item.id}
-                  style={{
-                    border: '1px solid #444',
-                    padding: 16,
-                    marginBottom: 16,
-                    borderRadius: 12,
-                    background: tg.themeParams.secondary_bg_color || '#222',
-                  }}
-                >
-                  <h3>{item.title || item.nickname}</h3>
-                  <p>Ранг: {item.rank}</p>
-                  <p>Регион: {item.region}</p>
-                  <p>Цена: {item.price_rub ? `${item.price_rub} ₽` : `${item.pricePerRank} за ранг`}</p>
-                  {item.image_url && <img src={item.image_url} alt="изображение" style={{ maxWidth: '100%', borderRadius: 8 }} />}
-                  <button
-                    onClick={() => viewDetails(item)}
-                    style={{
-                      width: '100%',
-                      marginTop: 12,
-                      padding: 12,
-                      background: '#3390ec',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 8,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {formData.service === 'account' ? 'Купить' : 'Выбрать бустера'}
-                  </button>
-                </div>
-              ))
-            )
+            orders.map(order => (
+              <div key={order._id} style={{ border: '1px solid #444', padding: 16, marginBottom: 16, borderRadius: 12 }}>
+                <p>Тип: {order.type}</p>
+                <p>Статус: {order.status}</p>
+                <p>Цена: {order.amount_rub} ₽</p>
+              </div>
+            ))
           )}
+          <button onClick={() => setView('menu')}>Назад</button>
         </>
       )}
 
-      {step === 3 && selectedItem && (
+      {view === 'profile' && (
         <>
-          <h2>Детали</h2>
-          <h3>{selectedItem.title || selectedItem.nickname}</h3>
-          <p>Ранг: {selectedItem.rank}</p>
-          <p>Регион: {selectedItem.region}</p>
-          <p>Цена: {selectedItem.price_rub ? `${selectedItem.price_rub} ₽` : `${selectedItem.pricePerRank} за ранг`}</p>
-          {selectedItem.description && <p>Описание: {selectedItem.description}</p>}
-          {selectedItem.image_url && <img src={selectedItem.image_url} alt="изображение" style={{ maxWidth: '100%', borderRadius: 8 }} />}
-          <button onClick={() => setStep(4)} style={{ width: '100%', marginTop: 16, padding: 12, background: '#28a745', color: 'white', border: 'none', borderRadius: 8 }}>
-            Подтвердить
-          </button>
-          <button onClick={() => setStep(2)} style={{ width: '100%', marginTop: 8, padding: 12, background: '#444', color: 'white', border: 'none', borderRadius: 8 }}>
-            Назад
-          </button>
-        </>
-      )}
-
-      {step === 4 && selectedItem && (
-        <>
-          <h2>Подтверждение заказа</h2>
-          <p>Вы выбрали: {selectedItem.title || selectedItem.nickname}</p>
-          <p>Цена: {selectedItem.price_rub ? `${selectedItem.price_rub} ₽` : `${selectedItem.pricePerRank} за ранг`}</p>
-          <p>Пожелания: {formData.wishes || 'Нет'}</p>
-          <button onClick={handleMainButton} style={{ width: '100%', padding: 12, background: '#28a745', color: 'white', border: 'none', borderRadius: 8 }}>
-            Создать заказ
-          </button>
-          <button onClick={() => setStep(3)} style={{ width: '100%', marginTop: 8, padding: 12, background: '#444', color: 'white', border: 'none', borderRadius: 8 }}>
-            Назад
-          </button>
+          <h1>Профиль</h1>
+          <p>Ваш ID: {tg.initDataUnsafe.user?.id || 'Неизвестно'}</p>
+          <p>Заказов: 0 (заглушка)</p>
+          <button onClick={() => setView('menu')}>Назад</button>
         </>
       )}
     </div>
