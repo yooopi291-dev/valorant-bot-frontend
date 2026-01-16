@@ -1213,3 +1213,76 @@ body.dark-theme .danger-btn .btn-text,
 body.dark-theme .danger-btn.delete .btn-text {
   color: #ffffff !important;
 }
+/* ====== Home header + feed (Unicorn-like) ====== */
+.home-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 14px;
+}
+
+.valo-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.valo-logo svg {
+  animation: valo-spin 6s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+@keyframes valo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.home-headings .app-title {
+  margin: 0;
+}
+
+.home-headings .app-subtitle {
+  margin: 2px 0 0;
+  opacity: 0.75;
+}
+
+.feed-section {
+  margin: 14px 0 10px;
+}
+
+.feed-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.feed-card {
+  background: #ededed;
+  border-radius: 20px;
+  padding: 14px;
+}
+
+.feed-title {
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.feed-text {
+  font-size: 13px;
+  opacity: 0.8;
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.feed-action {
+  border: 0;
+  background: rgba(255,255,255,0.95);
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-weight: 700;
+}

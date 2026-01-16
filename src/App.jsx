@@ -345,6 +345,11 @@ function App() {
     if (tg) tg.showAlert(`📱 ${account.title}\nРанг: ${account.rank}\nЦена: ${account.price_rub} ₽`);
   };
 
+  const handleNavigate = (view) => {
+    setActiveView(view);
+    if (view !== 'profile') setProfileSubView('menu');
+  };
+
   const handleProfileAction = (action) => {
     switch (action) {
       case 'orders':
@@ -356,6 +361,10 @@ function App() {
         break;
       case 'viewed':
         setProfileSubView('viewed');
+        break;
+      case 'favorites':
+        setActiveView('favorites');
+        setProfileSubView('menu');
         break;
       case 'support':
         if (tg) tg.openLink('https://t.me/ricksxxx');
@@ -374,37 +383,57 @@ function App() {
       case 'home':
         return (
           <div className="home-container">
-            <h1 className="app-title">Valorant Store</h1>
-            <p className="app-subtitle">Аккаунты и бусты</p>
-            
-            <PromoBanner 
-              title="Новые аккаунты"
-              subtitle="Свежие поставки каждый день"
-              imageUrl="https://picsum.photos/300/150?random=1"
-            />
-            
-            <PromoBanner 
-              title="Скидки в корзине!"
-              subtitle="-5% на первый заказ с промокодом START"
-              imageUrl="https://picsum.photos/300/150?random=2"
-              accent
-            />
-            
+            <div className="home-header">
+              <div className="valo-logo" aria-hidden="true">
+                <svg viewBox="0 0 100 100" width="44" height="44">
+                  <path d="M50 5 L90 27 L90 73 L50 95 L10 73 L10 27 Z" fill="#111"/>
+                  <path d="M50 20 L78 34 L78 66 L50 80 L22 66 L22 34 Z" fill="#ff4655"/>
+                </svg>
+              </div>
+              <div className="home-headings">
+                <h1 className="app-title">Valorant Store</h1>
+                <p className="app-subtitle">Аккаунты, бусты и новости сервиса</p>
+              </div>
+            </div>
+
+            <div className="feed-section">
+              <div className="section-header">
+                <h2>📰 Лента</h2>
+                <button
+                  className="see-all-btn"
+                  onClick={() => {
+                    if (tg) tg.showAlert('Лента новостей: скоро добавим публикации от админа');
+                  }}
+                >
+                  Все →
+                </button>
+              </div>
+
+              <div className="feed-list">
+                <div className="feed-card">
+                  <div className="feed-title">🔥 Добавлены новые аккаунты</div>
+                  <div className="feed-text">Загляни в каталог — свежие позиции уже доступны.</div>
+                  <button className="feed-action" onClick={() => setActiveView('catalog')}>Открыть каталог</button>
+                </div>
+                <div className="feed-card">
+                  <div className="feed-title">🚀 Буст теперь в отдельной вкладке</div>
+                  <div className="feed-text">Открой вкладку «Буст» снизу и оформи заявку.</div>
+                  <button className="feed-action" onClick={() => setActiveView('boost')}>Перейти в буст</button>
+                </div>
+              </div>
+            </div>
+
             <div className="section-header">
               <h2>🔥 Популярное</h2>
-              <button 
-                className="see-all-btn"
-                onClick={() => setActiveView('catalog')}
-              >
-                Все →
-              </button>
+              <button className="see-all-btn" onClick={() => setActiveView('catalog')}>Все →</button>
             </div>
-            
+
             <div className="products-grid">
               {accounts.slice(0, 4).map(account => (
                 <ProductCard
                   key={account._id}
                   account={account}
+                  backendUrl={BACKEND_URL}
                   onAddToCart={addToCart}
                   onToggleFavorite={toggleFavorite}
                   onViewDetails={handleViewDetails}
@@ -413,24 +442,9 @@ function App() {
                 />
               ))}
             </div>
-            
-            <div className="quick-actions">
-              <button 
-                className="action-btn"
-                onClick={() => setActiveView('catalog')}
-              >
-                🚀 Заказать буст
-              </button>
-              <button 
-                className="action-btn secondary"
-                onClick={() => setActiveView('catalog')}
-              >
-                🛒 Весь каталог
-              </button>
-            </div>
           </div>
         );
-        
+
       case 'catalog':
         return (
           <div className="catalog-container">
@@ -460,6 +474,7 @@ function App() {
                   <ProductCard
                     key={account._id}
                     account={account}
+                    backendUrl={BACKEND_URL}
                     onAddToCart={addToCart}
                     onToggleFavorite={toggleFavorite}
                     onViewDetails={handleViewDetails}
@@ -496,6 +511,7 @@ function App() {
                   <ProductCard
                     key={account._id}
                     account={account}
+                    backendUrl={BACKEND_URL}
                     onAddToCart={addToCart}
                     onToggleFavorite={toggleFavorite}
                     onViewDetails={handleViewDetails}
@@ -779,7 +795,7 @@ function App() {
       
       <NavigationBar 
         activeView={activeView}
-        onNavigate={setActiveView}
+        onNavigate={handleNavigate}
         cartCount={cart.length}
       />
     </div>
