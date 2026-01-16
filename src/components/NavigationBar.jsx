@@ -39,6 +39,6 @@ const navItems = [
       ))}
     </nav>
   );
-};
+;
 
 export default NavigationBar;
