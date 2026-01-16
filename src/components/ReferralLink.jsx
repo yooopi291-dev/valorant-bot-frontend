@@ -5,7 +5,7 @@ const ReferralLink = ({ userId, username }) => {
   const [copied, setCopied] = useState(false);
   
   const referralLink = `https://t.me/valorant_servicebot?start=ref_${userId}`;
-  const displayLink = `t.me/valorant_servicebot?start=ref_${userId.substring(0, 8)}...`;
+  const displayLink = `t.me/valorant_servicebot?start=ref_${userId..substring(0, 6);
 
   const handleCopy = async () => {
     try {
