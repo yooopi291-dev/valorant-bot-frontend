@@ -3,44 +3,45 @@ import axios from 'axios';
 
 const tg = window.Telegram.WebApp;
 
-const regions = ['CIS', 'EU', 'NA', 'APAC'];
-const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
-
 function App() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 1 - форма, 2 - каталог
   const [formData, setFormData] = useState({
-    service: 'account', // по умолчанию аккаунт
+    service: 'account',
     rank: '',
     region: '',
     wishes: '',
   });
-  const [accounts, setAccounts] = useState([]);
+  const [accounts, setAccounts] = useState([]); // Реальные аккаунты с бэкенда
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
 
-  const BACKEND_URL = 'https://valorant-bot-backend.onrender.com'; // ← твой реальный URL
+  // Твой реальный URL бэкенда с Render
+  const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
 
   useEffect(() => {
     tg.ready();
     tg.expand();
-    tg.MainButton.text = step === 1 ? 'Далее' : 'Подтвердить заказ';
-    tg.MainButton.onClick(handleMainButtonClick);
+    tg.MainButton.text = step === 1 ? 'Далее' : 'Купить';
+    tg.MainButton.onClick(handleMainButton);
     tg.MainButton.show();
 
+    // Загружаем каталог аккаунтов, когда переходим на шаг 2
     if (step === 2 && formData.service === 'account') {
       loadAccounts();
     }
-  }, [step, formData.service]);
+  }, [step]);
 
   const loadAccounts = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await axios.get(`${BACKEND_URL}/api/accounts`);
       setAccounts(res.data);
+      console.log('Аккаунты загружены:', res.data);
     } catch (err) {
       console.error('Ошибка загрузки аккаунтов:', err);
-      setError('Не удалось загрузить каталог');
+      setError('Не удалось загрузить каталог. Проверь бэкенд.');
     }
     setLoading(false);
   };
@@ -49,33 +50,31 @@ function App() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleMainButtonClick = async () => {
+  const handleMainButton = async () => {
     if (step === 1) {
       if (!formData.rank || !formData.region) {
-        tg.showAlert('Выберите ранг и регион');
+        tg.showAlert('Выбери ранг и регион');
         return;
       }
       setStep(2);
     } else if (step === 2) {
       if (!selectedAccount) {
-        tg.showAlert('Выберите аккаунт');
+        tg.showAlert('Выбери аккаунт');
         return;
       }
 
       try {
-        const payload = {
+        const res = await axios.post(`${BACKEND_URL}/api/orders/account`, {
           initData: tg.initData,
           userId: tg.initDataUnsafe.user?.id,
           accountId: selectedAccount._id,
-        };
-
-        const res = await axios.post(`${BACKEND_URL}/api/orders/account`, payload);
+        });
 
         if (res.data.success) {
-          tg.showAlert('Заказ создан! Ожидайте подтверждения от администратора.');
+          tg.showAlert('Заказ создан! Ожидай подтверждения.');
           tg.close();
         } else {
-          tg.showAlert('Ошибка: ' + (res.data.error || 'Неизвестная ошибка'));
+          tg.showAlert('Ошибка: ' + (res.data.error || 'Неизвестно'));
         }
       } catch (err) {
         tg.showAlert('Не удалось создать заказ');
@@ -85,8 +84,8 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 20, minHeight: '100vh', background: tg.themeParams.bg_color, color: tg.themeParams.text_color }}>
-      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+    <div style={{ padding: 20, background: tg.themeParams.bg_color, color: tg.themeParams.text_color }}>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {step === 1 && (
         <>
@@ -98,30 +97,34 @@ function App() {
 
           <select name="rank" value={formData.rank} onChange={handleFormChange} style={{ width: '100%', marginBottom: 16 }}>
             <option value="">Выберите ранг</option>
-            {ranks.map(r => <option key={r} value={r}>{r}</option>)}
+            {['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'].map(r => (
+              <option key={r} value={r}>{r}</option>
+            ))}
           </select>
 
           <select name="region" value={formData.region} onChange={handleFormChange} style={{ width: '100%', marginBottom: 16 }}>
             <option value="">Выберите регион</option>
-            {regions.map(r => <option key={r} value={r}>{r}</option>)}
+            {['CIS', 'EU', 'NA', 'APAC'].map(r => (
+              <option key={r} value={r}>{r}</option>
+            ))}
           </select>
 
           <textarea
             name="wishes"
             value={formData.wishes}
             onChange={handleFormChange}
-            placeholder="Пожелания (скины, агенты, время и т.д.)"
+            placeholder="Пожелания..."
             rows={4}
             style={{ width: '100%', marginBottom: 16 }}
           />
         </>
       )}
 
-      {step === 2 && formData.service === 'account' && (
+      {step === 2 && (
         <>
-          <h2>Каталог аккаунтов</h2>
+          <h2>Доступные аккаунты</h2>
           {loading ? <p>Загрузка...</p> : accounts.length === 0 ? (
-            <p>Каталог пуст</p>
+            <p>Каталог пуст. Добавь аккаунты в базу.</p>
           ) : (
             accounts.map(acc => (
               <div key={acc._id} style={{
@@ -135,32 +138,29 @@ function App() {
                 <p>Ранг: {acc.rank}</p>
                 <p>Цена: {acc.price_rub} ₽</p>
                 <p>Регион: {acc.region}</p>
-                {acc.image_url && <img src={acc.image_url} alt={acc.title} style={{ maxWidth: '100%', borderRadius: 8 }} />}
+                {acc.image_url && <img src={acc.image_url} alt="аккаунт" style={{ maxWidth: '100%', borderRadius: 8 }} />}
                 <button
                   onClick={() => setSelectedAccount(acc)}
                   style={{ width: '100%', marginTop: 12, padding: 12, background: '#3390ec', color: 'white', border: 'none', borderRadius: 8 }}
                 >
-                  Купить
+                  Выбрать
                 </button>
               </div>
             ))
           )}
-        </>
-      )}
 
-      {selectedAccount && (
-        <div style={{ marginTop: 20, padding: 16, background: '#222', borderRadius: 12 }}>
-          <h3>Подтверждение покупки</h3>
-          <p>{selectedAccount.title}</p>
-          <p>Цена: {selectedAccount.price_rub} ₽</p>
-          <p>Ваши пожелания: {formData.wishes}</p>
-          <button
-            onClick={handleMainButtonClick}
-            style={{ width: '100%', padding: 12, background: '#28a745', color: 'white', border: 'none', borderRadius: 8 }}
-          >
-            Подтвердить заказ
-          </button>
-        </div>
+          {selectedAccount && (
+            <div style={{ marginTop: 20, padding: 16, background: '#222', borderRadius: 12 }}>
+              <h3>Подтверждение</h3>
+              <p>{selectedAccount.title}</p>
+              <p>Цена: {selectedAccount.price_rub} ₽</p>
+              <p>Пожелания: {formData.wishes}</p>
+              <button onClick={handleMainButton} style={{ width: '100%', padding: 12, background: '#28a745', color: 'white', border: 'none', borderRadius: 8 }}>
+                Подтвердить заказ
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
