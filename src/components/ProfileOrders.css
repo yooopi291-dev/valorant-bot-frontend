@@ -348,3 +348,157 @@ body.dark-theme .filter-btn.active {
   background: #ff4655;
   color: white;
 }
+.profile-orders-container {
+  padding: 16px;
+  background: white;
+  min-height: 100vh;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.orders-title {
+  font-size: 24px;
+  margin: 0;
+  color: #333;
+}
+
+.refresh-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.orders-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-btn.active {
+  background: #ff4655;
+  color: white;
+  border-color: #ff4655;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+  background: #f9f9f9;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.order-id {
+  font-weight: bold;
+  color: #333;
+}
+
+.order-status {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.order-details {
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.detail-label {
+  color: #666;
+}
+
+.detail-value {
+  font-weight: 500;
+}
+
+.detail-value.price {
+  color: #ff4655;
+  font-weight: bold;
+}
+
+.detail-value.date {
+  color: #888;
+  font-size: 14px;
+}
+
+.order-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pay-btn, .contact-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.pay-btn {
+  background: #28a745;
+  color: white;
+}
+
+.contact-btn {
+  background: #17a2b8;
+  color: white;
+}
+
+.back-btn {
+  width: 100%;
+  padding: 12px;
+  background: #ff4655;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.loading, .empty-orders {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}

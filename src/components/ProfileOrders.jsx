@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ProfileOrders.css';
+
 const tg = window.Telegram.WebApp;
 const filteredOrders = orders.filter(order => {
   if (filter === 'all') return true;
@@ -31,8 +32,8 @@ const filteredOrders = orders.filter(order => {
     ❌ Отмененные
   </button>
 </div>
-const [filter, setFilter] = useState('all'); // 'all', 'pending', 'completed', 'cancelled'
 const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
+  const [filter, setFilter] = useState('all'); // 'all', 'pending', 'completed', 'cancelled'
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed': return '#28a745';
