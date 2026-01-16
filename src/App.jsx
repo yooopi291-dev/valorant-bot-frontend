@@ -14,6 +14,9 @@ import ReferralLink from './components/ReferralLink';
 
 const tg = window.Telegram.WebApp;
 
+const regions = ['CIS', 'EU', 'NA', 'APAC'];
+const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
+
 function App() {
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
@@ -32,6 +35,7 @@ function App() {
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [discountApplied, setDiscountApplied] = useState(false);
+  const [cartValidating, setCartValidating] = useState(false);
   
   // Форма буста
   const [boostForm, setBoostForm] = useState({
@@ -41,32 +45,35 @@ function App() {
     wishes: ''
   });
   
+  // Для истории заказов
+  const [ordersLoading, setOrdersLoading] = useState(false);
+  
   const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
-  const USER_ID = tg.initDataUnsafe?.user?.id || 'unknown';
-  const USERNAME = tg.initDataUnsafe?.user?.username || '';
-  const FIRST_NAME = tg.initDataUnsafe?.user?.first_name || 'Игрок';
+  const USER_ID = tg?.initDataUnsafe?.user?.id || 'unknown';
+  const USERNAME = tg?.initDataUnsafe?.user?.username || '';
+  const FIRST_NAME = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
-    tg.ready();
-    tg.expand();
-    tg.setHeaderColor('#ff4655');
-    tg.setBackgroundColor('#f8f5f0');
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
     
     // Загрузка данных из localStorage
     loadLocalData();
     
-    // Загрузка каталога
+    // Загружаем каталог при переходе на него
     if (activeView === 'catalog' || activeView === 'home') {
       loadAccounts();
     }
     
-    // Загрузка заказов если в профиле
+    // Загружаем заказы если в профиле
     if (activeView === 'profile' && profileSubView === 'orders') {
       loadUserOrders();
     }
   }, [activeView, profileSubView]);
-
+  
   // Загрузка данных из localStorage
   const loadLocalData = () => {
     try {
@@ -116,128 +123,139 @@ function App() {
       setAccounts(res.data);
     } catch (err) {
       console.error('Ошибка загрузки аккаунтов:', err);
-      tg.showAlert('❌ Ошибка загрузки каталога');
+      if (tg) tg.showAlert('❌ Ошибка загрузки каталога');
     } finally {
       setLoading(false);
     }
   };
 
   const loadUserOrders = async () => {
-    setLoading(true);
+    setOrdersLoading(true);
     try {
       const res = await axios.get(`${BACKEND_URL}/api/orders/user/${USER_ID}`);
       setUserOrders(res.data || []);
     } catch (err) {
       console.error('Ошибка загрузки заказов:', err);
-      tg.showAlert('❌ Ошибка загрузки заказов');
+      if (tg) tg.showAlert('❌ Ошибка загрузки истории заказов');
     } finally {
-      setLoading(false);
+      setOrdersLoading(false);
     }
   };
 
   // ========== ФУНКЦИИ КОРЗИНЫ ==========
   const addToCart = (account) => {
     const existing = cart.find(item => item._id === account._id);
+    
     if (existing) {
-      const updated = cart.map(item => 
-        item._id === account._id 
+      const updatedCart = cart.map(item =>
+        item._id === account._id
           ? { ...item, quantity: item.quantity + 1 }
           : item
       );
-      setCart(updated);
-      tg.showAlert(`✅ "${account.title}" (теперь: ${existing.quantity + 1} шт.)`);
+      setCart(updatedCart);
+      if (tg) tg.showAlert(`✅ "${account.title}" (теперь: ${existing.quantity + 1} шт.)`);
     } else {
-      const newCart = [...cart, { ...account, quantity: 1 }];
+      const newCart = [...cart, { 
+        ...account, 
+        quantity: 1,
+        addedAt: new Date().toISOString()
+      }];
       setCart(newCart);
-      tg.showAlert(`✅ "${account.title}" добавлен в корзину!`);
+      if (tg) tg.showAlert(`✅ "${account.title}" добавлен в корзину!`);
     }
   };
-
-  const updateCartQuantity = (accountId, change) => {
-    const updated = cart.map(item => {
+  
+  const updateQuantity = (accountId, change) => {
+    const updatedCart = cart.map(item => {
       if (item._id === accountId) {
-        const newQty = Math.max(1, item.quantity + change);
-        return { ...item, quantity: newQty };
+        const newQuantity = Math.max(1, item.quantity + change);
+        return { ...item, quantity: newQuantity };
       }
       return item;
     });
-    setCart(updated);
+    setCart(updatedCart);
   };
-
+  
   const removeFromCart = (accountId) => {
-    const item = cart.find(i => i._id === accountId);
-    const newCart = cart.filter(i => i._id !== accountId);
+    const itemToRemove = cart.find(item => item._id === accountId);
+    const newCart = cart.filter(item => item._id !== accountId);
     setCart(newCart);
-    if (item) tg.showAlert(`🗑️ "${item.title}" удален`);
-  };
-
-  const clearCart = () => {
-    if (cart.length === 0) return;
-    if (window.confirm('Очистить всю корзину?')) {
-      setCart([]);
-      tg.showAlert('🛒 Корзина очищена');
+    if (tg && itemToRemove) {
+      tg.showAlert(`🗑️ "${itemToRemove.title}" удален из корзины`);
     }
   };
-
+  
+  const clearCart = () => {
+    if (cart.length > 0) {
+      if (window.confirm('Очистить всю корзину?')) {
+        setCart([]);
+        setDiscount(0);
+        setDiscountApplied(false);
+        setPromoCode('');
+        if (tg) tg.showAlert('🛒 Корзина очищена');
+      }
+    }
+  };
+  
   // ========== ИЗБРАННОЕ ==========
   const toggleFavorite = (account) => {
     const isFav = favorites.find(f => f._id === account._id);
     if (isFav) {
       const newFavs = favorites.filter(f => f._id !== account._id);
       setFavorites(newFavs);
-      tg.showAlert(`❤️ "${account.title}" удален из избранного`);
+      if (tg) tg.showAlert(`❤️ "${account.title}" удален из избранного`);
     } else {
       const newFavs = [...favorites, account];
       setFavorites(newFavs);
-      tg.showAlert(`⭐ "${account.title}" добавлен в избранное!`);
+      if (tg) tg.showAlert(`⭐ "${account.title}" добавлен в избранное!`);
     }
   };
-
+  
   const isFavorite = (accountId) => {
     return favorites.some(f => f._id === accountId);
   };
-
+  
   // ========== ПРОСМОТРЕННЫЕ ==========
   const addToViewed = (account) => {
-    // Убираем если уже есть
     const filtered = viewedItems.filter(item => item._id !== account._id);
-    // Добавляем в начало
-    const updated = [account, ...filtered].slice(0, 20); // максимум 20
+    const updated = [account, ...filtered].slice(0, 20);
     setViewedItems(updated);
   };
-
+  
   // ========== ПРОМОКОДЫ ==========
-  const applyPromo = async () => {
+  const applyPromoCode = async () => {
     if (!promoCode.trim()) {
-      tg.showAlert('Введите промокод');
+      if (tg) tg.showAlert('Введите промокод');
       return;
     }
+    
     if (discountApplied) {
-      tg.showAlert('Скидка уже применена');
+      if (tg) tg.showAlert('Скидка уже применена');
       return;
     }
     
     if (promoCode.trim().toLowerCase() === 'start') {
       const total = cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0);
-      const discountAmount = Math.floor(total * 0.05);
-      setDiscount(discountAmount);
+      const calculatedDiscount = Math.floor(total * 0.05);
+      
+      setDiscount(calculatedDiscount);
       setDiscountApplied(true);
-      tg.showAlert(`✅ Промокод "start" применен! Скидка: ${discountAmount} ₽`);
+      if (tg) tg.showAlert(`✅ Промокод применен! Скидка: ${calculatedDiscount} ₽`);
     } else {
-      tg.showAlert('❌ Неверный промокод');
+      if (tg) tg.showAlert('❌ Неверный промокод');
     }
   };
-
+  
   // ========== ОФОРМЛЕНИЕ ЗАКАЗА ==========
   const checkoutCart = async () => {
     if (cart.length === 0) {
-      tg.showAlert('Корзина пуста');
+      if (tg) tg.showAlert('Корзина пуста');
       return;
     }
     
     setLoading(true);
+    
     try {
-      const total = cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0) - discount;
       const orderPayload = {
         userId: USER_ID,
         items: cart.map(item => ({
@@ -248,34 +266,38 @@ function App() {
         })),
         promoCode: discountApplied ? promoCode : null,
         discount: discount,
-        total: total
+        total: cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0) - discount
       };
       
       const res = await axios.post(`${BACKEND_URL}/api/orders/cart`, orderPayload);
+      
       if (res.data.success) {
-        tg.showAlert(`✅ Заказ оформлен! Сумма: ${total} ₽`);
+        if (tg) tg.showAlert(`✅ Заказ оформлен! Сумма: ${res.data.total} ₽`);
+        
         setCart([]);
         setDiscount(0);
         setDiscountApplied(false);
         setPromoCode('');
+        
+        await loadUserOrders();
+        
         setActiveView('profile');
         setProfileSubView('orders');
-        loadUserOrders();
       } else {
-        tg.showAlert('❌ Ошибка: ' + (res.data.error || 'Не удалось оформить'));
+        if (tg) tg.showAlert('❌ Ошибка: ' + (res.data.error || 'Не удалось оформить заказ'));
       }
     } catch (err) {
-      console.error('Ошибка оформления:', err);
-      tg.showAlert('❌ Ошибка оформления');
+      console.error('Ошибка оформления заказа:', err);
+      if (tg) tg.showAlert('❌ Ошибка оформления заказа. Попробуйте позже.');
     } finally {
       setLoading(false);
     }
   };
-
+  
   // ========== БУСТ ==========
   const submitBoost = async () => {
     if (!boostForm.fromRank || !boostForm.toRank || !boostForm.region) {
-      tg.showAlert('Заполните все поля');
+      if (tg) tg.showAlert('Заполните все поля');
       return;
     }
     
@@ -291,36 +313,58 @@ function App() {
       
       const res = await axios.post(`${BACKEND_URL}/api/orders/boost`, payload);
       if (res.data.success) {
-        tg.showAlert('✅ Заказ буста создан! Свяжитесь с менеджером.');
+        if (tg) tg.showAlert('✅ Заказ буста создан! Свяжитесь с менеджером.');
         setBoostForm({ fromRank: '', toRank: '', region: '', wishes: '' });
         setActiveView('profile');
         setProfileSubView('orders');
         loadUserOrders();
       } else {
-        tg.showAlert('❌ Ошибка: ' + res.data.error);
+        if (tg) tg.showAlert('❌ Ошибка: ' + res.data.error);
       }
     } catch (err) {
       console.error('Ошибка буста:', err);
-      tg.showAlert('❌ Ошибка создания заказа');
+      if (tg) tg.showAlert('❌ Ошибка создания заказа');
     } finally {
       setLoading(false);
     }
   };
-
+  
   // ========== ВСПОМОГАТЕЛЬНЫЕ ==========
   const getCartTotal = () => {
     return cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0);
   };
-
+  
   const getFinalTotal = () => {
     return Math.max(0, getCartTotal() - discount);
   };
-
+  
   const handleViewDetails = (account) => {
     setSelectedAccount(account);
     addToViewed(account);
-    // Здесь можно открыть модалку или отдельную страницу
-    tg.showAlert(`📱 ${account.title}\nРанг: ${account.rank}\nЦена: ${account.price_rub} ₽`);
+    if (tg) tg.showAlert(`📱 ${account.title}\nРанг: ${account.rank}\nЦена: ${account.price_rub} ₽`);
+  };
+
+  const handleProfileAction = (action) => {
+    switch (action) {
+      case 'orders':
+        loadUserOrders();
+        setProfileSubView('orders');
+        break;
+      case 'settings':
+        setProfileSubView('settings');
+        break;
+      case 'viewed':
+        setProfileSubView('viewed');
+        break;
+      case 'support':
+        if (tg) tg.openLink('https://t.me/ricksxxx');
+        break;
+      case 'community':
+        if (tg) tg.openLink('https://t.me/valorant_servicebot');
+        break;
+      default:
+        setProfileSubView('menu');
+    }
   };
 
   // ========== RENDER ==========
@@ -372,7 +416,7 @@ function App() {
             <div className="quick-actions">
               <button 
                 className="action-btn"
-                onClick={() => setActiveView('boost')}
+                onClick={() => setActiveView('catalog')}
               >
                 🚀 Заказать буст
               </button>
@@ -494,13 +538,13 @@ function App() {
                       <div className="cart-item-actions">
                         <div className="quantity-controls">
                           <button 
-                            onClick={() => updateCartQuantity(item._id, -1)}
+                            onClick={() => updateQuantity(item._id, -1)}
                             disabled={item.quantity <= 1}
                           >
                             −
                           </button>
                           <span>{item.quantity}</span>
-                          <button onClick={() => updateCartQuantity(item._id, 1)}>+</button>
+                          <button onClick={() => updateQuantity(item._id, 1)}>+</button>
                         </div>
                         <button 
                           className="remove-btn"
@@ -525,7 +569,7 @@ function App() {
                       disabled={discountApplied}
                     />
                     <button 
-                      onClick={applyPromo}
+                      onClick={applyPromoCode}
                       disabled={discountApplied}
                       className={discountApplied ? 'applied' : ''}
                     >
@@ -603,7 +647,7 @@ function App() {
                   onChange={(e) => setBoostForm({...boostForm, fromRank: e.target.value})}
                 >
                   <option value="">Выберите ранг</option>
-                  {['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'].map(rank => (
+                  {ranks.map(rank => (
                     <option key={rank} value={rank}>{rank}</option>
                   ))}
                 </select>
@@ -616,7 +660,7 @@ function App() {
                   onChange={(e) => setBoostForm({...boostForm, toRank: e.target.value})}
                 >
                   <option value="">Выберите ранг</option>
-                  {['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'].map(rank => (
+                  {ranks.slice(1).map(rank => (
                     <option key={rank} value={rank}>{rank}</option>
                   ))}
                 </select>
@@ -629,7 +673,7 @@ function App() {
                   onChange={(e) => setBoostForm({...boostForm, region: e.target.value})}
                 >
                   <option value="">Выберите регион</option>
-                  {['CIS', 'EU', 'NA', 'APAC'].map(region => (
+                  {regions.map(region => (
                     <option key={region} value={region}>{region}</option>
                   ))}
                 </select>
@@ -672,7 +716,7 @@ function App() {
             return (
               <ProfileOrders 
                 orders={userOrders}
-                loading={loading}
+                loading={ordersLoading}
                 onBack={() => setProfileSubView('menu')}
                 onRefresh={loadUserOrders}
               />
@@ -705,18 +749,7 @@ function App() {
                 favoritesCount={favorites.length}
                 viewedCount={viewedItems.length}
                 cartCount={cart.length}
-                onSelect={(view) => {
-                  if (view === 'orders' || view === 'settings' || view === 'viewed') {
-                    setProfileSubView(view);
-                    if (view === 'orders') loadUserOrders();
-                  } else if (view === 'support') {
-                    tg.openLink('https://t.me/ricksxxx');
-                  } else if (view === 'community') {
-                    tg.openLink('https://t.me/valorant_servicebot');
-                  } else if (view === 'referral') {
-                    // Рефералка уже в компоненте
-                  }
-                }}
+                onSelect={handleProfileAction}
                 referralComponent={
                   <ReferralLink 
                     userId={USER_ID}
@@ -747,36 +780,9 @@ function App() {
         activeView={activeView}
         onNavigate={setActiveView}
         cartCount={cart.length}
-        onProfileNavigate={(view) => {
-          if (view !== 'profile') {
-            setActiveView(view);
-          } else {
-            setActiveView('profile');
-            setProfileSubView('menu');
-          }
-        }}
       />
     </div>
   );
 }
 
 export default App;
-<input
-  type="text"
-  value={promoCode}
-  onChange={(e) => {
-    setPromoCode(e.target.value);
-    setPromoError(''); // Очищаем ошибку при вводе
-  }}
-  placeholder="Введите промокод"
-  style={{
-    flex: 1,
-    padding: '14px',
-    border: '1px solid #e5e5e5',
-    borderRadius: '12px',
-    background: 'white',
-    color: '#0f1923',
-    fontSize: '16px'
-  }}
-  disabled={discountApplied}
-/>
