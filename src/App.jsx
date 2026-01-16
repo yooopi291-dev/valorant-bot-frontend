@@ -1,4 +1,9 @@
+<div style={{position:'fixed', top:0, left:0, zIndex:9999, background:'#000', color:'#fff', padding:'4px 8px', fontSize:12}}>
+  BUILD: test-123
+</div>
+
 import { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import './App.css';
 
