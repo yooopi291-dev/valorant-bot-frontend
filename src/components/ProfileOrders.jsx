@@ -1,6 +1,37 @@
 import React from 'react';
 import './ProfileOrders.css';
-
+const tg = window.Telegram.WebApp;
+const filteredOrders = orders.filter(order => {
+  if (filter === 'all') return true;
+  return order.status === filter;
+});
+<div className="orders-filter">
+  <button 
+    className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+    onClick={() => setFilter('all')}
+  >
+    Все
+  </button>
+  <button 
+    className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
+    onClick={() => setFilter('pending')}
+  >
+    ⏳ Ожидают
+  </button>
+  <button 
+    className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+    onClick={() => setFilter('completed')}
+  >
+    ✅ Выполненные
+  </button>
+  <button 
+    className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
+    onClick={() => setFilter('cancelled')}
+  >
+    ❌ Отмененные
+  </button>
+</div>
+const [filter, setFilter] = useState('all'); // 'all', 'pending', 'completed', 'cancelled'
 const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
   const getStatusColor = (status) => {
     switch (status) {
@@ -122,15 +153,26 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
                 </div>
 
                 {order.status === 'pending' && (
-                  <div className="order-actions">
-                    <button className="btn pay-btn">
-                      💳 Оплатить
-                    </button>
-                    <button className="btn contact-btn">
-                      💬 Связаться с менеджером
-                    </button>
-                  </div>
-                )}
+  <div className="order-actions">
+    <button 
+      className="btn pay-btn"
+      onClick={() => {
+        tg.showAlert('Для оплаты свяжитесь с менеджером @ricksxxx');
+        tg.openLink('https://t.me/ricksxxx');
+      }}
+    >
+      💳 Оплатить
+    </button>
+    <button 
+      className="btn contact-btn"
+      onClick={() => {
+        tg.openLink('https://t.me/ricksxxx');
+      }}
+    >
+      💬 Связаться с менеджером
+    </button>
+  </div>
+)}
 
                 {order.status === 'completed' && order.account_id && (
                   <div className="order-success">

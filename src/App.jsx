@@ -761,3 +761,22 @@ function App() {
 }
 
 export default App;
+<input
+  type="text"
+  value={promoCode}
+  onChange={(e) => {
+    setPromoCode(e.target.value);
+    setPromoError(''); // Очищаем ошибку при вводе
+  }}
+  placeholder="Введите промокод"
+  style={{
+    flex: 1,
+    padding: '14px',
+    border: '1px solid #e5e5e5',
+    borderRadius: '12px',
+    background: 'white',
+    color: '#0f1923',
+    fontSize: '16px'
+  }}
+  disabled={discountApplied}
+/>

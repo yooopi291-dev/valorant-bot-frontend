@@ -22,9 +22,30 @@ const ProductCard = ({
             }}
           />
         ) : (
-          <div className="product-image-placeholder">
-            <span className="placeholder-text">{account.title.charAt(0)}</span>
+          // ЗАМЕНИТЕ весь блок с картинкой:
+<div className="product-image-container">
+  {account.image_url && account.image_url.startsWith('http') ? (
+    <img 
+      src={account.image_url} 
+      alt={account.title}
+      className="product-image"
+      onError={(e) => {
+        e.target.style.display = 'none';
+        e.target.parentElement.innerHTML = `
+          <div class="image-fallback">
+            <span>${account.title.charAt(0)}</span>
           </div>
+        `;
+      }}
+    />
+  ) : (
+    <div className="image-fallback">
+      <span>{account.title.charAt(0)}</span>
+    </div>
+  )}
+  
+  {/* Остальной код... */}
+</div>
         )}
         
         <button 

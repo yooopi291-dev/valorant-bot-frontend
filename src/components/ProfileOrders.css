@@ -305,3 +305,46 @@
   background: #e03e4c;
   transform: translateY(-1px);
 }
+.orders-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.filter-btn {
+  padding: 10px 16px;
+  border: 1px solid #e5e5e5;
+  background: white;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: #ff4655;
+  color: #ff4655;
+}
+
+.filter-btn.active {
+  background: #ff4655;
+  color: white;
+  border-color: #ff4655;
+}
+
+/* Темная тема для фильтров */
+body.dark-theme .filter-btn {
+  background: #1a2a3a;
+  border-color: #2d3d4d;
+  color: #b0b0b0;
+}
+
+body.dark-theme .filter-btn.active {
+  background: #ff4655;
+  color: white;
+}

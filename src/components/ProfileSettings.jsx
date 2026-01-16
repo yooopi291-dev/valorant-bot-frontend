@@ -1,6 +1,46 @@
 import React, { useState } from 'react';
 import './ProfileSettings.css';
 
+// В начало ProfileSettings.jsx добавьте:
+const [isDarkMode, setIsDarkMode] = useState(false);
+
+useEffect(() => {
+  const savedTheme = localStorage.getItem('valorant_theme');
+  if (savedTheme === 'dark') {
+    setIsDarkMode(true);
+    document.body.classList.add('dark-theme');
+  }
+}, []);
+
+const toggleTheme = () => {
+  const newTheme = !isDarkMode;
+  setIsDarkMode(newTheme);
+  
+  if (newTheme) {
+    document.body.classList.add('dark-theme');
+    localStorage.setItem('valorant_theme', 'dark');
+  } else {
+    document.body.classList.remove('dark-theme');
+    localStorage.setItem('valorant_theme', 'light');
+  }
+};
+
+// В JSX замените переключатель темной темы:
+<div className="setting-item">
+  <div className="setting-info">
+    <h4 className="setting-title">Тёмная тема</h4>
+    <p className="setting-description">Переключение темы оформления</p>
+  </div>
+  <label className="switch">
+    <input 
+      type="checkbox" 
+      checked={isDarkMode}
+      onChange={toggleTheme}
+    />
+    <span className="slider"></span>
+  </label>
+</div>
+
 const ProfileSettings = ({ user, onBack }) => {
   const [settings, setSettings] = useState({
     notifications: true,
