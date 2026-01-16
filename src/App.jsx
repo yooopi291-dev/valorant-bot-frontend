@@ -1,544 +1,197 @@
-import React, { useState, useEffect } from 'react';
-import WebApp from '@twa-dev/sdk';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Container,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
-  Button,
-  Chip,
-  Box,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  CircularProgress,
-  Snackbar,
-  Alert,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Divider,
-  Badge,
-  Tabs,
-  Tab,
-  Paper,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-} from '@mui/material';
-import {
-  ShoppingCart,
-  AccountCircle,
-  Home,
-  Search,
-  Payment,
-  Security,
-  CheckCircle,
-  Public,
-  MilitaryTech,
-  Email,
-  Star,
-  ShoppingBag,
-  FilterList,
-  ArrowBack,
-  MonetizationOn,
-} from '@mui/icons-material';
 
-// API URL — твой бэкенд на Render
-const API_BASE_URL = 'https://valorant-bot-backend.onrender.com';
+const tg = window.Telegram.WebApp;
 
-// Цвета рангов (как в боте)
-const getRankColor = (rank) => {
-  if (!rank) return '#1976d2';
-  const rankColors = {
-    Iron: '#727272',
-    Bronze: '#CD7F32',
-    Silver: '#C0C0C0',
-    Gold: '#FFD700',
-    Platinum: '#00CED1',
-    Diamond: '#B9F2FF',
-    Ascendant: '#FF6B6B',
-    Immortal: '#8A2BE2',
-    Radiant: '#FFD700',
+const regions = ['CIS', 'EU', 'NA', 'APAC'];
+const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
+
+function App() {
+  const [view, setView] = useState('menu'); // 'menu', 'catalog', 'details', 'boost', 'orders', 'profile'
+  const [accounts, setAccounts] = useState([]); // аккаунты с бэкенда
+  const [selectedAccount, setSelectedAccount] = useState(null); // выбранный аккаунт
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({ rank: '', region: '', wishes: '' });
+
+  const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
+
+  useEffect(() => {
+    tg.ready();
+    tg.expand();
+
+    // Загружаем каталог, когда переходим на него
+    if (view === 'catalog') {
+      loadAccounts();
+    }
+  }, [view]);
+
+  const loadAccounts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axios.get(`${BACKEND_URL}/api/accounts`);
+      setAccounts(res.data);
+    } catch (err) {
+      console.error('Ошибка загрузки аккаунтов:', err);
+      setError('Не удалось загрузить каталог');
+    }
+    setLoading(false);
   };
-  const rankName = rank.split(' ')[0];
-  return rankColors[rankName] || '#1976d2';
-};
 
-const formatPrice = (rubPrice) => {
-  if (!rubPrice) return '0₽';
-  const usdPrice = (rubPrice / 95).toFixed(2);
-  return `${rubPrice}₽ ($${usdPrice})`;
-};
+  const handleFormChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const submitBoost = async () => {
+    try {
+      const payload = {
+        initData: tg.initData,
+        userId: tg.initDataUnsafe?.user?.id || 'unknown',
+        fromRank: formData.rank,
+        region: formData.region,
+        wishes: formData.wishes,
+      };
+
+      const res = await axios.post(`${BACKEND_URL}/api/orders/boost`, payload);
+      if (res.data.success) {
+        tg.showAlert('Заказ буста создан!');
+        setView('menu');
+      } else {
+        tg.showAlert('Ошибка: ' + res.data.error);
+      }
+    } catch (err) {
+      tg.showAlert('Не удалось создать заказ буста');
+    }
+  };
+
+  const buyAccount = async () => {
+    if (!selectedAccount) return;
+
+    try {
+      const payload = {
+        initData: tg.initData,
+        userId: tg.initDataUnsafe?.user?.id || 'unknown',
+        accountId: selectedAccount._id,
+      };
+
+      const res = await axios.post(`${BACKEND_URL}/api/orders/account`, payload);
+      if (res.data.success) {
+        tg.showAlert('Заказ на аккаунт создан! Ожидайте подтверждения.');
+        setView('menu');
+      } else {
+        tg.showAlert('Ошибка: ' + res.data.error);
+      }
+    } catch (err) {
+      tg.showAlert('Не удалось создать заказ');
+    }
+  };
 
   return (
-    <div hidden={value !== index} {...other}>
-      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
+    <div style={{ padding: 16, minHeight: '100vh', background: tg.themeParams.bg_color || '#000', color: tg.themeParams.text_color || '#fff' }}>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+
+      {view === 'menu' && (
+        <div style={{ textAlign: 'center' }}>
+          <h1>Valorant Service</h1>
+          <button onClick={() => setView('catalog')} style={buttonStyle}>🛒 Каталог аккаунтов</button>
+          <button onClick={() => setView('boost')} style={buttonStyle}>🚀 Заказать буст</button>
+          <button onClick={() => setView('orders')} style={buttonStyle}>📦 Мои заказы</button>
+          <button onClick={() => setView('profile')} style={buttonStyle}>👤 Профиль</button>
+        </div>
+      )}
+
+      {view === 'catalog' && (
+        <>
+          <h2>Каталог аккаунтов</h2>
+          {loading ? <p>Загрузка...</p> : accounts.length === 0 ? (
+            <p>Каталог пуст</p>
+          ) : (
+            accounts.map(acc => (
+              <div key={acc._id} style={cardStyle}>
+                <h3>{acc.title}</h3>
+                <p>Ранг: {acc.rank}</p>
+                <p>Цена: {acc.price_rub} ₽</p>
+                <p>Регион: {acc.region}</p>
+                {acc.image_url && <img src={acc.image_url} alt={acc.title} style={{ width: '100%', borderRadius: 8 }} />}
+                <button onClick={() => {
+                  setSelectedAccount(acc);
+                  setView('details');
+                }} style={buttonStyle}>Просмотреть</button>
+              </div>
+            ))
+          )}
+          <button onClick={() => setView('menu')} style={buttonStyle}>Назад в меню</button>
+        </>
+      )}
+
+      {view === 'details' && selectedAccount && (
+        <>
+          <h2>{selectedAccount.title}</h2>
+          <p>Ранг: {selectedAccount.rank}</p>
+          <p>Цена: {selectedAccount.price_rub} ₽</p>
+          <p>Регион: {selectedAccount.region}</p>
+          <p>Описание: {selectedAccount.description || 'Нет'}</p>
+          {selectedAccount.image_url && <img src={selectedAccount.image_url} alt={selectedAccount.title} style={{ width: '100%' }} />}
+          <button onClick={buyAccount} style={buttonStyle}>Купить</button>
+          <button onClick={() => setView('catalog')} style={buttonStyle}>Назад</button>
+        </>
+      )}
+
+      {view === 'boost' && (
+        <>
+          <h2>Заказать буст</h2>
+          <select name="rank" value={formData.rank} onChange={handleFormChange}>
+            <option value="">Выберите ранг</option>
+            {ranks.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <select name="region" value={formData.region} onChange={handleFormChange}>
+            <option value="">Выберите регион</option>
+            {regions.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+          <textarea name="wishes" value={formData.wishes} onChange={handleFormChange} placeholder="Пожелания..." />
+          <button onClick={submitBoost} style={buttonStyle}>Отправить заказ</button>
+          <button onClick={() => setView('menu')} style={buttonStyle}>Назад</button>
+        </>
+      )}
+
+      {view === 'orders' && (
+        <>
+          <h2>Мои заказы</h2>
+          <p>Пока нет заказов (добавим позже)</p>
+          <button onClick={() => setView('menu')} style={buttonStyle}>Назад</button>
+        </>
+      )}
+
+      {view === 'profile' && (
+        <>
+          <h2>Профиль</h2>
+          <p>ID: {tg.initDataUnsafe?.user?.id || 'Неизвестно'}</p>
+          <button onClick={() => setView('menu')} style={buttonStyle}>Назад</button>
+        </>
+      )}
     </div>
   );
 }
 
-const App = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [user, setUser] = useState(null);
-  const [accounts, setAccounts] = useState([]);
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedAccount, setSelectedAccount] = useState(null);
-  const [showAccountDialog, setShowAccountDialog] = useState(false);
-  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
-  const [searchQuery, setSearchQuery] = useState('');
+const buttonStyle = {
+  width: '100%',
+  marginBottom: '12px',
+  padding: '12px',
+  background: '#3390ec',
+  color: 'white',
+  border: 'none',
+  borderRadius: '8px',
+  fontSize: '16px',
+  cursor: 'pointer'
+};
 
-  useEffect(() => {
-    console.log('Mini App инициализируется...');
-
-    // Инициализация Telegram Web App
-    if (window.Telegram?.WebApp) {
-      const tg = WebApp;
-      tg.ready();
-      tg.expand();
-
-      const initData = tg.initDataUnsafe;
-      console.log('Telegram user:', initData.user);
-
-      if (initData.user) {
-        const tgUser = {
-          id: initData.user.id,
-          firstName: initData.user.first_name,
-          lastName: initData.user.last_name || '',
-          username: initData.user.username,
-          isPremium: initData.user.is_premium || false,
-        };
-        setUser(tgUser);
-        loadData(tgUser.id);
-      } else {
-        // Демо-режим
-        const demoUser = { id: 123456789, firstName: 'Демо', username: 'demo_user' };
-        setUser(demoUser);
-        loadData(demoUser.id);
-      }
-    } else {
-      console.log('Запуск в браузере (демо-режим)');
-      const demoUser = { id: 123456789, firstName: 'Демо', username: 'demo_user' };
-      setUser(demoUser);
-      loadData(demoUser.id);
-    }
-  }, []);
-
-  const loadData = async (userId) => {
-    setLoading(true);
-    try {
-      // Загрузка аккаунтов
-      const accountsRes = await axios.get(`${API_BASE_URL}/api/accounts`);
-      const availableAccounts = accountsRes.data.filter(acc => !acc.is_sold);
-      setAccounts(availableAccounts);
-
-      // Загрузка заказов (если есть такой endpoint)
-      try {
-        const ordersRes = await axios.get(`${API_BASE_URL}/api/orders/user/${userId}`);
-        setOrders(ordersRes.data);
-      } catch (orderError) {
-        console.log('Заказы не загрузились:', orderError.message);
-      }
-    } catch (error) {
-      console.error('Ошибка загрузки данных:', error);
-      showNotification('Используются демо-данные', 'info');
-      setAccounts(getDemoAccounts());
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDemoAccounts = () => [
-    {
-      _id: 'demo1',
-      title: 'Аккаунт Radiant с Prime Vandal',
-      rank: 'Radiant 450 RR',
-      price_rub: 25000,
-      region: 'EU',
-      description: 'Премиум аккаунт с коллекцией скинов',
-      skins: ['Prime Vandal', 'Reaver Knife'],
-      agents: ['Jett', 'Reyna'],
-      level: 156,
-      is_sold: false,
-    },
-    {
-      _id: 'demo2',
-      title: 'Immortal 3 с полной коллекцией',
-      rank: 'Immortal 3',
-      price_rub: 15000,
-      region: 'CIS',
-      description: 'Все агенты разблокированы',
-      skins: ['Glitchpop Phantom', 'Oni Phantom'],
-      agents: ['Все агенты'],
-      level: 203,
-      is_sold: false,
-    },
-  ];
-
-  const showNotification = (message, severity = 'info') => {
-    setNotification({ open: true, message, severity });
-  };
-
-  const handleBuyAccount = (account) => {
-    setSelectedAccount(account);
-    setShowAccountDialog(true);
-  };
-
-  const handleConfirmPurchase = () => {
-    showNotification('Свяжитесь с менеджером @ricksxxx для оплаты', 'success');
-    setShowPaymentDialog(false);
-
-    // Открываем чат с менеджером
-    window.open('https://t.me/ricksxxx', '_blank');
-  };
-
-  const renderCatalog = () => {
-    if (loading) {
-      return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
-          <CircularProgress />
-        </Box>
-      );
-    }
-
-    const filteredAccounts = accounts.filter(account =>
-      !searchQuery ||
-      account.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      account.rank.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    return (
-      <>
-        <Box sx={{ p: 2 }}>
-          <TextField
-            fullWidth
-            placeholder="Поиск аккаунтов..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            InputProps={{
-              startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
-            }}
-            sx={{ mb: 2 }}
-          />
-        </Box>
-
-        {filteredAccounts.length === 0 ? (
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <Typography color="text.secondary">Аккаунты не найдены</Typography>
-          </Box>
-        ) : (
-          <Grid container spacing={2} sx={{ p: 2, pb: 10 }}>
-            {filteredAccounts.map(account => (
-              <Grid item xs={12} sm={6} key={account._id}>
-                <Card sx={{ height: '100%' }}>
-                  {account.image_url && (
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={account.image_url}
-                      alt={account.title}
-                    />
-                  )}
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {account.title}
-                    </Typography>
-
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Chip
-                        label={account.rank}
-                        sx={{
-                          bgcolor: getRankColor(account.rank),
-                          color: 'white',
-                          mr: 1,
-                        }}
-                      />
-                      <Chip label={account.region} size="small" />
-                    </Box>
-
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      {account.description || 'Описание отсутствует'}
-                    </Typography>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="h6" color="primary">
-                        {formatPrice(account.price_rub)}
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={() => {
-                          setSelectedAccount(account);
-                          setShowAccountDialog(true);
-                        }}
-                      >
-                        Подробнее
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </>
-    );
-  };
-
-  const renderBoost = () => {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6" gutterBottom>
-          Заказать буст
-        </Typography>
-        <TextField
-          fullWidth
-          label="Текущий ранг"
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="Желаемый ранг"
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label="Регион"
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          multiline
-          rows={3}
-          label="Пожелания"
-          variant="outlined"
-          sx={{ mb: 2 }}
-        />
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => showNotification('Свяжитесь с менеджером @ricksxxx для оформления буста', 'success')}
-        >
-          Оформить заказ
-        </Button>
-      </Box>
-    );
-  };
-
-  const renderOrders = () => {
-    return (
-      <Box sx={{ p: 2 }}>
-        {orders.length === 0 ? (
-          <Box sx={{ textAlign: 'center', py: 4 }}>
-            <ShoppingBag sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary">
-              У вас пока нет заказов
-            </Typography>
-          </Box>
-        ) : (
-          <List>
-            {orders.map(order => (
-              <Card key={order._id} sx={{ mb: 2 }}>
-                <CardContent>
-                  <Typography variant="h6">
-                    Заказ #{order._id?.slice(-6) || 'N/A'}
-                  </Typography>
-                  <Typography color="text.secondary">
-                    Статус: {order.status === 'completed' ? '✅ Выполнен' : '⏳ В обработке'}
-                  </Typography>
-                  <Typography color="text.secondary">
-                    Сумма: {formatPrice(order.amount_rub)}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
-          </List>
-        )}
-      </Box>
-    );
-  };
-
-  const renderProfile = () => {
-    if (!user) return null;
-
-    return (
-      <Box sx={{ p: 2 }}>
-        <Card>
-          <CardContent>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Avatar sx={{ width: 60, height: 60, mr: 2, bgcolor: 'primary.main' }}>
-                {user.firstName?.[0] || 'U'}
-              </Avatar>
-              <Box>
-                <Typography variant="h5">
-                  {user.firstName} {user.lastName}
-                </Typography>
-                <Typography color="text.secondary">
-                  @{user.username || 'без username'}
-                </Typography>
-              </Box>
-            </Box>
-
-            <Divider sx={{ my: 2 }} />
-
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={() => window.open('https://t.me/ricksxxx', '_blank')}
-              sx={{ mb: 1 }}
-              startIcon={<Email />}
-            >
-              Связаться с поддержкой
-            </Button>
-          </CardContent>
-        </Card>
-      </Box>
-    );
-  };
-
-  return (
-    <Container maxWidth="md" disableGutters sx={{ height: '100vh' }}>
-      {/* Верхний бар */}
-      <AppBar position="sticky">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Valorant Accounts
-          </Typography>
-          <IconButton color="inherit" onClick={() => setActiveTab(1)}>
-            <Badge badgeContent={orders.length} color="error">
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit" onClick={() => setActiveTab(2)}>
-            <AccountCircle />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      {/* Табы */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)} centered>
-          <Tab icon={<Home />} label="Каталог" />
-          <Tab icon={<ShoppingCart />} label="Заказы" />
-          <Tab icon={<AccountCircle />} label="Профиль" />
-        </Tabs>
-      </Box>
-
-      {/* Контент */}
-      <TabPanel value={activeTab} index={0}>
-        {renderCatalog()}
-      </TabPanel>
-      <TabPanel value={activeTab} index={1}>
-        {renderOrders()}
-      </TabPanel>
-      <TabPanel value={activeTab} index={2}>
-        {renderProfile()}
-      </TabPanel>
-
-      {/* Диалог аккаунта */}
-      <Dialog open={showAccountDialog} onClose={() => setShowAccountDialog(false)} maxWidth="sm" fullWidth>
-        {selectedAccount && (
-          <>
-            <DialogTitle>{selectedAccount.title}</DialogTitle>
-            <DialogContent>
-              <Box sx={{ mb: 2 }}>
-                <Chip
-                  label={selectedAccount.rank}
-                  sx={{
-                    bgcolor: getRankColor(selectedAccount.rank),
-                    color: 'white',
-                    mr: 1,
-                  }}
-                />
-                <Chip label={selectedAccount.region} />
-              </Box>
-
-              <Typography paragraph>{selectedAccount.description}</Typography>
-
-              {selectedAccount.skins && selectedAccount.skins.length > 0 && (
-                <>
-                  <Typography variant="subtitle2" gutterBottom>Скины:</Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mb: 2 }}>
-                    {selectedAccount.skins.map((skin, idx) => (
-                      <Chip key={idx} label={skin} size="small" />
-                    ))}
-                  </Box>
-                </>
-              )}
-
-              <Typography variant="h5" color="primary" gutterBottom>
-                {formatPrice(selectedAccount.price_rub)}
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setShowAccountDialog(false)}>Закрыть</Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  setShowAccountDialog(false);
-                  handleBuyAccount(selectedAccount);
-                }}
-              >
-                Купить
-              </Button>
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
-
-      {/* Диалог оплаты */}
-      <Dialog open={showPaymentDialog} onClose={() => setShowPaymentDialog(false)}>
-        <DialogTitle>Подтверждение покупки</DialogTitle>
-        <DialogContent>
-          {selectedAccount && (
-            <>
-              <Typography variant="h6" gutterBottom>
-                {selectedAccount.title}
-              </Typography>
-              <Typography color="primary" gutterBottom>
-                {formatPrice(selectedAccount.price_rub)}
-              </Typography>
-              <Typography variant="body2" paragraph>
-                Для завершения покупки свяжитесь с менеджером @ricksxxx
-              </Typography>
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowPaymentDialog(false)}>Отмена</Button>
-          <Button variant="contained" onClick={handleConfirmPurchase}>
-            Перейти к оплате
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Уведомления */}
-      <Snackbar
-        open={notification.open}
-        autoHideDuration={6000}
-        onClose={() => setNotification({ ...notification, open: false })}
-      >
-        <Alert severity={notification.severity}>
-          {notification.message}
-        </Alert>
-      </Snackbar>
-    </Container>
-  );
+const cardStyle = {
+  border: '1px solid #444',
+  padding: '16px',
+  marginBottom: '16px',
+  borderRadius: '12px',
+  background: '#222'
 };
 
 export default App;
