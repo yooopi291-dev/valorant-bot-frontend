@@ -28,10 +28,10 @@ import {
   Tab,
   Paper,
   Avatar,
-  CardActions,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ListItemAvatar,
 } from '@mui/material';
 import {
   ShoppingCart,
@@ -47,13 +47,40 @@ import {
   Star,
   ShoppingBag,
   FilterList,
-  ArrowBack
+  ArrowBack,
+  MonetizationOn,
 } from '@mui/icons-material';
 
-// Определяем API URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://valorant-bot-backend.onrender.com';
+// API URL — твой бэкенд на Render
+const API_BASE_URL = 'https://valorant-bot-backend.onrender.com';
 
-function TabPanel({ children, value, index, ...other }) {
+// Цвета рангов (как в боте)
+const getRankColor = (rank) => {
+  if (!rank) return '#1976d2';
+  const rankColors = {
+    Iron: '#727272',
+    Bronze: '#CD7F32',
+    Silver: '#C0C0C0',
+    Gold: '#FFD700',
+    Platinum: '#00CED1',
+    Diamond: '#B9F2FF',
+    Ascendant: '#FF6B6B',
+    Immortal: '#8A2BE2',
+    Radiant: '#FFD700',
+  };
+  const rankName = rank.split(' ')[0];
+  return rankColors[rankName] || '#1976d2';
+};
+
+const formatPrice = (rubPrice) => {
+  if (!rubPrice) return '0₽';
+  const usdPrice = (rubPrice / 95).toFixed(2);
+  return `${rubPrice}₽ ($${usdPrice})`;
+};
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
   return (
     <div hidden={value !== index} {...other}>
       {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
@@ -62,97 +89,72 @@ function TabPanel({ children, value, index, ...other }) {
 }
 
 const App = () => {
+  const [activeTab, setActiveTab] = useState(0);
   const [user, setUser] = useState(null);
   const [accounts, setAccounts] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [showAccountDialog, setShowAccountDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
   const [notification, setNotification] = useState({ open: false, message: '', severity: 'info' });
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    console.log('App initializing...');
-    
-    // Инициализация Telegram WebApp
+    console.log('Mini App инициализируется...');
+
+    // Инициализация Telegram Web App
     if (window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp;
+      const tg = WebApp;
       tg.ready();
       tg.expand();
-      
+
       const initData = tg.initDataUnsafe;
       console.log('Telegram user:', initData.user);
-      
+
       if (initData.user) {
         const tgUser = {
           id: initData.user.id,
           firstName: initData.user.first_name,
           lastName: initData.user.last_name || '',
           username: initData.user.username,
-          isPremium: initData.user.is_premium || false
+          isPremium: initData.user.is_premium || false,
         };
         setUser(tgUser);
         loadData(tgUser.id);
       } else {
-        // Демо режим для тестирования
-        const demoUser = {
-          id: 123456789,
-          firstName: 'Демо',
-          lastName: 'Пользователь',
-          username: 'demo_user'
-        };
+        // Демо-режим
+        const demoUser = { id: 123456789, firstName: 'Демо', username: 'demo_user' };
         setUser(demoUser);
         loadData(demoUser.id);
       }
     } else {
-      console.log('Running in browser mode');
-      const demoUser = {
-        id: 123456789,
-        firstName: 'Демо',
-        lastName: 'Пользователь',
-        username: 'demo_user'
-      };
+      console.log('Запуск в браузере (демо-режим)');
+      const demoUser = { id: 123456789, firstName: 'Демо', username: 'demo_user' };
       setUser(demoUser);
       loadData(demoUser.id);
     }
   }, []);
 
   const loadData = async (userId) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      // Загружаем аккаунты
+      // Загрузка аккаунтов
       const accountsRes = await axios.get(`${API_BASE_URL}/api/accounts`);
-      console.log('Loaded accounts:', accountsRes.data);
-      
-      if (Array.isArray(accountsRes.data)) {
-        const availableAccounts = accountsRes.data.filter(acc => acc && !acc.is_sold);
-        setAccounts(availableAccounts);
-        
-        if (availableAccounts.length === 0) {
-          // Демо данные если нет реальных
-          setAccounts(getDemoAccounts());
-        }
-      } else {
-        setAccounts(getDemoAccounts());
-      }
-      
-      // Пытаемся загрузить заказы
+      const availableAccounts = accountsRes.data.filter(acc => !acc.is_sold);
+      setAccounts(availableAccounts);
+
+      // Загрузка заказов (если есть такой endpoint)
       try {
         const ordersRes = await axios.get(`${API_BASE_URL}/api/orders/user/${userId}`);
-        if (Array.isArray(ordersRes.data)) {
-          setOrders(ordersRes.data);
-        }
+        setOrders(ordersRes.data);
       } catch (orderError) {
-        console.log('Could not load orders:', orderError.message);
+        console.log('Заказы не загрузились:', orderError.message);
       }
-      
     } catch (error) {
-      console.error('Error loading data:', error);
-      setAccounts(getDemoAccounts());
+      console.error('Ошибка загрузки данных:', error);
       showNotification('Используются демо-данные', 'info');
+      setAccounts(getDemoAccounts());
     } finally {
       setLoading(false);
     }
@@ -169,7 +171,7 @@ const App = () => {
       skins: ['Prime Vandal', 'Reaver Knife'],
       agents: ['Jett', 'Reyna'],
       level: 156,
-      is_sold: false
+      is_sold: false,
     },
     {
       _id: 'demo2',
@@ -181,49 +183,28 @@ const App = () => {
       skins: ['Glitchpop Phantom', 'Oni Phantom'],
       agents: ['Все агенты'],
       level: 203,
-      is_sold: false
-    }
+      is_sold: false,
+    },
   ];
 
   const showNotification = (message, severity = 'info') => {
     setNotification({ open: true, message, severity });
   };
 
-  const formatPrice = (rubPrice) => {
-    if (!rubPrice) return '0₽';
-    const usdPrice = (rubPrice / 95).toFixed(2);
-    return `${rubPrice}₽ ($${usdPrice})`;
-  };
-
-  const getRankColor = (rank) => {
-    if (!rank) return '#1976d2';
-    const rankColors = {
-      'Iron': '#727272', 'Bronze': '#CD7F32', 'Silver': '#C0C0C0',
-      'Gold': '#FFD700', 'Platinum': '#00CED1', 'Diamond': '#B9F2FF',
-      'Ascendant': '#FF6B6B', 'Immortal': '#8A2BE2', 'Radiant': '#FFD700'
-    };
-    const rankName = rank.split(' ')[0];
-    return rankColors[rankName] || '#1976d2';
-  };
-
   const handleBuyAccount = (account) => {
     setSelectedAccount(account);
-    setShowPaymentDialog(true);
+    setShowAccountDialog(true);
   };
 
   const handleConfirmPurchase = () => {
     showNotification('Свяжитесь с менеджером @ricksxxx для оплаты', 'success');
     setShowPaymentDialog(false);
-    
-    // Открываем Telegram
-    if (window.Telegram?.WebApp) {
-      window.Telegram.WebApp.openTelegramLink('https://t.me/ricksxxx');
-    } else {
-      window.open('https://t.me/ricksxxx', '_blank');
-    }
+
+    // Открываем чат с менеджером
+    window.open('https://t.me/ricksxxx', '_blank');
   };
 
-  const renderHome = () => {
+  const renderCatalog = () => {
     if (loading) {
       return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
@@ -233,7 +214,7 @@ const App = () => {
     }
 
     const filteredAccounts = accounts.filter(account =>
-      !searchQuery || 
+      !searchQuery ||
       account.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       account.rank.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -247,7 +228,7 @@ const App = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
-              startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />
+              startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
             }}
             sx={{ mb: 2 }}
           />
@@ -262,33 +243,41 @@ const App = () => {
             {filteredAccounts.map(account => (
               <Grid item xs={12} sm={6} key={account._id}>
                 <Card sx={{ height: '100%' }}>
+                  {account.image_url && (
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={account.image_url}
+                      alt={account.title}
+                    />
+                  )}
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
                       {account.title}
                     </Typography>
-                    
+
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <Chip 
+                      <Chip
                         label={account.rank}
-                        sx={{ 
+                        sx={{
                           bgcolor: getRankColor(account.rank),
                           color: 'white',
-                          mr: 1
+                          mr: 1,
                         }}
                       />
                       <Chip label={account.region} size="small" />
                     </Box>
-                    
+
                     <Typography variant="body2" color="text.secondary" paragraph>
                       {account.description || 'Описание отсутствует'}
                     </Typography>
-                    
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="h6" color="primary">
                         {formatPrice(account.price_rub)}
                       </Typography>
-                      <Button 
-                        variant="contained" 
+                      <Button
+                        variant="contained"
                         size="small"
                         onClick={() => {
                           setSelectedAccount(account);
@@ -305,6 +294,49 @@ const App = () => {
           </Grid>
         )}
       </>
+    );
+  };
+
+  const renderBoost = () => {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6" gutterBottom>
+          Заказать буст
+        </Typography>
+        <TextField
+          fullWidth
+          label="Текущий ранг"
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Желаемый ранг"
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Регион"
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          multiline
+          rows={3}
+          label="Пожелания"
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => showNotification('Свяжитесь с менеджером @ricksxxx для оформления буста', 'success')}
+        >
+          Оформить заказ
+        </Button>
+      </Box>
     );
   };
 
@@ -409,7 +441,7 @@ const App = () => {
 
       {/* Контент */}
       <TabPanel value={activeTab} index={0}>
-        {renderHome()}
+        {renderCatalog()}
       </TabPanel>
       <TabPanel value={activeTab} index={1}>
         {renderOrders()}
@@ -425,15 +457,19 @@ const App = () => {
             <DialogTitle>{selectedAccount.title}</DialogTitle>
             <DialogContent>
               <Box sx={{ mb: 2 }}>
-                <Chip 
+                <Chip
                   label={selectedAccount.rank}
-                  sx={{ bgcolor: getRankColor(selectedAccount.rank), color: 'white', mr: 1 }}
+                  sx={{
+                    bgcolor: getRankColor(selectedAccount.rank),
+                    color: 'white',
+                    mr: 1,
+                  }}
                 />
                 <Chip label={selectedAccount.region} />
               </Box>
-              
+
               <Typography paragraph>{selectedAccount.description}</Typography>
-              
+
               {selectedAccount.skins && selectedAccount.skins.length > 0 && (
                 <>
                   <Typography variant="subtitle2" gutterBottom>Скины:</Typography>
@@ -444,15 +480,15 @@ const App = () => {
                   </Box>
                 </>
               )}
-              
+
               <Typography variant="h5" color="primary" gutterBottom>
                 {formatPrice(selectedAccount.price_rub)}
               </Typography>
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setShowAccountDialog(false)}>Закрыть</Button>
-              <Button 
-                variant="contained" 
+              <Button
+                variant="contained"
                 onClick={() => {
                   setShowAccountDialog(false);
                   handleBuyAccount(selectedAccount);
