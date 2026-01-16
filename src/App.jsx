@@ -12,7 +12,8 @@ import ProfileSettings from './components/ProfileSettings';
 import ProfileViewed from './components/ProfileViewed';
 import ReferralLink from './components/ReferralLink';
 
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram?.WebApp;
+
 
 const regions = ['CIS', 'EU', 'NA', 'APAC'];
 const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];

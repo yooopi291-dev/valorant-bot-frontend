@@ -1,39 +1,18 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './ProfileOrders.css';
 
-const tg = window.Telegram.WebApp;
-const filteredOrders = orders.filter(order => {
-  if (filter === 'all') return true;
-  return order.status === filter;
-});
-<div className="orders-filter">
-  <button 
-    className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
-    onClick={() => setFilter('all')}
-  >
-    Все
-  </button>
-  <button 
-    className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
-    onClick={() => setFilter('pending')}
-  >
-    ⏳ Ожидают
-  </button>
-  <button 
-    className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
-    onClick={() => setFilter('completed')}
-  >
-    ✅ Выполненные
-  </button>
-  <button 
-    className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
-    onClick={() => setFilter('cancelled')}
-  >
-    ❌ Отмененные
-  </button>
-</div>
-const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
+const tg = window.Telegram?.WebApp;
+
+const ProfileOrders = ({ orders = [], loading, onBack, onRefresh }) => {
   const [filter, setFilter] = useState('all'); // 'all', 'pending', 'completed', 'cancelled'
+
+  const filteredOrders = useMemo(() => {
+    return (orders || []).filter(order => {
+      if (filter === 'all') return true;
+      return order?.status === filter;
+    });
+  }, [orders, filter]);
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed': return '#28a745';
@@ -50,17 +29,36 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
       case 'paid': return '💰 Оплачен';
       case 'pending': return '⏳ Ожидает оплаты';
       case 'cancelled': return '❌ Отменен';
-      default: return status;
+      default: return status || '';
     }
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return '';
     return date.toLocaleDateString('ru-RU', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
     });
+  };
+
+  const openManager = () => {
+    const url = 'https://t.me/ricksxxx';
+    if (tg) {
+      tg.openLink(url);
+    } else {
+      window.open(url, '_blank');
+    }
+  };
+
+  const showPayInfo = () => {
+    const text = 'Для оплаты свяжитесь с менеджером @ricksxxx';
+    if (tg) {
+      tg.showAlert(text);
+    } else {
+      alert(text);
+    }
   };
 
   return (
@@ -70,12 +68,41 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
           ‹
         </button>
         <h2 className="orders-title">Мои заказы</h2>
-        <button 
-          className="refresh-button" 
+        <button
+          className="refresh-button"
           onClick={onRefresh}
           disabled={loading}
+          title="Обновить"
         >
-          {loading ? '⟳' : '⟳'}
+          ⟳
+        </button>
+      </div>
+
+      {/* Фильтры */}
+      <div className="orders-filter">
+        <button
+          className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+          onClick={() => setFilter('all')}
+        >
+          Все
+        </button>
+        <button
+          className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
+          onClick={() => setFilter('pending')}
+        >
+          ⏳ Ожидают
+        </button>
+        <button
+          className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+          onClick={() => setFilter('completed')}
+        >
+          ✅ Выполненные
+        </button>
+        <button
+          className={`filter-btn ${filter === 'cancelled' ? 'active' : ''}`}
+          onClick={() => setFilter('cancelled')}
+        >
+          ❌ Отмененные
         </button>
       </div>
 
@@ -84,7 +111,7 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
           <div className="loading-spinner"></div>
           <p>Загрузка заказов...</p>
         </div>
-      ) : orders.length === 0 ? (
+      ) : filteredOrders.length === 0 ? (
         <div className="empty-orders">
           <div className="empty-icon">📦</div>
           <h3>Заказов пока нет</h3>
@@ -97,27 +124,29 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
         <>
           <div className="orders-stats">
             <div className="stat-card">
-              <div className="stat-value">{orders.length}</div>
-              <div className="stat-label">Всего заказов</div>
+              <div className="stat-value">{filteredOrders.length}</div>
+              <div className="stat-label">Показано</div>
             </div>
             <div className="stat-card">
               <div className="stat-value">
-                {orders.filter(o => o.status === 'completed').length}
+                {(orders || []).filter(o => o?.status === 'completed').length}
               </div>
               <div className="stat-label">Выполнено</div>
             </div>
           </div>
 
           <div className="orders-list">
-            {orders.map((order) => (
-              <div key={order._id} className="order-card">
+            {filteredOrders.map((order) => (
+              <div key={order?._id} className="order-card">
                 <div className="order-header">
-                  <div className="order-id">Заказ #{order._id.slice(-6)}</div>
-                  <div 
+                  <div className="order-id">
+                    Заказ #{String(order?._id || '').slice(-6)}
+                  </div>
+                  <div
                     className="order-status"
-                    style={{ color: getStatusColor(order.status) }}
+                    style={{ color: getStatusColor(order?.status) }}
                   >
-                    {getStatusText(order.status)}
+                    {getStatusText(order?.status)}
                   </div>
                 </div>
 
@@ -125,15 +154,15 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
                   <div className="detail-row">
                     <span className="detail-label">Тип:</span>
                     <span className="detail-value">
-                      {order.type === 'account' ? 'Аккаунт' : 'Буст'}
+                      {order?.type === 'account' ? 'Аккаунт' : 'Буст'}
                     </span>
                   </div>
 
-                  {order.account_id && (
+                  {order?.account_id && (
                     <div className="detail-row">
                       <span className="detail-label">Аккаунт:</span>
                       <span className="detail-value">
-                        {order.account_id.title || 'Аккаунт'}
+                        {order.account_id?.title || 'Аккаунт'}
                       </span>
                     </div>
                   )}
@@ -141,41 +170,39 @@ const ProfileOrders = ({ orders, loading, onBack, onRefresh }) => {
                   <div className="detail-row">
                     <span className="detail-label">Сумма:</span>
                     <span className="detail-value price">
-                      {order.amount_rub || 0} ₽
+                      {order?.amount_rub || 0} ₽
                     </span>
                   </div>
 
                   <div className="detail-row">
                     <span className="detail-label">Дата:</span>
                     <span className="detail-value date">
-                      {formatDate(order.created_at)}
+                      {formatDate(order?.created_at)}
                     </span>
                   </div>
                 </div>
 
-                {order.status === 'pending' && (
-  <div className="order-actions">
-    <button 
-      className="btn pay-btn"
-      onClick={() => {
-        tg.showAlert('Для оплаты свяжитесь с менеджером @ricksxxx');
-        tg.openLink('https://t.me/ricksxxx');
-      }}
-    >
-      💳 Оплатить
-    </button>
-    <button 
-      className="btn contact-btn"
-      onClick={() => {
-        tg.openLink('https://t.me/ricksxxx');
-      }}
-    >
-      💬 Связаться с менеджером
-    </button>
-  </div>
-)}
+                {order?.status === 'pending' && (
+                  <div className="order-actions">
+                    <button
+                      className="btn pay-btn"
+                      onClick={() => {
+                        showPayInfo();
+                        openManager();
+                      }}
+                    >
+                      💳 Оплатить
+                    </button>
+                    <button
+                      className="btn contact-btn"
+                      onClick={openManager}
+                    >
+                      💬 Связаться с менеджером
+                    </button>
+                  </div>
+                )}
 
-                {order.status === 'completed' && order.account_id && (
+                {order?.status === 'completed' && order?.account_id && (
                   <div className="order-success">
                     <span className="success-icon">✅</span>
                     <span>Аккаунт передан. Проверьте личные сообщения.</span>
