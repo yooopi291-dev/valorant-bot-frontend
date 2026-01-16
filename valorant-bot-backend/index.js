@@ -2379,6 +2379,18 @@ app.post('/api/orders/boost', async (req, res) => {
   }
 });
 
+// Получить заказы пользователя
+app.get('/api/orders/user/:userId', async (req, res) => {
+  try {
+    const orders = await Order.find({ user_id: req.params.userId })
+      .populate('account_id')
+      .sort({ created_at: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
 // ========== ЗАПУСК СЕРВЕРА ==========
 const PORT = process.env.PORT || 3000;
 let server;
