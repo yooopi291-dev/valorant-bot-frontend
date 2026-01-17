@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import sageOrb from './assets/sage-orb.png';
 
 // Компоненты
 import NavigationBar from './components/NavigationBar';
@@ -405,7 +406,10 @@ function App() {
     <div className="home-container">
       {/* HERO / шапка */}
       <div className="home-hero">
-        <div className="home-hero-logo" aria-hidden="true" />
+        <div className="home-hero-logo" aria-hidden="true">
+  <img className="home-hero-logo-img" src={sageOrb} alt="" />
+</div>
+
         <div className="home-hero-text">
           <h1 className="home-hero-title">Valorant Service</h1>
           <p className="home-hero-subtitle">Аккаунты и бусты</p>

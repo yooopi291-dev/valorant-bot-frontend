@@ -1178,3 +1178,66 @@ body {
     margin: 10px;
   }
 }
+/* HERO / шапка: делаем чуть серее, чтобы не сливалась с фоном */
+.home-hero {
+  background: #f2f3f5;                 /* чуть серее, чем --bg */
+  border: 1px solid rgba(15, 25, 35, 0.08);
+  border-radius: 18px;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* Переливающийся квадрат */
+.home-hero-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* перелив */
+  background: linear-gradient(135deg, #ff4655, #ffb84d, #ff4655);
+  background-size: 300% 300%;
+  animation: heroShift 4.5s ease-in-out infinite;
+
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+/* Мягкий блик поверх */
+.home-hero-logo::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.55), transparent 55%);
+  transform: rotate(12deg);
+  pointer-events: none;
+}
+
+/* Иконка внутри */
+.home-hero-logo-img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+
+  /* чтобы смотрелось “вклеенным” и читалось */
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.22));
+  transform: translateY(1px);
+}
+
+@keyframes heroShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
