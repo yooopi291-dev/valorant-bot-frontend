@@ -3,7 +3,7 @@ import axios from 'axios';
 import './App.css';
 import sageOrb from './assets/sage-orb.png';
 import PublicOffer from './components/PublicOffer';
-
+import vpIcon from './assets/vp-icon.png';
 
 // Компоненты
 import NavigationBar from './components/NavigationBar';
@@ -437,6 +437,7 @@ function App() {
   subtitle="-5% по промокоду START"
   accent
   hideButton={true}
+  artSrc={vpIcon}
 />
 
 

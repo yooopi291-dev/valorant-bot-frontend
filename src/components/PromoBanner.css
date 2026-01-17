@@ -25,7 +25,8 @@
 .promo-banner__text {
   position: relative;
   z-index: 2;
-  max-width: 100%;
+  flex: 1;              /* занимает всё доступное место */
+  min-width: 0;
 }
 
 .promo-banner__title {
@@ -110,31 +111,25 @@
 
 /* Декор-иконка справа */
 .promo-banner__art {
-  position: absolute;
-  right: 8px;
-  top: 50%;
+  flex: 0 0 auto;
+  margin-left: 14px;    /* отступ от текста */
+  margin-right: 6px;    /* привязка к правому краю (аккуратно) */
+  align-self: center;   /* вертикально по центру относительно текста */
 
-  /* было rotate(10deg) */
-  transform: translateY(-50%) rotate(0deg);
-
-  /* было 150x150 -> +30% */
   width: 195px;
   height: 195px;
-
   object-fit: contain;
-  z-index: 2;
-  pointer-events: none;
 
+  pointer-events: none;
   opacity: 0.95;
   filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
 }
 
 /* Чтобы текст не залезал на иконку */
 .promo-banner--accent .promo-banner__text {
-  position: relative;
-  z-index: 3;
-  max-width: 62%;
+  max-width: none;
 }
+
 
 /* Анимация перелива */
 @keyframes promoShift {
@@ -145,33 +140,11 @@
 
 /* Мобилка */
 @media (max-width: 480px) {
-  .promo-banner__content {
-    min-height: 110px;
-    padding: 18px 16px;
-  }
-
-  .promo-banner__title {
-    font-size: 18px;
-  }
-
-  .promo-banner__subtitle {
-    font-size: 13px;
-  }
-
-   .promo-banner__art {
-    /* было 135x135 -> +30% */
+  .promo-banner__art {
     width: 176px;
     height: 176px;
-
-    right: -10px;
+    margin-right: -6px; /* чуть “выдвигаем” в край, если надо */
     opacity: 0.9;
-
-    /* было rotate(12deg) */
-    transform: translateY(-50%) rotate(0deg);
-  }
-
-  .promo-banner--accent .promo-banner__text {
-    max-width: 74%;
   }
 }
 /* === Текст на accent: объём, микро-обводка, читаемость === */
