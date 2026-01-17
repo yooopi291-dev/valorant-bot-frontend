@@ -45,9 +45,8 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
 
   <h2 className="settings-title">Настройки</h2>
 
-  <div className="settings-actions">
-    <button className="settings-save" type="button">Сохранить</button>
-  </div>
+ <div className="settings-actions-spacer" />
+
 </div>
 
 

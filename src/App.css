@@ -1,3 +1,41 @@
+:root {
+  --bg: #f8f5f0;
+  --text: #0f1923;
+
+  --surface: #ffffff;
+  --surface-2: #f2f3f5;
+  --border: rgba(15, 25, 35, 0.10);
+
+  --muted: rgba(15, 25, 35, 0.60);
+
+  --accent: #ff4655;
+  --accent-contrast: #ffffff;
+
+  --nav-bg: #ffffff;
+  --nav-text: rgba(15, 25, 35, 0.60);
+  --nav-text-active: #ff4655;
+  --nav-border: rgba(15, 25, 35, 0.08);
+}
+
+body.dark-theme {
+  --bg: #0b0f17;
+  --text: rgba(255, 255, 255, 0.92);
+
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.10);
+
+  --muted: rgba(255, 255, 255, 0.65);
+
+  --accent: #ff4655;
+  --accent-contrast: #ffffff;
+
+  --nav-bg: rgba(255, 255, 255, 0.06);
+  --nav-text: rgba(255, 255, 255, 0.62);
+  --nav-text-active: #ff4655;
+  --nav-border: rgba(255, 255, 255, 0.10);
+}
+
 /* Основные стили */
 * {
   margin: 0;
@@ -520,7 +558,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f8f5f0;
+  background: var(--bg);
+color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -1172,4 +1211,56 @@ body.dark-theme .security-btn .btn-text,
 body.dark-theme .danger-btn .btn-text,
 body.dark-theme .danger-btn.delete .btn-text {
   color: #ffffff !important;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+#root {
+  background: var(--bg);
+  color: var(--text);
+}
+/* базовые поверхности */
+.product-card,
+.cart-item,
+.cart-summary,
+.promo-section,
+.boost-form,
+.profile-menu,
+.price-estimate {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* вторичные подложки */
+.quantity-controls {
+  background: var(--surface-2) !important;
+}
+
+/* вторичный текст */
+.app-subtitle,
+.subtitle,
+.product-meta,
+.cart-item-meta,
+.price-estimate .hint,
+.boost-note,
+.link-hint {
+  color: var(--muted) !important;
+}
+
+/* акцент */
+.product-price,
+.see-all-btn,
+.menu-item.active,
+.btn.primary,
+.product-btn.primary {
+  color: var(--accent-contrast);
+}
+
+.btn.primary,
+.product-btn.primary {
+  background: var(--accent) !important;
 }
