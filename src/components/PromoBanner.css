@@ -148,7 +148,7 @@
   position: absolute;
   top: 50%;
   right: 5px;
-  transform: translateY(-48%) translateX(30%); /* ниже + вправо на 30% */
+  transform: translateY(-45%) translateX(20%); /* ниже + вправо на 30% */
   width: 190px;
   height: 190px;
   object-fit: contain;
