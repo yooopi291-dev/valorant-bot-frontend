@@ -193,3 +193,63 @@ body.dark .referral-stats {
   background: var(--stroke);
   margin: 8px 0;
 }
+
+/* контейнер ссылки + кнопки */
+.link-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* сама ссылка должна нормально сжиматься и быть читабельной */
+.referral-link {
+  flex: 1;
+  min-width: 0;
+
+  display: block;
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  color: var(--tg-theme-text-color, #111);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* кнопка компактная, НЕ на пол-экрана */
+.copy-btn {
+  flex: 0 0 auto;
+  width: 52px;
+  height: 44px;
+  border-radius: 14px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  cursor: pointer;
+
+  background: var(--tg-theme-button-color, #ff3b5c);
+  color: var(--tg-theme-button-text-color, #fff);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* если где-то выше стоит width:100% — гарантированно перебиваем */
+.copy-btn {
+  width: 52px !important;
+}
+
+/* состояние "скопировано" */
+.copy-btn.copied {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
