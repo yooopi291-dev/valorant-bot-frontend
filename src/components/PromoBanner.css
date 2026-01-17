@@ -108,9 +108,9 @@
 /* Декор-иконка справа */
 .promo-banner__art{
   position: absolute;
-  right: 18px;                     /* сдвиг вправо */
+  right: 25px;                     /* сдвиг вправо */
   top: 50%;
-  transform: translateY(-50%);     /* центр по вертикали */
+  transform: translateY(-55%);     /* центр по вертикали */
 
   width: 190px;
   height: 190px;
