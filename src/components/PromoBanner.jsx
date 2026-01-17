@@ -2,12 +2,13 @@ import React from 'react';
 import './PromoBanner.css';
 
 export default function PromoBanner({
-  title,
+   title,
   subtitle,
   accent,
   buttonText = 'Смотреть',
   buttonIcon,
-  onClick
+  onClick,
+  hideButton = false,
 }) {
   return (
     <div className={`promo-banner ${accent ? 'promo-banner--accent' : ''}`}>
@@ -17,14 +18,12 @@ export default function PromoBanner({
           <p className="promo-banner__subtitle">{subtitle}</p>
         </div>
 
-        <button
-          type="button"
-          className="promo-banner__btn"
-          onClick={onClick}
-        >
-          <span className="promo-banner__btnIcon">{buttonIcon || '👁️'}</span>
-          <span>{buttonText}</span>
-        </button>
+        {!hideButton && (
+          <button type="button" className="promo-banner__btn" onClick={onClick}>
+            <span className="promo-banner__btnIcon">{buttonIcon || '👁️'}</span>
+            <span>{buttonText}</span>
+          </button>
+        )}
       </div>
     </div>
   );

@@ -431,18 +431,11 @@ function App() {
         </div>
       </div>
 
-      <PromoBanner
-        title="Новые аккаунты"
-        subtitle="Свежие поставки каждый день"
-        imageUrl="https://picsum.photos/300/150?random=1"
-      />
 
       <PromoBanner
         title="Скидки в корзине!"
         subtitle="-5% на первый заказ с промокодом START"
-        imageUrl="https://picsum.photos/300/150?random=2"
         accent
-        buttonIcon="👁️"   // <-- если PromoBanner это поддерживает (см. ниже)
       />
 
       {/* Заголовок ленты */}
