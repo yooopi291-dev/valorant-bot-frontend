@@ -20,14 +20,10 @@ export default function PromoBanner({
         </div>
 
         {/* Иконка справа, как часть flex (не absolute) */}
-        {artSrc && (
-          <img
-            className="promo-banner__art"
-            src={artSrc}
-            alt=""
-            aria-hidden="true"
-          />
-        )}
+       {artSrc && (
+  <img className="promo-banner__art" src={artSrc} alt="" aria-hidden="true" />
+)}
+
 
         {!hideButton && (
           <button type="button" className="promo-banner__btn" onClick={onClick}>
