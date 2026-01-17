@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './ProfileSettings.css';
 
-const STORAGE_THEME = 'valorant_theme';
 const STORAGE_LANG = 'valorant_lang';
 
-const tg = window.Telegram?.WebApp;
-
 export default function ProfileSettings({ user, onBack, lang, setLang }) {
-
-
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-
 
   return (
     <div className="profile-settings-container">
       <div className="settings-header">
-  <button className="settings-back" type="button" onClick={onBack}>‹</button>
-
-  <h2 className="settings-title">Настройки</h2>
-
- <div className="settings-actions-spacer" />
-
-</div>
-
+        <button className="settings-back" type="button" onClick={onBack}>‹</button>
+        <h2 className="settings-title">Настройки</h2>
+        <div className="settings-actions-spacer" />
+      </div>
 
       <div className="user-profile-section">
         <div className="profile-avatar-large">
@@ -43,21 +32,7 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
       <div className="settings-section">
         <h3 className="section-title">Внешний вид</h3>
 
-        <div className="setting-item">
-          <div className="setting-info">
-            <h4 className="setting-title">Тёмная тема</h4>
-            <p className="setting-description">Переключение темы оформления</p>
-          </div>
-          <label className="switch">
-            <input
-  type="checkbox"
-  checked={isDarkTheme}
-  onChange={(e) => setIsDarkTheme(e.target.checked)}
-/>=
-
-            <span className="slider"></span>
-          </label>
-        </div>
+        {/* Тёмную тему полностью убрали */}
 
         <div className="setting-item">
           <div className="setting-info">
@@ -88,10 +63,15 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
             <p className="setting-description">Новые заказы и сообщения</p>
           </div>
           <label className="switch">
-            <input type="checkbox" checked={notifications} onChange={(e) => setNotifications(e.target.checked)} />
+            <input
+              type="checkbox"
+              checked={notifications}
+              onChange={(e) => setNotifications(e.target.checked)}
+            />
             <span className="slider"></span>
           </label>
-        </div>      </div>
+        </div>
+      </div>
     </div>
   );
 }
