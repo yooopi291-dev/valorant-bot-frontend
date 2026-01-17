@@ -307,3 +307,56 @@ body.dark .referral-stats {
   font-size: 18px;
   font-weight: 700;
 }
+/* =========================
+   LIGHT THEME OVERRIDES
+   (dark theme removed)
+   Добавить В САМЫЙ КОНЕЦ файла
+========================= */
+
+.referral-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+}
+
+.referral-title,
+.benefit-text strong {
+  color: var(--text) !important;
+}
+
+.referral-subtitle,
+.benefit-text span,
+.link-label,
+.link-hint,
+.stat-label {
+  color: var(--muted) !important;
+}
+
+/* подложки внутри карточки */
+.referral-benefits,
+.referral-stats {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* поле со ссылкой — делаем как светлый input */
+.referral-link {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* кнопка копирования (оставляем акцент) */
+.copy-btn {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+}
+
+/* убираем влияние "dark" селекторов, даже если где-то остались классы */
+body.dark .referral-benefits,
+body.dark .referral-stats,
+body.dark .referral-link {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}

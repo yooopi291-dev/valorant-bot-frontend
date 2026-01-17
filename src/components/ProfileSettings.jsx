@@ -32,13 +32,12 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
       <div className="settings-section">
         <h3 className="section-title">Внешний вид</h3>
 
-        {/* Тёмную тему полностью убрали */}
-
         <div className="setting-item">
           <div className="setting-info">
             <h4 className="setting-title">Язык</h4>
             <p className="setting-description">Русский / English</p>
           </div>
+
           <select
             className="language-select"
             value={lang || 'ru'}
@@ -62,6 +61,7 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
             <h4 className="setting-title">Push-уведомления</h4>
             <p className="setting-description">Новые заказы и сообщения</p>
           </div>
+
           <label className="switch">
             <input
               type="checkbox"

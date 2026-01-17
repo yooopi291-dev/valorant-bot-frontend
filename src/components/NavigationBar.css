@@ -77,3 +77,21 @@
   stroke: currentColor;
   stroke-width: 2;
 }
+/* Press effect как в примере (приятное нажатие на мобильных) */
+.nav-item {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, background 0.12s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.96);
+  background: rgba(15, 25, 35, 0.06);
+  border-radius: 12px;
+}
+
+/* чтобы активная тоже красиво нажималась */
+.nav-item.active:active {
+  background: rgba(255, 70, 85, 0.10);
+}
