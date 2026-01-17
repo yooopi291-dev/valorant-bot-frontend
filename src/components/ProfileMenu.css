@@ -197,3 +197,47 @@
   object-fit: cover;
   display: block;
 }
+/* badge (цифры справа) */
+.menu-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.menu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 20px;
+  min-width: 20px;
+  padding: 0 8px;
+
+  border-radius: 999px;
+  background: rgba(15, 25, 35, 0.08);
+  color: rgba(15, 25, 35, 0.8);
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* referral: убрать “двойные” боковые отступы если они приходят из ReferralLink */
+.profile-menu-container .referral-wrapper {
+  margin: 0;
+}
+
+.profile-menu-container .referral-wrapper .referral-card {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Support block at the bottom: без заголовка, но с разделением */
+.menu-section--no-title .section-title {
+  display: none;
+}
+
+.menu-item--support {
+  border-top: 1px solid rgba(15, 25, 35, 0.08);
+}

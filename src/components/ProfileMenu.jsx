@@ -11,74 +11,55 @@ const ProfileMenu = ({
   referralComponent 
 }) => {
   const menuSections = [
-    {
-      title: 'Акции и поддержка',
-      items: [
-        {
-          id: 'referral',
-          icon: '🎁',
-          title: 'Пригласить друга',
-          subtitle: 'Бонус после первой покупки друга: +300 ₽',
-          component: referralComponent
-        },
-        {
-          id: 'support',
-          icon: '💬',
-          title: 'Поддержка',
-          subtitle: '@ricksxxx',
-          arrow: true
-        }
-      ]
-    },
-    {
-      title: 'Мои данные',
-      items: [
-        {
-          id: 'orders',
-          icon: '📦',
-          title: 'Заказы',
-          subtitle: `${ordersCount} заказов`,
-          badge: ordersCount > 0 ? ordersCount : null,
-          arrow: true
-        },
-        {
-          id: 'reviews',
-          icon: '⭐',
-          title: 'Отзывы',
-          subtitle: 'Оцените покупку',
-          arrow: true
-        },
-        {
-          id: 'favorites',
-          icon: '❤️',
-          title: 'Избранное',
-          subtitle: `${favoritesCount} товаров`,
-          badge: favoritesCount > 0 ? favoritesCount : null,
-          arrow: true
-        },
-        {
-          id: 'viewed',
-          icon: '👁️',
-          title: 'Просмотренные товары',
-          subtitle: `${viewedCount} товаров`,
-          badge: viewedCount > 0 ? viewedCount : null,
-          arrow: true
-        }
-      ]
-    },
-    {
-      title: 'Профиль',
-      items: [
-                {
-          id: 'settings',
-          icon: '👤',
-          title: 'Моя страница',
-          subtitle: 'Настройки профиля',
-          arrow: true
-        }
-      ]
-    }
-  ];
+  {
+    title: 'Акции',
+    items: [
+      {
+        id: 'referral',
+        component: referralComponent
+      }
+    ]
+  },
+  {
+    title: 'Мои данные',
+    items: [
+      {
+        id: 'orders',
+        icon: '📦',
+        title: 'Заказы',
+        badge: ordersCount > 0 ? ordersCount : null,
+        arrow: true
+      },
+      {
+        id: 'reviews',
+        icon: '⭐',
+        title: 'Отзывы',
+        arrow: true
+      },
+      {
+        id: 'favorites',
+        icon: '❤️',
+        title: 'Избранное',
+        badge: favoritesCount > 0 ? favoritesCount : null,
+        arrow: true
+      },
+      {
+        id: 'viewed',
+        icon: '👁️',
+        title: 'История просмотров',
+        badge: viewedCount > 0 ? viewedCount : null,
+        arrow: true
+      },
+      {
+        id: 'settings',
+        icon: '👤',
+        title: 'Настройки профиля',
+        arrow: true
+      }
+    ]
+  }
+];
+
 
   return (
     <div className="profile-menu-container">
@@ -118,14 +99,18 @@ const ProfileMenu = ({
                     <div className="menu-item-icon">{item.icon}</div>
                     
                     <div className="menu-item-content">
-                      <div className="menu-item-header">
-  <h4 className="menu-item-title">{item.title}</h4>
-</div>
+  <div className="menu-item-header">
+    <h4 className="menu-item-title">{item.title}</h4>
 
-                      
-                      {item.subtitle && (
-                        <p className="menu-item-subtitle">{item.subtitle}</p>
-                      )}
+    {item.badge !== null && item.badge !== undefined && (
+      <span className="menu-badge">{item.badge}</span>
+    )}
+  </div>
+
+  {item.subtitle && (
+    <p className="menu-item-subtitle">{item.subtitle}</p>
+  )}
+
                       
                       {item.customContent && (
                         <div className="menu-item-custom">
@@ -144,6 +129,25 @@ const ProfileMenu = ({
           </div>
         </div>
       ))}
+<div className="menu-section menu-section--no-title">
+  <div className="menu-items">
+    <div
+      className="menu-item menu-item--support"
+      onClick={() => onSelect('support')}
+    >
+      <div className="menu-item-icon">💬</div>
+
+      <div className="menu-item-content">
+        <div className="menu-item-header">
+          <h4 className="menu-item-title">Поддержка</h4>
+        </div>
+        <p className="menu-item-subtitle">@ricksxxx</p>
+      </div>
+
+      <div className="menu-item-arrow">›</div>
+    </div>
+  </div>
+</div>
 
       <div className="profile-footer">
         <p className="footer-text">
