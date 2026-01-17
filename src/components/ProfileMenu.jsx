@@ -131,20 +131,19 @@ const ProfileMenu = ({
       ))}
 <div className="menu-section menu-section--no-title">
   <div className="menu-items">
+
     {/* Поддержка */}
     <div
       className="menu-item menu-item--support"
       onClick={() => onSelect('support')}
     >
       <div className="menu-item-icon">💬</div>
-
       <div className="menu-item-content">
         <div className="menu-item-header">
           <h4 className="menu-item-title">Поддержка</h4>
         </div>
         <p className="menu-item-subtitle">@ricksxxx</p>
       </div>
-
       <div className="menu-item-arrow">›</div>
     </div>
 
@@ -154,18 +153,18 @@ const ProfileMenu = ({
       onClick={() => onSelect('offer')}
     >
       <div className="menu-item-icon">📄</div>
-
       <div className="menu-item-content">
         <div className="menu-item-header">
           <h4 className="menu-item-title">Публичная оферта</h4>
         </div>
         <p className="menu-item-subtitle">Правила покупки и возврата</p>
       </div>
-
       <div className="menu-item-arrow">›</div>
     </div>
+
   </div>
 </div>
+
 
 
       <div className="profile-footer">

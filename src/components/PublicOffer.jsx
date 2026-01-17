@@ -5,7 +5,7 @@ import publicOfferText from "../content/publicOfferText";
 
 export default function PublicOffer({ onBack }) {
   const blocks = useMemo(() => {
-    return PUBLIC_OFFER_TEXT
+    return publicOfferText
       .replace(/\r/g, "")
       .split(/\n{2,}/)
       .map((b) => b.trim())
