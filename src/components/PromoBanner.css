@@ -108,7 +108,7 @@
 /* Декор-иконка справа */
 .promo-banner__art{
   position: absolute;
-  right: 35px;                     /* сдвиг вправо */
+  right: 5px;                     /* сдвиг вправо */
   top: 50%;
   transform: translateY(-45%);     /* центр по вертикали */
 
