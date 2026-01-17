@@ -8,8 +8,9 @@
   overflow: hidden;
   border-radius: 18px;
 
-  padding: 22px 18px;
-  min-height: 120px;
+  /* было: 22px 18px + min-height 120px */
+  padding: 18px 18px;
+  min-height: 104px;
 
   display: flex;
   align-items: center;
@@ -20,6 +21,7 @@
   border: 1px solid rgba(15, 25, 35, 0.08);
   background: #ffffff;
 }
+
 
 /* Текст */
 .promo-banner__text {
@@ -112,23 +114,21 @@
 /* Декор-иконка справа */
 .promo-banner__art {
   flex: 0 0 auto;
-  margin-left: 14px;    /* отступ от текста */
-  margin-right: 6px;    /* привязка к правому краю (аккуратно) */
-  align-self: center;   /* вертикально по центру относительно текста */
+  margin-left: 14px;
+  margin-right: 6px;
+  align-self: center;
 
-  width: 195px;
-  height: 195px;
+  /* ВАЖНО: иконка больше не раздувает баннер */
+  width: 108px;      /* было слишком много */
+  height: 108px;     /* фиксируем квадрат */
   object-fit: contain;
+  display: block;
 
   pointer-events: none;
   opacity: 0.95;
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
+  filter: drop-shadow(0 16px 22px rgba(0,0,0,0.20));
 }
 
-/* Чтобы текст не залезал на иконку */
-.promo-banner--accent .promo-banner__text {
-  max-width: none;
-}
 
 
 /* Анимация перелива */
@@ -141,12 +141,13 @@
 /* Мобилка */
 @media (max-width: 480px) {
   .promo-banner__art {
-    width: 176px;
-    height: 176px;
-    margin-right: -6px; /* чуть “выдвигаем” в край, если надо */
+    width: 96px;
+    height: 96px;
+    margin-right: 0;
     opacity: 0.9;
   }
 }
+
 /* === Текст на accent: объём, микро-обводка, читаемость === */
 .promo-banner--accent .promo-banner__title {
   letter-spacing: -0.2px;
