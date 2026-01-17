@@ -15,7 +15,6 @@ import { t } from './i18n';
 
 const tg = window.Telegram?.WebApp;
 
-
 const regions = ['CIS', 'EU', 'NA', 'APAC'];
 const ranks = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant'];
 
@@ -23,12 +22,14 @@ function App() {
   // язык интерфейса
   const [lang, setLang] = useState(localStorage.getItem('valorant_lang') || 'ru');
   const labels = t(lang);
-};
+
+  // ❌ темная тема убрана полностью (ничего не пишем в body.classList и localStorage theme)
+  // Если у тебя где-то в Settings остался переключатель — он будет просто ни на что не влиять (позже удалим).
 
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
   const [profileSubView, setProfileSubView] = useState('menu'); // 'menu', 'orders', 'settings', 'viewed'
-  
+
   // Состояния для данных
   const [accounts, setAccounts] = useState([]);
   const [cart, setCart] = useState([]);
@@ -37,13 +38,12 @@ function App() {
   const [userOrders, setUserOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
-  
+
   // Промокоды и скидки
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [discountApplied, setDiscountApplied] = useState(false);
-  const [cartValidating, setCartValidating] = useState(false);
-  
+
   // Форма буста
   const [boostForm, setBoostForm] = useState({
     fromRank: '',
@@ -51,10 +51,10 @@ function App() {
     region: '',
     wishes: ''
   });
-  
+
   // Для истории заказов
   const [ordersLoading, setOrdersLoading] = useState(false);
-  
+
   const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
   const USER_ID = String(tg?.initDataUnsafe?.user?.id ?? 'unknown');
   const USERNAME = tg?.initDataUnsafe?.user?.username || '';
@@ -73,6 +73,9 @@ function App() {
       // ignore
     }
   }, [lang]);
+
+  // ====== дальше файл без изменений: твои useEffect/init/loadLocalData/renderContent/return ======
+  // (просто оставь всё, что было ниже, как есть)
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
