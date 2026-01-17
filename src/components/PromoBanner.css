@@ -113,20 +113,20 @@
 
 /* Декор-иконка справа */
 .promo-banner__art {
-  flex: 0 0 auto;
-  margin-left: 14px;
-  margin-right: 6px;
-  align-self: center;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%); /* без поворота */
 
-  /* ВАЖНО: иконка больше не раздувает баннер */
-  width: 108px;      /* было слишком много */
-  height: 108px;     /* фиксируем квадрат */
+  width: 195px;   /* было ~150 */
+  height: 195px;  /* было ~150 */
   object-fit: contain;
-  display: block;
 
+  z-index: 2;
   pointer-events: none;
-  opacity: 0.95;
-  filter: drop-shadow(0 16px 22px rgba(0,0,0,0.20));
+
+  opacity: 0.98;
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
 }
 
 
@@ -141,10 +141,9 @@
 /* Мобилка */
 @media (max-width: 480px) {
   .promo-banner__art {
-    width: 96px;
-    height: 96px;
-    margin-right: 0;
-    opacity: 0.9;
+    width: 175px;
+    height: 175px;
+    right: 10px;
   }
 }
 
