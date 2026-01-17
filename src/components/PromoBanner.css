@@ -1,23 +1,106 @@
-/* ===== Accent style (скидка) ===== */
+.promo-banner {
+  margin: 14px 0 18px;
+}
+
+.promo-banner__content {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+
+  overflow: hidden;
+  border-radius: 18px;
+
+  padding: 18px 18px;
+  min-height: 120px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+
+  background: #ffffff;
+}
+
+.promo-banner__text {
+  position: relative;
+  z-index: 2;
+}
+
+.promo-banner__title {
+  margin: 0 0 6px 0;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.promo-banner__subtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0.92;
+}
+
+.promo-banner__btn {
+  position: relative;
+  z-index: 2;
+
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  background: rgba(15, 25, 35, 0.92);
+  color: #fff;
+
+  font-weight: 800;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.promo-banner__btn:active {
+  transform: scale(0.985);
+  opacity: 0.95;
+}
+
+.promo-banner__btnIcon {
+  width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+}
+
+/* ===== Accent (скидка) ===== */
 .promo-banner--accent .promo-banner__content {
   color: #fff;
 
-  /* тот же градиент, что в верхнем логотипе */
+  /* ваш градиент как в лого */
   background: linear-gradient(135deg, #ff4655 0%, #ffb84d 50%, #ff4655 100%);
   background-size: 220% 220%;
   animation: promoShift 6s ease-in-out infinite;
 }
 
-/* мягкий блик/узор */
+/* мягкая текстура/блик */
 .promo-banner--accent .promo-banner__content::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.16;
+  pointer-events: none;
+
+  opacity: 0.18;
   background:
     radial-gradient(circle at 18% 30%, rgba(255,255,255,0.55), transparent 55%),
-    radial-gradient(circle at 70% 20%, rgba(255,255,255,0.22), transparent 55%),
+    radial-gradient(circle at 75% 22%, rgba(255,255,255,0.22), transparent 58%),
+    radial-gradient(circle at 70% 80%, rgba(0,0,0,0.16), transparent 55%),
     repeating-linear-gradient(
       135deg,
       rgba(255,255,255,0.10) 0px,
@@ -25,41 +108,40 @@
       rgba(255,255,255,0.00) 2px,
       rgba(255,255,255,0.00) 10px
     );
+
   mix-blend-mode: overlay;
-  pointer-events: none;
 }
 
-/* “скин” справа: силуэт Vandal/Phantom в твоей палитре (CSS mask) */
+/* Vandal справа */
 .promo-banner--accent .promo-banner__content::after {
   content: "";
   position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%) rotate(-6deg);
-  width: 240px;
-  height: 140px;
   z-index: 1;
   pointer-events: none;
 
-  /* заливка под палитру */
-  background: linear-gradient(135deg, rgba(15,25,35,0.00), rgba(15,25,35,0.18));
-  opacity: 0.9;
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-6deg);
 
-  /* Маска (упрощённый силуэт винтовки) */
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420'%3E%3Cpath fill='%23000' d='M84 220h96l34-24h104l18-22h82l14 20h120l30-22h44l14 18h44l12 18h50v34h-50l-12 18h-44l-14 18h-44l-30-22H432l-14 20h-82l-18-22H214l-34-24H84v-22z'/%3E%3Cpath fill='%23000' d='M292 248h62l22 48h-40l-18-28h-26v-20z'/%3E%3Cpath fill='%23000' d='M620 208h70v24h-70z'/%3E%3C/svg%3E") center / contain no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420'%3E%3Cpath fill='%23000' d='M84 220h96l34-24h104l18-22h82l14 20h120l30-22h44l14 18h44l12 18h50v34h-50l-12 18h-44l-14 18h-44l-30-22H432l-14 20h-82l-18-22H214l-34-24H84v-22z'/%3E%3Cpath fill='%23000' d='M292 248h62l22 48h-40l-18-28h-26v-20z'/%3E%3Cpath fill='%23000' d='M620 208h70v24h-70z'/%3E%3C/svg%3E") center / contain no-repeat;
+  width: 360px;
+  height: 170px;
 
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
+  background: url("../assets/vandal-banner.png") right center / contain no-repeat;
+
+  /* “вплавляем” в баннер */
+  opacity: 0.92;
+  mix-blend-mode: soft-light;
+  filter:
+    drop-shadow(0 18px 26px rgba(0,0,0,0.22))
+    drop-shadow(0 6px 12px rgba(0,0,0,0.12));
 }
 
-/* чтобы текст не залезал на “скин” */
+/* чтобы текст не залезал на пушку */
 .promo-banner--accent .promo-banner__text {
-  position: relative;
-  z-index: 2;
-  max-width: 68%;
+  max-width: 62%;
 }
 
-/* анимация перелива */
+/* перелив */
 @keyframes promoShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -68,13 +150,28 @@
 
 /* мобилка */
 @media (max-width: 480px) {
-  .promo-banner--accent .promo-banner__text {
-    max-width: 78%;
+  .promo-banner__content {
+    padding: 16px 16px;
+    min-height: 112px;
+    border-radius: 16px;
   }
+
+  .promo-banner__title {
+    font-size: 18px;
+  }
+
+  .promo-banner__subtitle {
+    font-size: 13px;
+  }
+
+  .promo-banner--accent .promo-banner__text {
+    max-width: 76%;
+  }
+
   .promo-banner--accent .promo-banner__content::after {
-    width: 190px;
-    height: 120px;
-    right: 6px;
-    opacity: 0.85;
+    width: 250px;
+    height: 140px;
+    right: -14px;
+    opacity: 0.88;
   }
 }
