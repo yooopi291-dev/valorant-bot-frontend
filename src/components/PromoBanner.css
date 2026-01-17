@@ -148,7 +148,7 @@
   position: absolute;
   top: 50%;
   right: 5px;
-  transform: translateY(-45%) translateX(20%); /* ниже + вправо на 30% */
+  transform: translateY(-40%) translateX(10%); /* ниже + вправо на 30% */
   width: 190px;
   height: 190px;
   object-fit: contain;
@@ -176,6 +176,6 @@
     right: 6px;
     width: 165px;
     height: 165px;
-    transform: translateY(-48%) translateX(30%); /* то же поведение на мобиле */
+    transform: translateY(-40%) translateX(10%); /* то же поведение на мобиле */
   }
 }
