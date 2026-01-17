@@ -1317,3 +1317,38 @@ body {
   background: #e9ecef !important; /* темнее чем было */
   border: 1px solid rgba(15,25,35,.10) !important;
 }
+
+/* === HOME fixed background === */
+.home-container.home-bg{
+  position: relative;
+  isolation: isolate; /* чтобы фон был строго под контентом */
+}
+
+/* сам фон */
+.home-container.home-bg::before{
+  content: "";
+  position: fixed;       /* <-- не двигается со скроллом */
+  inset: 0;
+  z-index: -1;
+
+  background-image: url("/home-bg.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  transform: translateZ(0); /* чуть стабильнее на мобиле */
+}
+
+/* затемнение + легкая "дымка" для читабельности */
+.home-container.home-bg::after{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background:
+    radial-gradient(circle at 30% 10%, rgba(0,0,0,0.25), transparent 55%),
+    linear-gradient(180deg, rgba(248,245,240,0.70) 0%, rgba(248,245,240,0.88) 55%, rgba(248,245,240,0.96) 100%);
+
+  pointer-events: none;
+}
