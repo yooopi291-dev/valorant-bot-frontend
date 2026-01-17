@@ -111,21 +111,22 @@
 /* Декор-иконка справа */
 .promo-banner__art {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
-  transform: translateY(-50%) rotate(10deg);
 
-  width: 150px;
-  height: 150px;
+  /* было rotate(10deg) */
+  transform: translateY(-50%) rotate(0deg);
+
+  /* было 150x150 -> +30% */
+  width: 195px;
+  height: 195px;
+
   object-fit: contain;
-
-  z-index: 2;               /* <-- было 1, поднимаем над узорами */
+  z-index: 2;
   pointer-events: none;
 
   opacity: 0.95;
-  filter:
-    drop-shadow(0 18px 26px rgba(0,0,0,0.22))
-    drop-shadow(0 0 0 rgba(255,255,255,0.35));
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
 }
 
 /* Чтобы текст не залезал на иконку */
@@ -157,12 +158,16 @@
     font-size: 13px;
   }
 
-  .promo-banner__art {
-    width: 135px;
-    height: 135px;
-    right: -18px;
+   .promo-banner__art {
+    /* было 135x135 -> +30% */
+    width: 176px;
+    height: 176px;
+
+    right: -10px;
     opacity: 0.9;
-    transform: translateY(-50%) rotate(12deg);
+
+    /* было rotate(12deg) */
+    transform: translateY(-50%) rotate(0deg);
   }
 
   .promo-banner--accent .promo-banner__text {
