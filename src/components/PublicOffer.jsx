@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import "./PublicOffer.css";
-import PUBLIC_OFFER_TEXT from "../content/publicOfferText";
+import publicOfferText from "../content/publicOfferText";
+
 
 export default function PublicOffer({ onBack }) {
   const blocks = useMemo(() => {
