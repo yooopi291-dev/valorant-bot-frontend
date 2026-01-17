@@ -1,27 +1,31 @@
 import React from 'react';
 import './PromoBanner.css';
 
-const PromoBanner = ({ title, subtitle, imageUrl, accent = false }) => {
+export default function PromoBanner({
+  title,
+  subtitle,
+  accent,
+  buttonText = 'Смотреть',
+  buttonIcon,
+  onClick
+}) {
   return (
-    <div className={`promo-banner ${accent ? 'accent' : ''}`}>
-      <div className="promo-content">
-        <h3 className="promo-title">{title}</h3>
-        <p className="promo-subtitle">{subtitle}</p>
-        <button className="promo-button">
-          {accent ? '👁️ Смотреть' : '👉 Подробнее'}
+    <div className={`promo-banner ${accent ? 'promo-banner--accent' : ''}`}>
+      <div className="promo-banner__content">
+        <div className="promo-banner__text">
+          <h3 className="promo-banner__title">{title}</h3>
+          <p className="promo-banner__subtitle">{subtitle}</p>
+        </div>
+
+        <button
+          type="button"
+          className="promo-banner__btn"
+          onClick={onClick}
+        >
+          <span className="promo-banner__btnIcon">{buttonIcon || '👁️'}</span>
+          <span>{buttonText}</span>
         </button>
-      </div>
-      <div className="promo-image">
-        <img 
-          src={imageUrl} 
-          alt={title}
-          onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/300x150/1a1a1a/ffffff?text=Valorant';
-          }}
-        />
       </div>
     </div>
   );
-};
-
-export default PromoBanner;
+}
