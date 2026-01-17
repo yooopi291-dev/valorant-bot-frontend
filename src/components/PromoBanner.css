@@ -1,60 +1,80 @@
-.promo-banner {
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 14px 0;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
-  background: #0f1923; /* базовый тёмный */
+/* ===== Accent style (скидка) ===== */
+.promo-banner--accent .promo-banner__content {
   color: #fff;
+
+  /* тот же градиент, что в верхнем логотипе */
+  background: linear-gradient(135deg, #ff4655 0%, #ffb84d 50%, #ff4655 100%);
+  background-size: 220% 220%;
+  animation: promoShift 6s ease-in-out infinite;
 }
 
-.promo-banner--accent {
-  background: linear-gradient(135deg, #ff4655 0%, #ff6a78 100%);
+/* мягкий блик/узор */
+.promo-banner--accent .promo-banner__content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.16;
+  background:
+    radial-gradient(circle at 18% 30%, rgba(255,255,255,0.55), transparent 55%),
+    radial-gradient(circle at 70% 20%, rgba(255,255,255,0.22), transparent 55%),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.10) 2px,
+      rgba(255,255,255,0.00) 2px,
+      rgba(255,255,255,0.00) 10px
+    );
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
-.promo-banner__content {
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+/* “скин” справа: силуэт Vandal/Phantom в твоей палитре (CSS mask) */
+.promo-banner--accent .promo-banner__content::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-6deg);
+  width: 240px;
+  height: 140px;
+  z-index: 1;
+  pointer-events: none;
 
-.promo-banner__title {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 900;
-  line-height: 1.15;
-}
-
-.promo-banner__subtitle {
-  margin: 6px 0 0;
-  font-size: 14px;
+  /* заливка под палитру */
+  background: linear-gradient(135deg, rgba(15,25,35,0.00), rgba(15,25,35,0.18));
   opacity: 0.9;
-  line-height: 1.35;
+
+  /* Маска (упрощённый силуэт винтовки) */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420'%3E%3Cpath fill='%23000' d='M84 220h96l34-24h104l18-22h82l14 20h120l30-22h44l14 18h44l12 18h50v34h-50l-12 18h-44l-14 18h-44l-30-22H432l-14 20h-82l-18-22H214l-34-24H84v-22z'/%3E%3Cpath fill='%23000' d='M292 248h62l22 48h-40l-18-28h-26v-20z'/%3E%3Cpath fill='%23000' d='M620 208h70v24h-70z'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 420'%3E%3Cpath fill='%23000' d='M84 220h96l34-24h104l18-22h82l14 20h120l30-22h44l14 18h44l12 18h50v34h-50l-12 18h-44l-14 18h-44l-30-22H432l-14 20h-82l-18-22H214l-34-24H84v-22z'/%3E%3Cpath fill='%23000' d='M292 248h62l22 48h-40l-18-28h-26v-20z'/%3E%3Cpath fill='%23000' d='M620 208h70v24h-70z'/%3E%3C/svg%3E") center / contain no-repeat;
+
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
 }
 
-.promo-banner__btn {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 12px 18px;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-
-  background: rgba(15, 25, 35, 0.92);
-  color: #fff;
-  font-weight: 800;
+/* чтобы текст не залезал на “скин” */
+.promo-banner--accent .promo-banner__text {
+  position: relative;
+  z-index: 2;
+  max-width: 68%;
 }
 
-.promo-banner--accent .promo-banner__btn {
-  background: rgba(15, 25, 35, 0.92);
+/* анимация перелива */
+@keyframes promoShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.promo-banner__btnIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+/* мобилка */
+@media (max-width: 480px) {
+  .promo-banner--accent .promo-banner__text {
+    max-width: 78%;
+  }
+  .promo-banner--accent .promo-banner__content::after {
+    width: 190px;
+    height: 120px;
+    right: 6px;
+    opacity: 0.85;
+  }
 }
