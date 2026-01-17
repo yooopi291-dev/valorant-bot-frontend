@@ -1241,3 +1241,19 @@ body {
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+/* СИЛЬНЕЕ: чтобы точно перебить старые стили */
+.home-container .home-hero {
+  background: #f0f1f3 !important; /* чуть серее */
+  border: 1px solid rgba(15, 25, 35, 0.08) !important;
+}
+.home-hero-logo {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 18px !important;
+}
+
+.home-hero-logo-img {
+  width: 88% !important;
+  height: 88% !important;
+  transform: translateY(1px) scale(1.02);
+}
