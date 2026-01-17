@@ -253,3 +253,57 @@ body.dark .referral-stats {
   opacity: 0.9;
   transform: scale(0.98);
 }
+/* одинаковая высота для ссылки и кнопки */
+.link-box {
+  display: flex;
+  gap: 12px;
+  align-items: stretch; /* важно: растягиваем элементы по высоте */
+}
+
+/* ссылка — как поле ввода */
+.referral-link {
+  flex: 1;
+  min-width: 0;
+
+  height: 46px;                 /* фиксируем высоту */
+  display: flex;                /* чтобы выровнять текст по центру */
+  align-items: center;
+
+  padding: 0 14px;
+  border-radius: 14px;
+
+  /* читаемость на тёмном фоне */
+  background: rgba(15, 23, 42, 0.92) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  font-size: 13px;
+  line-height: 1;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* кнопка ровно по высоте и без смещений */
+.copy-btn {
+  flex: 0 0 auto;
+  width: 56px !important;
+  height: 46px !important;
+
+  margin: 0 !important;         /* убираем возможные сдвиги */
+  padding: 0 !important;
+
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  cursor: pointer;
+
+  background: var(--tg-theme-button-color, #3b82f6);
+  color: var(--tg-theme-button-text-color, #fff);
+  font-size: 18px;
+  font-weight: 700;
+}
