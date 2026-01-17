@@ -33,7 +33,7 @@ const ReferralLink = ({ userId }) => {
         <div className="referral-icon">🎁</div>
         <div className="referral-title-group">
           <h3 className="referral-title">Пригласить друга</h3>
-          <p className="referral-subtitle">+500 ₽ за каждого приглашённого</p>
+          <p className="referral-subtitle">+200 ₽ за каждого приглашённого</p>
         </div>
       </div>
 
@@ -41,7 +41,7 @@ const ReferralLink = ({ userId }) => {
         <div className="benefit-item">
           <span className="benefit-icon">💰</span>
           <div className="benefit-text">
-            <strong>Вы получаете 500 ₽</strong>
+            <strong>Вы получаете 200 ₽</strong>
             <span>на баланс после первой покупки друга</span>
           </div>
         </div>

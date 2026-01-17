@@ -4,7 +4,7 @@
   border-radius: 20px;
   padding: 20px;
   color: #fff;
-  margin: 0 16px 20px;
+  margin: 0 16px 0;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -359,4 +359,13 @@ body.dark .referral-link {
   background: var(--surface-2) !important;
   color: var(--text) !important;
   border-color: var(--border) !important;
+}
+/* Убираем лишние отступы у блока рефералки в профиле */
+.profile-menu-container .referral-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+.profile-menu-container .referral-wrapper .referral-card {
+  margin: 0 !important;   /* убирает тот самый нижний/боковой */
 }
