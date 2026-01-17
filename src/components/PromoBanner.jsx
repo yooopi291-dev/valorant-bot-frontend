@@ -1,8 +1,10 @@
 import React from 'react';
 import './PromoBanner.css';
 
+import vpIcon from '../assets/vp-icon.png'; // файл должен лежать: src/assets/vp-icon.png
+
 export default function PromoBanner({
-   title,
+  title,
   subtitle,
   accent,
   buttonText = 'Смотреть',
@@ -13,6 +15,15 @@ export default function PromoBanner({
   return (
     <div className={`promo-banner ${accent ? 'promo-banner--accent' : ''}`}>
       <div className="promo-banner__content">
+        {accent && (
+          <img
+            className="promo-banner__art"
+            src={vpIcon}
+            alt=""
+            aria-hidden="true"
+          />
+        )}
+
         <div className="promo-banner__text">
           <h3 className="promo-banner__title">{title}</h3>
           <p className="promo-banner__subtitle">{subtitle}</p>
