@@ -36,10 +36,8 @@
   justify-content: center;
 }
 
-.nav-icon svg {
-  fill: currentColor;
-  stroke: currentColor;
-}
+.nav-icon svg { fill: none !important; stroke: currentColor !important; }
+
 
 
 .nav-item.active .nav-icon svg {
@@ -114,4 +112,30 @@
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
+}
+/* FIX: нижняя навигация всегда читаема */
+.navigation-bar {
+  background: var(--nav-bg) !important;
+  border-top: 1px solid var(--nav-border) !important;
+}
+
+.nav-item {
+  color: var(--nav-text) !important;
+}
+
+.nav-item.active {
+  color: var(--nav-text-active) !important;
+}
+
+.nav-icon,
+.nav-label {
+  color: inherit !important;
+}
+
+/* FIX: SVG иконки наследуют цвет */
+.nav-icon svg {
+  width: 22px;   /* если у тебя уже есть размеры — можно убрать */
+  height: 22px;
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }

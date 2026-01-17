@@ -1,6 +1,7 @@
 :root {
-  --bg: #f8f5f0;
-  --text: #0f1923;
+  background: var(--bg);
+color: var(--text);
+
 
   --surface: #ffffff;
   --surface-2: #f2f3f5;
@@ -17,7 +18,11 @@
   --nav-border: rgba(15, 25, 35, 0.08);
 }
 
-body.dark-theme {
+body.dark-theme,
+.app.dark-theme,
+#root.dark-theme,
+.dark-theme {
+  /* DARK */
   --bg: #0b0f17;
   --text: rgba(255, 255, 255, 0.92);
 
@@ -35,6 +40,7 @@ body.dark-theme {
   --nav-text-active: #ff4655;
   --nav-border: rgba(255, 255, 255, 0.10);
 }
+
 
 /* Основные стили */
 * {
