@@ -288,3 +288,88 @@
     0 16px 36px rgba(15, 25, 35, 0.16),
     0 4px 12px rgba(15, 25, 35, 0.08);
 }
+/* ===== FEED CARD: левый баннер-картинка на всю площадь ===== */
+.products-feed .product-card {
+  overflow: hidden; /* чтобы cover не вылезал за скругления */
+}
+
+.products-feed .product-image {
+  /* это и есть чёрная зона */
+  position: relative;
+  flex: 1 1 auto;
+
+  /* важно: убираем “квадратик” из-за отступов/ограничений */
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+
+  height: 132px;                 /* размер баннера (desktop) */
+  background: #0f1923;
+  border-radius: 16px 0 0 16px;  /* слева скругление, справа стык с инфо */
+  overflow: hidden;
+}
+
+/* если внутри баннера есть <img> — растягиваем его на весь блок */
+.products-feed .product-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+  border-radius: inherit;
+}
+
+/* mobile */
+@media (max-width: 480px) {
+  .products-feed .product-image {
+    height: 120px;               /* размер баннера (mobile) */
+  }
+}
+/* ===== Цена: спокойнее цвет + всё в одну строку ===== */
+.products-feed .product-price,
+.products-feed .price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.products-feed .product-price,
+.products-feed .price {
+  color: rgba(15, 25, 35, 0.88); /* вместо красного */
+  font-weight: 900;
+  font-size: 20px;
+}
+
+/* если ₽ отдельно — не даём ему стать с новой строки */
+.products-feed .product-price span,
+.products-feed .price span {
+  white-space: nowrap;
+}
+
+/* ===== Кнопки “глаз” и “корзина”: одинаковый размер и баланс ===== */
+.products-feed .product-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.products-feed .product-actions button {
+  height: 42px;
+  min-width: 42px;
+  border-radius: 14px;
+}
+
+/* если есть отдельные классы под кнопки — можно точнее */
+.products-feed .btn-view,
+.products-feed .btn-cart,
+.products-feed .product-btn-view,
+.products-feed .product-btn-cart {
+  height: 42px;
+  width: 42px;
+  border-radius: 14px;
+}
