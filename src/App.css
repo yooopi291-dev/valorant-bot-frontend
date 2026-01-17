@@ -1286,8 +1286,8 @@ body {
 }
 
 .home-hero-logo-img {
-  width: 96%;
-  height: 96%;
+  width: 120%;
+  height: 120%;
   display: block;
   object-fit: contain;
   object-position: center;
@@ -1312,3 +1312,8 @@ body {
   100% { transform: translateX(35%) rotate(25deg); opacity: 0; }
 }
 
+/* HOME HERO — гарантированно заметный серый */
+.home-container .home-hero{
+  background: #e9ecef !important; /* темнее чем было */
+  border: 1px solid rgba(15,25,35,.10) !important;
+}
