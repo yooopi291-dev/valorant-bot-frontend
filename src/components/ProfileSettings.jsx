@@ -79,7 +79,7 @@ export default function ProfileSettings({ user, onBack, lang, setLang, isDarkThe
   type="checkbox"
   checked={isDarkTheme}
   onChange={(e) => setIsDarkTheme(e.target.checked)}
-/>
+/>=
 
             <span className="slider"></span>
           </label>
