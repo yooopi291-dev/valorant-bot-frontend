@@ -4,6 +4,7 @@ import './App.css';
 import sageOrb from './assets/sage-orb.png';
 import PublicOffer from './components/PublicOffer';
 
+
 // Компоненты
 import NavigationBar from './components/NavigationBar';
 import ProductCard from './components/ProductCard';
@@ -371,37 +372,46 @@ function App() {
   };
 
   const handleProfileAction = (action) => {
-    switch (action) {
-      case 'orders':
-        loadUserOrders();
-        setProfileSubView('orders');
-        break;
-      case 'settings':
-        setProfileSubView('settings');
-        break;
-      case 'viewed':
-        setProfileSubView('viewed');
-        break;
-      case 'favorites':
-        setActiveView('favorites');
-        break;
-      case 'reviews':
-        tg?.showAlert?.('⭐ Отзывы будут добавлены позже');
-        break;
-      case 'support':
-        tg?.openLink?.('https://t.me/ricksxxx');
-        break;
-      case 'community':
-        tg?.openLink?.('https://t.me/valorant_servicebot');
-        break;
-      default:
-        setProfileSubView('menu');
-        case 'offer':
-  setProfileSubView('offer');
-  break;
+  switch (action) {
+    case 'orders':
+      loadUserOrders();
+      setProfileSubView('orders');
+      break;
 
-    }
-  };
+    case 'settings':
+      setProfileSubView('settings');
+      break;
+
+    case 'viewed':
+      setProfileSubView('viewed');
+      break;
+
+    case 'favorites':
+      setActiveView('favorites');
+      break;
+
+    case 'reviews':
+      tg?.showAlert?.('⭐ Отзывы будут добавлены позже');
+      break;
+
+    case 'support':
+      tg?.openLink?.('https://t.me/ricksxxx');
+      break;
+
+    case 'community':
+      tg?.openLink?.('https://t.me/valorant_servicebot');
+      break;
+
+    case 'offer':
+      setProfileSubView('offer');
+      break;
+
+    default:
+      setProfileSubView('menu');
+      break;
+  }
+};
+
 
   // ========== RENDER ==========
   const renderContent = () => {
@@ -466,10 +476,6 @@ function App() {
     </div>
   );
 
-        case 'offer':
-  return (
-    <PublicOffer onBack={() => setProfileSubView('menu')} />
-  );
 
       case 'catalog':
         return (
@@ -785,7 +791,10 @@ function App() {
                 onBack={() => setProfileSubView('menu')}
               />
             );
-            
+            case 'offer':
+  return (
+    <PublicOffer onBack={() => setProfileSubView('menu')} />
+  );
           case 'menu':
           default:
             return (

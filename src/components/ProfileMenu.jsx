@@ -151,7 +151,7 @@ const ProfileMenu = ({
     
     <div
       className="menu-item"
-      onClick={() => { console.log('OFFER CLICK'); onSelect('offer'); }}
+     onClick={() => onSelect('offer')}
     >
       <div className="menu-item-icon">📄</div>
       <div className="menu-item-content">
