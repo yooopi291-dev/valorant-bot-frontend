@@ -119,11 +119,9 @@ const ProfileMenu = ({
                     
                     <div className="menu-item-content">
                       <div className="menu-item-header">
-                        <h4 className="menu-item-title">{item.title}</h4>
-                        {item.badge && item.badge > 0 && (
-                          <span className="menu-item-badge">{item.badge}</span>
-                        )}
-                      </div>
+  <h4 className="menu-item-title">{item.title}</h4>
+</div>
+
                       
                       {item.subtitle && (
                         <p className="menu-item-subtitle">{item.subtitle}</p>
