@@ -8,7 +8,7 @@ const PromoBanner = ({ title, subtitle, imageUrl, accent = false }) => {
         <h3 className="promo-title">{title}</h3>
         <p className="promo-subtitle">{subtitle}</p>
         <button className="promo-button">
-          {accent ? '🔥 Смотреть' : '👉 Подробнее'}
+          {accent ? '👁️ Смотреть' : '👉 Подробнее'}
         </button>
       </div>
       <div className="promo-image">

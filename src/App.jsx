@@ -401,59 +401,62 @@ function App() {
   const renderContent = () => {
     switch (activeView) {
       case 'home':
-        return (
-          <div className="home-container">
-            <h1 className="app-title">Valorant Service</h1>
-            <p className="app-subtitle">Аккаунты и бусты</p>
-            
-            <PromoBanner 
-              title="Новые аккаунты"
-              subtitle="Свежие поставки каждый день"
-              imageUrl="https://picsum.photos/300/150?random=1"
-            />
-            
-            <PromoBanner 
-              title="Скидки в корзине!"
-              subtitle="-5% на первый заказ с промокодом START"
-              imageUrl="https://picsum.photos/300/150?random=2"
-              accent
-            />
-            
-            <div className="section-header">
-              <h2>🔥 Популярное</h2>
-              <button 
-                className="see-all-btn"
-                onClick={() => setActiveView('catalog')}
-              >
-                Все →
-              </button>
-            </div>
-            
-            <div className="products-grid">
-              {accounts.slice(0, 4).map(account => (
-                <ProductCard
-                  key={account._id}
-                  account={account}
-                  backendUrl={BACKEND_URL}
-                  onAddToCart={addToCart}
-                  onToggleFavorite={toggleFavorite}
-                  onViewDetails={handleViewDetails}
-                  isFavorite={isFavorite(account._id)}
-                  compact
-                />
-              ))}
-            </div>
-            
-            <div className="quick-actions">
-                            <button 
-                className="action-btn secondary"
-                onClick={() => setActiveView('catalog')}
-              >
-                🛒 Весь каталог
-              </button>
-            </div>
-          </div>
-        );
+  return (
+    <div className="home-container">
+      {/* HERO / шапка */}
+      <div className="home-hero">
+        <div className="home-hero-logo" aria-hidden="true" />
+        <div className="home-hero-text">
+          <h1 className="home-hero-title">Valorant Service</h1>
+          <p className="home-hero-subtitle">Аккаунты и бусты</p>
+        </div>
+      </div>
+
+      <PromoBanner
+        title="Новые аккаунты"
+        subtitle="Свежие поставки каждый день"
+        imageUrl="https://picsum.photos/300/150?random=1"
+      />
+
+      <PromoBanner
+        title="Скидки в корзине!"
+        subtitle="-5% на первый заказ с промокодом START"
+        imageUrl="https://picsum.photos/300/150?random=2"
+        accent
+        buttonIcon="👁️"   // <-- если PromoBanner это поддерживает (см. ниже)
+      />
+
+      {/* Заголовок ленты */}
+      <div className="section-header section-header--popular">
+        <h2 className="section-title-inline">🔥 Популярное</h2>
+        <button
+          className="see-all-btn"
+          onClick={() => setActiveView('catalog')}
+        >
+          Смотреть всё →
+        </button>
+      </div>
+
+      {/* Лента (не grid) */}
+      <div className="products-feed">
+        {accounts.slice(0, 4).map((account) => (
+          <ProductCard
+            key={account._id}
+            account={account}
+            backendUrl={BACKEND_URL}
+            onAddToCart={addToCart}
+            onToggleFavorite={toggleFavorite}
+            onViewDetails={handleViewDetails}
+            isFavorite={isFavorite(account._id)}
+            compact
+          />
+        ))}
+      </div>
+
+      {/* Убрали кнопку "Весь каталог" */}
+    </div>
+  );
+
         
       case 'catalog':
         return (

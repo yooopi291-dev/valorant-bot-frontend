@@ -1025,3 +1025,156 @@ body {
   background: var(--bg);
   color: var(--text);
 }
+/* =========================
+   HOME (new hero + feed)
+   ========================= */
+
+/* hero header on home */
+.home-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 16px 16px;
+  margin: 6px 0 18px;
+
+  background: #ffffff;
+  border: 1px solid rgba(15, 25, 35, 0.08);
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* minimal animated logo */
+.home-hero-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+
+  background: linear-gradient(135deg, rgba(255, 70, 85, 0.95), rgba(255, 120, 140, 0.95));
+  box-shadow: 0 10px 20px rgba(255, 70, 85, 0.22);
+
+  position: relative;
+  overflow: hidden;
+
+  animation: heroFloat 3.5s ease-in-out infinite;
+}
+
+.home-hero-logo::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.35) 45%,
+    rgba(255,255,255,0) 100%
+  );
+
+  transform: rotate(25deg);
+  animation: heroShine 2.8s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes heroShine {
+  0% { transform: translateX(-35%) rotate(25deg); opacity: 0; }
+  20% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateX(35%) rotate(25deg); opacity: 0; }
+}
+
+.home-hero-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.home-hero-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: rgba(15, 25, 35, 0.6);
+  font-weight: 600;
+}
+
+/* popular header row aligned nicely */
+.section-header.section-header--popular {
+  margin: 22px 0 12px;
+  padding: 0 2px;
+  align-items: center;
+}
+
+.section-title-inline {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+/* make the "Смотреть всё" look like link button */
+.see-all-btn {
+  padding: 8px 10px;
+  border-radius: 12px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.see-all-btn:active {
+  transform: scale(0.98);
+  background: rgba(255, 70, 85, 0.08);
+}
+
+/* products as a feed (list), not grid */
+.products-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* If ProductCard still uses .product-card, make it look like a list item */
+.products-feed .product-card {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+
+  border-radius: 16px;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* compact image like a list thumb */
+.products-feed .product-image {
+  width: 110px;
+  height: 110px;
+  border-radius: 14px;
+  margin: 12px;
+  flex-shrink: 0;
+}
+
+/* info spacing */
+.products-feed .product-info {
+  padding: 14px 14px 14px 0;
+  flex: 1;
+}
+
+/* buttons row feel tighter in feed */
+.products-feed .product-actions {
+  margin-top: 10px;
+}
+
+/* mobile tweaks */
+@media (max-width: 480px) {
+  .home-hero {
+    padding: 14px;
+  }
+
+  .products-feed .product-image {
+    width: 96px;
+    height: 96px;
+    margin: 10px;
+  }
+}
