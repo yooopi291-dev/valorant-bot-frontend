@@ -148,9 +148,10 @@ const ProfileMenu = ({
     </div>
 
     {/* Оферта */}
+    
     <div
       className="menu-item"
-      onClick={() => onSelect('offer')}
+      onClick={() => { console.log('OFFER CLICK'); onSelect('offer'); }}
     >
       <div className="menu-item-icon">📄</div>
       <div className="menu-item-content">

@@ -241,3 +241,29 @@
 .menu-item--support {
   border-top: 1px solid rgba(15, 25, 35, 0.08);
 }
+/* FIX: чтобы элементы меню точно были кликабельны */
+.profile-menu-container,
+.menu-section,
+.menu-items,
+.menu-item {
+  position: relative;
+  z-index: 2;
+}
+
+/* иногда клики съедает footer/оверлей */
+.profile-footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* на всякий: если где-то отключили */
+.menu-item {
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+.menu-item * {
+  pointer-events: none;            /* чтобы клик всегда попадал в .menu-item */
+}
+.menu-item {
+  pointer-events: auto !important; /* возвращаем клики на контейнер */
+}
