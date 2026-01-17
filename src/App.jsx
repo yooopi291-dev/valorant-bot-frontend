@@ -433,10 +433,12 @@ function App() {
 
 
       <PromoBanner
-        title="Скидки в корзине!"
-        subtitle="-5% на первый заказ с промокодом START"
-        accent
-      />
+  title="Скидка на первый товар"
+  subtitle="-5% по промокоду START"
+  accent
+  hideButton={true}
+/>
+
 
       {/* Заголовок ленты */}
       <div className="section-header section-header--popular">
