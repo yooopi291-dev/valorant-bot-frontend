@@ -23,23 +23,7 @@ function App() {
   // язык интерфейса
   const [lang, setLang] = useState(localStorage.getItem('valorant_lang') || 'ru');
   const labels = t(lang);
-const [isDarkTheme, setIsDarkTheme] = useState(() => {
-  try {
-    return localStorage.getItem('valorant_theme') === 'dark';
-  } catch {
-    return false;
-  }
-});
-
-useEffect(() => {
-  document.body.classList.toggle('dark-theme', isDarkTheme);
-  document.documentElement.classList.toggle('dark-theme', isDarkTheme);
-  try {
-    localStorage.setItem('valorant_theme', isDarkTheme ? 'dark' : 'light');
-  } catch {
-    // ignore
-  }
-}, [isDarkTheme]);
+};
 
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
@@ -769,8 +753,6 @@ useEffect(() => {
   onBack={() => setProfileSubView('menu')}
   lang={lang}
   setLang={setLang}
-  isDarkTheme={isDarkTheme}
-  setIsDarkTheme={setIsDarkTheme}
 />
 
             );
@@ -830,6 +812,5 @@ useEffect(() => {
       />
     </div>
   );
-}
 
 export default App;

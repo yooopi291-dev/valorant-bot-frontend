@@ -4,138 +4,76 @@
   right: 0;
   bottom: 0;
 
-  background: var(--nav-bg);
-  border-top: 1px solid var(--nav-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 
+  height: 64px;
   padding-bottom: env(safe-area-inset-bottom);
+
+  background: #ffffff;
+  border-top: 1px solid rgba(15, 25, 35, 0.10);
   z-index: 1000;
 }
 
-
 .nav-item {
-  color: var(--nav-text);
-}
+  flex: 1;
+  height: 64px;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 
-.nav-item:hover {
-  transform: translateY(-2px);
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  color: rgba(15, 25, 35, 0.65);
+  font: inherit;
+
+  cursor: pointer;
+  position: relative;
 }
 
 .nav-item.active {
-  color: var(--nav-text-active);
+  color: #ff4655;
 }
 
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 26px;
+  height: 3px;
+  border-radius: 3px;
+  background: #ff4655;
+}
 
 .nav-icon {
-  position: relative;
-  margin-bottom: 4px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.nav-icon svg { fill: none !important; stroke: currentColor !important; }
-
-
-
-.nav-item.active .nav-icon svg {
-  fill: currentColor;
-  stroke: currentColor;
-}
-
 
 .nav-label {
   font-size: 11px;
-  color: var(--muted);
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.nav-item.active .nav-label {
-  color: var(--accent);
   font-weight: 600;
+  line-height: 1;
 }
 
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: var(--accent);
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  border: 2px solid var(--card);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Анимация для активной иконки */
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 3px;
-  background: var(--accent);
-  border-radius: 0 0 3px 3px;
-  opacity: 0;
-  animation: slideDown 0.3s ease forwards;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-/* FIX: нижняя навигация всегда читаема */
-.navigation-bar {
-  background: var(--nav-bg) !important;
-  border-top: 1px solid var(--nav-border) !important;
-}
-
-.nav-item {
-  color: var(--nav-text) !important;
-}
-
-.nav-item.active {
-  color: var(--nav-text-active) !important;
-}
-
-.nav-icon,
-.nav-label {
-  color: inherit !important;
-}
-
-/* FIX: SVG иконки наследуют цвет */
+/* SVG иконки контуром */
 .nav-icon svg {
-  width: 22px;   /* если у тебя уже есть размеры — можно убрать */
+  width: 22px;
   height: 22px;
-  fill: currentColor !important;
-  stroke: currentColor !important;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
 }

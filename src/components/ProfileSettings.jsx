@@ -6,38 +6,12 @@ const STORAGE_LANG = 'valorant_lang';
 
 const tg = window.Telegram?.WebApp;
 
-export default function ProfileSettings({ user, onBack, lang, setLang, isDarkTheme, setIsDarkTheme }) {
+export default function ProfileSettings({ user, onBack, lang, setLang }) {
+
 
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  // init theme + lang
-  useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem(STORAGE_THEME);
-      const isDark = savedTheme === 'dark';
-      setDarkMode(isDark);
-      document.body.classList.toggle('dark', isDark);
-
-      const savedLang = localStorage.getItem(STORAGE_LANG);
-      if (savedLang && setLang) setLang(savedLang);
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  useEffect(() => {
-    document.body.classList.toggle('dark', darkMode);
-    try {
-      localStorage.setItem(STORAGE_THEME, darkMode ? 'dark' : 'light');
-    } catch {
-      // ignore
-    }
-  }, [darkMode]);
-
-  const onSave = () => {
-    tg?.showAlert?.('✅ Сохранено');
-  };
 
   return (
     <div className="profile-settings-container">

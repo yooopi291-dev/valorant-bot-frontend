@@ -1,7 +1,7 @@
 :root {
-  background: var(--bg);
-color: var(--text);
-
+  /* базовые цвета приложения (светлая тема) */
+  --bg: #f8f5f0;
+  --text: #0f1923;
 
   --surface: #ffffff;
   --surface-2: #f2f3f5;
@@ -16,29 +16,9 @@ color: var(--text);
   --nav-text: rgba(15, 25, 35, 0.60);
   --nav-text-active: #ff4655;
   --nav-border: rgba(15, 25, 35, 0.08);
-}
 
-body.dark-theme,
-.app.dark-theme,
-#root.dark-theme,
-.dark-theme {
-  /* DARK */
-  --bg: #0b0f17;
-  --text: rgba(255, 255, 255, 0.92);
-
-  --surface: rgba(255, 255, 255, 0.06);
-  --surface-2: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.10);
-
-  --muted: rgba(255, 255, 255, 0.65);
-
-  --accent: #ff4655;
-  --accent-contrast: #ffffff;
-
-  --nav-bg: rgba(255, 255, 255, 0.06);
-  --nav-text: rgba(255, 255, 255, 0.62);
-  --nav-text-active: #ff4655;
-  --nav-border: rgba(255, 255, 255, 0.10);
+  background: var(--bg);
+  color: var(--text);
 }
 
 
@@ -62,21 +42,6 @@ body.dark-theme,
   max-width: 800px;
   margin: 0 auto;
 }
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #ff4655;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
 /* Заголовки */
 .app-title {
   color: #0f1923;
@@ -1043,230 +1008,20 @@ color: var(--text);
     width: 100%;
   }
 }
-/* Исправление цветов текста для светлой темы */
-.product-title,
-.product-price,
-.cart-item-info h4,
-.cart-item-price,
-.summary-row,
-.menu-item-title,
-.setting-title,
-.user-name,
-.user-id,
-.profile-name,
-.order-id,
-.detail-label,
-.detail-value,
-.order-status,
-.price-estimate p,
-.promo-section h4,
-.cart-summary,
-.section-title,
-.referral-title,
-.referral-subtitle,
-.benefit-text strong,
-.referral-link,
-.stat-value,
-.stat-label,
-.link-label,
-.link-hint,
-.footer-text,
-.footer-version,
-.app-title,
-.app-subtitle,
-.page-header h2,
-.subtitle,
-.catalog-header h2,
-.catalog-stats span,
-.product-meta,
-.product-description,
-.viewed-name,
-.viewed-meta,
-.viewed-price,
-.empty-viewed h3,
-.empty-viewed p,
-.stat-info .stat-label,
-.stat-info .stat-hint,
-.viewed-hint p,
-.empty-orders h3,
-.empty-orders p,
-.orders-title,
-.stat-card .stat-value,
-.stat-card .stat-label,
-.order-card .order-id,
-.order-card .detail-label,
-.order-card .detail-value,
-.order-card .detail-value.price,
-.order-card .detail-value.date,
-.order-success,
-.settings-title,
-.profile-name,
-.profile-id,
-.profile-username,
-.security-btn .btn-text,
-.danger-btn .btn-text,
-.menu-item-title,
-.menu-item-subtitle,
-.section-title,
-.user-name,
-.user-id,
-.user-username,
-.referral-title,
-.referral-subtitle,
-.benefit-text strong,
-.benefit-text span,
-.link-label,
-.referral-link,
-.link-hint,
-.stat-value,
-.stat-label,
-.settings-title,
-.setting-title,
-.setting-description,
-.language-select,
-.region-display,
-.security-btn .btn-text,
-.danger-btn .btn-text,
-.danger-btn.delete .btn-text {
-  color: #0f1923 !important;
-}
-
-/* Для темной темы переопределяем */
-body.dark-theme .product-title,
-body.dark-theme .product-price,
-body.dark-theme .cart-item-info h4,
-body.dark-theme .cart-item-price,
-body.dark-theme .summary-row,
-body.dark-theme .menu-item-title,
-body.dark-theme .setting-title,
-body.dark-theme .user-name,
-body.dark-theme .user-id,
-body.dark-theme .profile-name,
-body.dark-theme .order-id,
-body.dark-theme .detail-label,
-body.dark-theme .detail-value,
-body.dark-theme .order-status,
-body.dark-theme .price-estimate p,
-body.dark-theme .promo-section h4,
-body.dark-theme .cart-summary,
-body.dark-theme .section-title,
-body.dark-theme .referral-title,
-body.dark-theme .referral-subtitle,
-body.dark-theme .benefit-text strong,
-body.dark-theme .referral-link,
-body.dark-theme .stat-value,
-body.dark-theme .stat-label,
-body.dark-theme .link-label,
-body.dark-theme .link-hint,
-body.dark-theme .footer-text,
-body.dark-theme .footer-version,
-body.dark-theme .app-title,
-body.dark-theme .app-subtitle,
-body.dark-theme .page-header h2,
-body.dark-theme .subtitle,
-body.dark-theme .catalog-header h2,
-body.dark-theme .catalog-stats span,
-body.dark-theme .product-meta,
-body.dark-theme .product-description,
-body.dark-theme .viewed-name,
-body.dark-theme .viewed-meta,
-body.dark-theme .viewed-price,
-body.dark-theme .empty-viewed h3,
-body.dark-theme .empty-viewed p,
-body.dark-theme .stat-info .stat-label,
-body.dark-theme .stat-info .stat-hint,
-body.dark-theme .viewed-hint p,
-body.dark-theme .empty-orders h3,
-body.dark-theme .empty-orders p,
-body.dark-theme .orders-title,
-body.dark-theme .stat-card .stat-value,
-body.dark-theme .stat-card .stat-label,
-body.dark-theme .order-card .order-id,
-body.dark-theme .order-card .detail-label,
-body.dark-theme .order-card .detail-value,
-body.dark-theme .order-card .detail-value.price,
-body.dark-theme .order-card .detail-value.date,
-body.dark-theme .order-success,
-body.dark-theme .settings-title,
-body.dark-theme .profile-name,
-body.dark-theme .profile-id,
-body.dark-theme .profile-username,
-body.dark-theme .security-btn .btn-text,
-body.dark-theme .danger-btn .btn-text,
-body.dark-theme .menu-item-title,
-body.dark-theme .menu-item-subtitle,
-body.dark-theme .section-title,
-body.dark-theme .user-name,
-body.dark-theme .user-id,
-body.dark-theme .user-username,
-body.dark-theme .referral-title,
-body.dark-theme .referral-subtitle,
-body.dark-theme .benefit-text strong,
-body.dark-theme .benefit-text span,
-body.dark-theme .link-label,
-body.dark-theme .referral-link,
-body.dark-theme .link-hint,
-body.dark-theme .stat-value,
-body.dark-theme .stat-label,
-body.dark-theme .settings-title,
-body.dark-theme .setting-title,
-body.dark-theme .setting-description,
-body.dark-theme .language-select,
-body.dark-theme .region-display,
-body.dark-theme .security-btn .btn-text,
-body.dark-theme .danger-btn .btn-text,
-body.dark-theme .danger-btn.delete .btn-text {
-  color: #ffffff !important;
-}
 
 html, body {
   background: var(--bg);
   color: var(--text);
 }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 #root {
   background: var(--bg);
   color: var(--text);
-}
-/* базовые поверхности */
-.product-card,
-.cart-item,
-.cart-summary,
-.promo-section,
-.boost-form,
-.profile-menu,
-.price-estimate {
-  background: var(--surface) !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text) !important;
-}
-
-/* вторичные подложки */
-.quantity-controls {
-  background: var(--surface-2) !important;
-}
-
-/* вторичный текст */
-.app-subtitle,
-.subtitle,
-.product-meta,
-.cart-item-meta,
-.price-estimate .hint,
-.boost-note,
-.link-hint {
-  color: var(--muted) !important;
-}
-
-/* акцент */
-.product-price,
-.see-all-btn,
-.menu-item.active,
-.btn.primary,
-.product-btn.primary {
-  color: var(--accent-contrast);
-}
-
-.btn.primary,
-.product-btn.primary {
-  background: var(--accent) !important;
 }
