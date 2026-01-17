@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 import sageOrb from './assets/sage-orb.png';
+import PublicOffer from './components/PublicOffer';
 
 // Компоненты
 import NavigationBar from './components/NavigationBar';
@@ -395,6 +396,10 @@ function App() {
         break;
       default:
         setProfileSubView('menu');
+        case 'offer':
+  setProfileSubView('offer');
+  break;
+
     }
   };
 
@@ -461,7 +466,11 @@ function App() {
     </div>
   );
 
-        
+        case 'offer':
+  return (
+    <PublicOffer onBack={() => setProfileSubView('menu')} />
+  );
+
       case 'catalog':
         return (
           <div className="catalog-container">

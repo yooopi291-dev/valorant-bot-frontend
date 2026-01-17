@@ -1,0 +1,62 @@
+.offer-container {
+  padding-bottom: 80px; /* чтобы не упиралось в навбар */
+}
+
+.offer-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin: 6px 0 14px;
+}
+
+.offer-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 25, 35, 0.12);
+  background: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.offer-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.offer-actions-spacer {
+  flex: 1;
+}
+
+.offer-card {
+  background: #fff;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.offer-h1 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.offer-h3 {
+  margin: 14px 0 8px 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.offer-p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(15, 25, 35, 0.80);
+  white-space: pre-wrap; /* сохраняем переносы внутри блока */
+}
