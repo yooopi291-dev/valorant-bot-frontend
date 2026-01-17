@@ -244,3 +244,47 @@
   font-weight: bold;
   color: white;
 }
+/* Левый блок-картинка в “ленточной” карточке */
+.products-feed .product-image {
+  width: 110px;          /* у тебя уже есть, оставляем */
+  height: 110px;
+  border-radius: 14px;
+  margin: 12px;
+  overflow: hidden;      /* важно, чтобы cover не вылезал */
+  background: #0f1923;   /* чтобы не было белых дыр */
+}
+
+/* Если внутри product-image лежит <img> */
+.products-feed .product-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;     /* вот это решает масштабирование */
+  object-position: center;
+}
+
+/* Если картинка сделана как background-image */
+.products-feed .product-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Карточка в ленте — добавляем объём */
+.products-feed .product-card {
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 16px;
+  background: #fff;
+
+  box-shadow:
+    0 12px 28px rgba(15, 25, 35, 0.12),
+    0 2px 8px rgba(15, 25, 35, 0.06);
+
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.products-feed .product-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 36px rgba(15, 25, 35, 0.16),
+    0 4px 12px rgba(15, 25, 35, 0.08);
+}
