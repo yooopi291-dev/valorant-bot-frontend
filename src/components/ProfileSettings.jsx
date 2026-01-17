@@ -41,12 +41,15 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
   return (
     <div className="profile-settings-container">
       <div className="settings-header">
-        <button className="back-button" onClick={onBack}>‹</button>
-        <h2 className="settings-title">Настройки</h2>
-        <div className="settings-actions">
-          <button className="save-btn" onClick={onSave} type="button">Сохранить</button>
-        </div>
-      </div>
+  <button className="settings-back" type="button" onClick={onBack}>‹</button>
+
+  <h2 className="settings-title">Настройки</h2>
+
+  <div className="settings-actions">
+    <button className="settings-save" type="button">Сохранить</button>
+  </div>
+</div>
+
 
       <div className="user-profile-section">
         <div className="profile-avatar-large">

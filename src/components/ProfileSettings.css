@@ -358,3 +358,48 @@ input:checked + .slider:before {
   object-fit: cover;
   display: block;
 }
+
+/* iOS/WebView: предотвращаем авто-зум при фокусе на select/input */
+.profile-settings-container select,
+.profile-settings-container input,
+.profile-settings-container textarea {
+  font-size: 16px !important;
+}
+
+.profile-settings-container {
+  -webkit-text-size-adjust: 100%;
+}
+.settings-header {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top));
+}
+
+.settings-title {
+  text-align: center;
+  margin: 0;          /* важно, чтобы не двигало сетку */
+  line-height: 1.1;
+}
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.settings-back {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+}
+
+.settings-save {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 14px;
+  white-space: nowrap;
+}
