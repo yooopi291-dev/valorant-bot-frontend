@@ -800,14 +800,13 @@ function App() {
     }
   };
 
-  return (
-   <div className="app">
-
+    return (
+    <div className="app">
       <div className="app-content">
         {renderContent()}
       </div>
-      
-      <NavigationBar 
+
+      <NavigationBar
         activeView={activeView}
         onNavigate={handleNavigate}
         cartCount={cart.length}
@@ -815,5 +814,6 @@ function App() {
       />
     </div>
   );
+}
 
 export default App;
