@@ -3,23 +3,17 @@
 }
 
 /* Карточка */
-.promo-banner__content {
+.promo-banner__content{
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-
-  /* было: 22px 18px + min-height 120px */
-  padding: 18px 18px;
-  min-height: 104px;
-
+  padding: 22px 18px;
+  min-height: 120px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
-  border: 1px solid rgba(15, 25, 35, 0.08);
-  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+  border: 1px solid rgba(15,25,35,.08);
+  background: #fff;
 }
 
 
@@ -112,21 +106,20 @@
 }
 
 /* Декор-иконка справа */
-.promo-banner__art {
+.promo-banner__art{
   position: absolute;
-  right: 14px;
+  right: 18px;                     /* сдвиг вправо */
   top: 50%;
-  transform: translateY(-50%); /* без поворота */
+  transform: translateY(-50%);     /* центр по вертикали */
 
-  width: 195px;   /* было ~150 */
-  height: 195px;  /* было ~150 */
+  width: 190px;
+  height: 190px;
   object-fit: contain;
 
   z-index: 2;
   pointer-events: none;
-
-  opacity: 0.98;
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,0.22));
+  opacity: .98;
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,.22));
 }
 
 
@@ -139,14 +132,16 @@
 }
 
 /* Мобилка */
-@media (max-width: 480px) {
-  .promo-banner__art {
-    width: 175px;
-    height: 175px;
-    right: 10px;
+@media (max-width: 480px){
+  .promo-banner--accent .promo-banner__text{
+    padding-right: 160px;
+  }
+  .promo-banner__art{
+    right: 12px;
+    width: 165px;
+    height: 165px;
   }
 }
-
 /* === Текст на accent: объём, микро-обводка, читаемость === */
 .promo-banner--accent .promo-banner__title {
   letter-spacing: -0.2px;
