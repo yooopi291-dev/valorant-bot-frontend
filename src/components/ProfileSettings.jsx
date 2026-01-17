@@ -6,7 +6,8 @@ const STORAGE_LANG = 'valorant_lang';
 
 const tg = window.Telegram?.WebApp;
 
-export default function ProfileSettings({ user, onBack, lang, setLang }) {
+export default function ProfileSettings({ user, onBack, lang, setLang, isDarkTheme, setIsDarkTheme }) {
+
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
@@ -74,7 +75,12 @@ export default function ProfileSettings({ user, onBack, lang, setLang }) {
             <p className="setting-description">Переключение темы оформления</p>
           </div>
           <label className="switch">
-            <input type="checkbox" checked={darkMode} onChange={(e) => setDarkMode(e.target.checked)} />
+            <input
+  type="checkbox"
+  checked={isDarkTheme}
+  onChange={(e) => setIsDarkTheme(e.target.checked)}
+/>
+
             <span className="slider"></span>
           </label>
         </div>

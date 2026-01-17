@@ -23,6 +23,23 @@ function App() {
   // язык интерфейса
   const [lang, setLang] = useState(localStorage.getItem('valorant_lang') || 'ru');
   const labels = t(lang);
+const [isDarkTheme, setIsDarkTheme] = useState(() => {
+  try {
+    return localStorage.getItem('valorant_theme') === 'dark';
+  } catch {
+    return false;
+  }
+});
+
+useEffect(() => {
+  document.body.classList.toggle('dark-theme', isDarkTheme);
+  document.documentElement.classList.toggle('dark-theme', isDarkTheme);
+  try {
+    localStorage.setItem('valorant_theme', isDarkTheme ? 'dark' : 'light');
+  } catch {
+    // ignore
+  }
+}, [isDarkTheme]);
 
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
@@ -72,16 +89,6 @@ function App() {
       // ignore
     }
   }, [lang]);
-
-  // применяем сохраненную тему один раз
-  useEffect(() => {
-    try {
-      const savedTheme = localStorage.getItem('valorant_theme');
-      document.body.classList.toggle('dark', savedTheme === 'dark');
-    } catch {
-      // ignore
-    }
-  }, []);
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
@@ -757,12 +764,15 @@ function App() {
             
           case 'settings':
             return (
-              <ProfileSettings 
-                user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME, photo_url: tg?.initDataUnsafe?.user?.photo_url }}
-                onBack={() => setProfileSubView('menu')}
-                lang={lang}
-                setLang={setLang}
-              />
+              <ProfileSettings
+  user={{ id: USER_ID, username: USERNAME, name: FIRST_NAME, photo_url: tg?.initDataUnsafe?.user?.photo_url }}
+  onBack={() => setProfileSubView('menu')}
+  lang={lang}
+  setLang={setLang}
+  isDarkTheme={isDarkTheme}
+  setIsDarkTheme={setIsDarkTheme}
+/>
+
             );
             
           case 'viewed':
@@ -806,7 +816,8 @@ function App() {
   };
 
   return (
-    <div className="app">
+   <div className="app">
+
       <div className="app-content">
         {renderContent()}
       </div>
