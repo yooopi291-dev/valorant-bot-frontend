@@ -267,3 +267,11 @@
 .menu-item {
   pointer-events: auto !important; /* возвращаем клики на контейнер */
 }
+/* FORCE: убрать любой доп. текст справа у "Поддержка" */
+.menu-item--support .menu-item-subtitle,
+.menu-item--support::after,
+.menu-item--support .menu-item-title::after,
+.menu-item--support .menu-item-header::after {
+  content: none !important;
+  display: none !important;
+}
