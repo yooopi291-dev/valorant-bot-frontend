@@ -1660,3 +1660,57 @@ body {
 /* баннер остаётся cover и компактный */
 .cart-vertical-banner { height: 132px !important; }
 @media (max-width: 480px) { .cart-vertical-banner { height: 124px !important; } }
+/* === CART price row (compact, above buttons) === */
+.cart-vertical-price{
+  width: 100% !important;
+
+  /* меньше высота */
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+
+  background: rgba(15,25,35,0.05) !important;
+
+  /* выравнивание как строка */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+/* делаем элементы "одной строкой" и компактно */
+.cart-vertical-price-rub{
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  color: #ff4655 !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 44% !important;
+}
+
+.cart-vertical-price-usd{
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  color: rgba(15,25,35,0.62) !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 30% !important;
+}
+
+.cart-vertical-mult{
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  color: rgba(15,25,35,0.55) !important;
+  white-space: nowrap !important;
+}
+
+/* чуть меньше вертикальные отступы всего блока */
+.cart-vertical-bottom{
+  gap: 8px !important;
+}
