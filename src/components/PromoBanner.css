@@ -284,14 +284,14 @@
 /* мобилка: чуть меньше, чтобы не съедала текст */
 @media (max-width: 480px){
   .promo-banner__content{
-    min-height: 68px !important;
+    min-height: 92px !important;
   }
   .promo-banner__text{
-    padding-right: 68px !important;
+    padding-right: 92px !important;
   }
   .promo-banner__art{
     width: 128x !important;
     height: 128px !important;
-    right: 8px !important;
+    right: 50px !important;
   }
 }
