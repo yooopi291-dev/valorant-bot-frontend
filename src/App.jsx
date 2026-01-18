@@ -597,10 +597,14 @@ function App() {
       case 'cart':
   return (
     <div className="cart-container">
-      <div className="page-header">
-        <h2>🛍️ Корзина</h2>
-        <p className="subtitle">{cart.length} товаров</p>
-      </div>
+      <div className="cart-hero">
+  <h2 className="cart-hero-title">🛍️ Корзина</h2>
+
+  <div className="cart-hero-row">
+    <span className="cart-hero-label">Количество товаров</span>
+    <span className="cart-hero-value">{cart.length}</span>
+  </div>
+</div>
 
       {cart.length === 0 ? (
         <div className="empty-state">

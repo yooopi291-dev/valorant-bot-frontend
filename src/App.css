@@ -786,3 +786,62 @@ body {
 .catalog-empty-bottom {
   padding-top: 12px;
 }
+/* =========================
+   CART HERO (как блок на главной/каталоге)
+   ========================= */
+.cart-hero {
+  padding: 16px;
+  margin: 6px 0 18px;
+
+  background: #e9ecef;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 18px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.cart-hero-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.cart-hero-row {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(15, 25, 35, 0.08);
+}
+
+.cart-hero-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(15, 25, 35, 0.65);
+}
+
+.cart-hero-value {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+/* =========================
+   CART price highlight (V2 card)
+   ========================= */
+.cart-card-v2__price-rub {
+  font-size: 15px;   /* было 13 */
+  font-weight: 900;
+}
+
+.cart-card-v2__price-usd {
+  font-size: 12px;   /* было 11 */
+  font-weight: 800;
+}
