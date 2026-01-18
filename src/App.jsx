@@ -250,11 +250,25 @@ function App() {
   };
   
   // ========== ПРОСМОТРЕННЫЕ ==========
-  const addToViewed = (account) => {
-    const filtered = viewedItems.filter(item => item._id !== account._id);
-    const updated = [account, ...filtered].slice(0, 20);
-    setViewedItems(updated);
+  // ========== ПРОСМОТРЕННЫЕ ==========
+const addToViewed = (account) => {
+  if (!account) return;
+
+  const normalized = {
+    ...account,
+    // гарантируем наличие поля для картинки
+    image_url:
+      account?.image_url ||
+      account?.image ||
+      account?.photo ||
+      (Array.isArray(account?.images) ? account.images[0] : undefined),
   };
+
+  const filtered = viewedItems.filter(item => item._id !== normalized._id);
+  const updated = [normalized, ...filtered].slice(0, 20);
+  setViewedItems(updated);
+};
+
   const clearViewed = () => {
   if (viewedItems.length === 0) return;
   if (window.confirm('Очистить историю просмотров?')) {

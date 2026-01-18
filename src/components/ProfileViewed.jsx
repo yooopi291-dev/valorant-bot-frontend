@@ -1,28 +1,58 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import './ProfileViewed.css';
 
+function ViewedCard({ item, backendUrl, onViewDetails, onAddToCart }) {
+  const [imgError, setImgError] = useState(false);
+
+  const imageSrc = useMemo(() => {
+    const img = item?.image_url || item?.image || item?.photo;
+    if (!img || typeof img !== 'string') return '';
+
+    if (img.startsWith('http')) return img;
+    if (img.startsWith('/')) return `${backendUrl || ''}${img}`;
+
+    // Telegram file_id fallback
+    return `${backendUrl || ''}/api/images/${img}`;
+  }, [item, backendUrl]);
+
+  const fallbackLetter = (item?.title || '?').charAt(0).toUpperCase();
+
+  return (
+    <div className="viewed-item">
+      <div className="viewed-image" onClick={() => onViewDetails(item)}>
+        {!imgError && imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={item?.title || 'Account'}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="image-placeholder">{fallbackLetter}</div>
+        )}
+      </div>
+
+      <div className="viewed-info">
+        <h4 className="viewed-name" onClick={() => onViewDetails(item)}>
+          {item?.title}
+        </h4>
+
+        <p className="viewed-meta">
+          {item?.rank} • {item?.region}
+        </p>
+
+        <div className="viewed-footer">
+          <span className="viewed-price">{item?.price_rub} ₽</span>
+          <button className="add-to-cart-btn" onClick={() => onAddToCart(item)} type="button">
+            🛒
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const ProfileViewed = ({ items, onViewDetails, onAddToCart, onBack, onClear, backendUrl }) => {
-  const getImageSrc = (item) => {
-    const raw =
-      item?.image_url ||
-      item?.image ||
-      (Array.isArray(item?.images) ? item.images[0] : null);
-
-    if (!raw || typeof raw !== 'string') return '';
-
-    // абсолютная ссылка
-    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
-
-    // относительная ссылка от backend
-    if (raw.startsWith('/')) return `${backendUrl || ''}${raw}`;
-
-    // если хранится просто имя/путь без /
-    return `${backendUrl || ''}/${raw}`;
-  };
-
-  const getPlaceholder = (title) =>
-    `https://via.placeholder.com/100x100/1a1a1a/ffffff?text=${encodeURIComponent((title || '?').charAt(0))}`;
-
   return (
     <div className="profile-viewed-container">
       <div className="viewed-header">
@@ -56,46 +86,15 @@ const ProfileViewed = ({ items, onViewDetails, onAddToCart, onBack, onClear, bac
           </div>
 
           <div className="viewed-grid">
-            {items.map((item, index) => {
-              const imgSrc = getImageSrc(item);
-              const title = item?.title || '';
-
-              return (
-                <div key={`${item?._id ?? 'item'}-${index}`} className="viewed-item">
-                  <div className="viewed-image" onClick={() => onViewDetails(item)}>
-                    {imgSrc ? (
-                      <img
-                        src={imgSrc}
-                        alt={title}
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = getPlaceholder(title);
-                        }}
-                      />
-                    ) : (
-                      <div className="image-placeholder">{(title || '?').charAt(0)}</div>
-                    )}
-                  </div>
-
-                  <div className="viewed-info">
-                    <h4 className="viewed-name" onClick={() => onViewDetails(item)}>
-                      {title}
-                    </h4>
-
-                    <p className="viewed-meta">
-                      {item?.rank} • {item?.region}
-                    </p>
-
-                    <div className="viewed-footer">
-                      <span className="viewed-price">{item?.price_rub} ₽</span>
-                      <button className="add-to-cart-btn" onClick={() => onAddToCart(item)} type="button">
-                        🛒
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {items.map((item, index) => (
+              <ViewedCard
+                key={`${item?._id ?? 'item'}-${index}`}
+                item={item}
+                backendUrl={backendUrl}
+                onViewDetails={onViewDetails}
+                onAddToCart={onAddToCart}
+              />
+            ))}
           </div>
 
           <div className="viewed-hint">
