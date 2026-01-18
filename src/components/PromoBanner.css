@@ -292,6 +292,6 @@
   .promo-banner__art{
     width: 128x !important;
     height: 128px !important;
-    right: 50px !important;
+    right: 1px !important;
   }
 }
