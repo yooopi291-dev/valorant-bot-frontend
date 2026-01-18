@@ -179,3 +179,33 @@
     transform: translateY(-45%) translateX(10%); /* то же поведение на мобиле */
   }
 }
+/* Compact PromoBanner on Home */
+.promo-banner {
+  padding: 12px 14px !important;   /* было больше */
+  border-radius: 16px !important;
+  min-height: 64px !important;     /* ограничиваем высоту */
+}
+
+.promo-banner__content {
+  gap: 6px !important;
+}
+
+.promo-banner__title {
+  font-size: 14px !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
+}
+
+.promo-banner__subtitle {
+  font-size: 12px !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
+}
+
+/* картинку/арт уменьшаем, чтобы не раздувала высоту */
+.promo-banner__art,
+.promo-banner img {
+  width: 44px !important;
+  height: 44px !important;
+  object-fit: contain;
+}
