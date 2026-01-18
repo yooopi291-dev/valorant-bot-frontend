@@ -67,9 +67,76 @@
   line-height: 1;
 }
 
-/* ===== Accent style ===== */
-.promo-banner--accent .promo-banner__content {
+/* =========================
+   PromoBanner (final, clean)
+   ========================= */
+
+.promo-banner {
+  margin: 6px 0 12px;
+}
+
+/* ВНЕШНИЙ контейнер баннера (серый как home-hero) */
+.promo-banner {
+  background: #e9ecef;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 18px;
+  padding: 6px; /* <-- именно это “рамка” вокруг градиента */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* ВНУТРЕННЯЯ карточка (градиент) */
+.promo-banner__content{
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  padding: 12px 14px;
+  min-height: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid rgba(15,25,35,.08);
+  background: #fff;
+}
+
+/* Текст */
+.promo-banner__text {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-width: 0;
+}
+
+.promo-banner__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.promo-banner__subtitle {
+  margin: 3px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.1;
+  opacity: 0.92;
+}
+
+/* ART (не absolute, чтобы не ломал высоту) */
+.promo-banner__art{
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.16));
+}
+
+/* ===== Accent ===== */
+.promo-banner--accent .promo-banner__content{
   color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
 
   background: linear-gradient(135deg,
     #ffb24a 0%,
@@ -80,8 +147,8 @@
   animation: promoShift 7s ease-in-out infinite;
 }
 
-/* Паттерн/блик */
-.promo-banner--accent .promo-banner__content::before {
+/* паттерн */
+.promo-banner--accent .promo-banner__content::before{
   content: "";
   position: absolute;
   inset: 0;
@@ -103,309 +170,38 @@
   mix-blend-mode: overlay;
 }
 
-/* === Текст на accent: объём, микро-обводка, читаемость === */
-.promo-banner--accent .promo-banner__title {
-  letter-spacing: -0.2px;
-  text-shadow:
-    0 2px 10px rgba(0,0,0,0.22),
-    0 1px 0 rgba(0,0,0,0.18);
-  -webkit-text-stroke: 0.35px rgba(15, 25, 35, 0.22);
+/* ВАЖНО: УБИРАЕМ тёмную подложку под текстом (если была в старых версиях) */
+.promo-banner--accent .promo-banner__text::before,
+.promo-banner--accent .promo-banner__text::after{
+  content: none !important;
+  display: none !important;
 }
 
-.promo-banner--accent .promo-banner__subtitle {
-  text-shadow: 0 2px 10px rgba(0,0,0,0.18);
-  -webkit-text-stroke: 0.25px rgba(15, 25, 35, 0.16);
-  opacity: 0.96;
-}
-
-/* Нежная подложка под текст */
-.promo-banner--accent .promo-banner__text::before {
-  content: "";
-  position: absolute;
-  left: -10px;
-  top: -10px;
-  width: 120%;
-  height: calc(100% + 20px);
-  border-radius: 16px;
-  background: linear-gradient(
-    90deg,
-    rgba(15,25,35,0.18) 0%,
-    rgba(15,25,35,0.08) 55%,
-    rgba(15,25,35,0.00) 100%
-  );
-  filter: blur(0.2px);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ✅ Чтобы текст не залезал на иконку (важно) */
-.promo-banner--accent .promo-banner__text{
-  padding-right: 190px;
-}
-
-/* ✅ Декор-иконка справа (правильная привязка + сдвиг вправо) */
-.promo-banner__art{
-  position: absolute;
-  top: 50%;
-  right: 5px;
-  transform: translateY(-45%) translateX(10%); /* ниже + вправо на 30% */
-  width: 190px;
-  height: 190px;
-  object-fit: contain;
-
-  z-index: 3;
-  pointer-events: none;
-  opacity: .98;
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,.22));
-}
-
-
-/* Анимация перелива */
-@keyframes promoShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Мобилка */
-@media (max-width: 480px){
-  .promo-banner--accent .promo-banner__text{
-    padding-right: 165px;
-  }
-  .promo-banner__art{
-    right: 6px;
-    width: 165px;
-    height: 165px;
-    transform: translateY(-45%) translateX(10%); /* то же поведение на мобиле */
-  }
-}
-/* Compact PromoBanner on Home */
-.promo-banner {
-  padding: 12px 14px !important;   /* было больше */
-  border-radius: 16px !important;
-  min-height: 64px !important;     /* ограничиваем высоту */
-}
-
-.promo-banner__content {
-  gap: 6px !important;
-}
-
-.promo-banner__title {
-  font-size: 14px !important;
-  line-height: 1.1 !important;
-  margin: 0 !important;
-}
-
-.promo-banner__subtitle {
-  font-size: 12px !important;
-  line-height: 1.1 !important;
-  margin: 0 !important;
-}
-
-/* картинку/арт уменьшаем, чтобы не раздувала высоту */
-.promo-banner__art,
-.promo-banner img {
-  width: 44px !important;
-  height: 44px !important;
-  object-fit: contain;
-}
-/* PromoBanner = same size/style as .home-hero */
-.promo-banner {
-  padding: 16px !important;                /* как home-hero */
-  margin: 6px 0 18px !important;           /* как home-hero */
-  border-radius: 18px !important;          /* как home-hero */
-  border: 1px solid rgba(15, 25, 35, 0.10) !important;
-  background: #e9ecef !important;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06) !important;
-
-  min-height: auto !important;             /* убираем ограничения высоты */
-}
-
-/* внутренние отступы/интервалы чуть компактнее, чтобы не раздувалось */
-.promo-banner__content {
-  gap: 8px !important;
-}
-
-.promo-banner__title {
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  margin: 0 !important;
-}
-
-.promo-banner__subtitle {
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  margin: 4px 0 0 !important;
-  color: rgba(15, 25, 35, 0.6) !important;
-}
-
-/* арт делаем как иконка, чтобы не увеличивал высоту */
-.promo-banner__art,
-.promo-banner img {
-  width: 56px !important;
-  height: 56px !important;
-  object-fit: contain !important;
-}
-/* ===== PromoBanner = same outer size as .home-hero ===== */
-
-.promo-banner{
-  margin: 6px 0 18px; /* как home-hero */
-}
-
-/* карточка */
-.promo-banner__content{
-  position: relative;
-  overflow: hidden;
-
-  display: flex;
-  align-items: center;
-  gap: 14px;
-
-  padding: 16px;               /* как home-hero */
-  border-radius: 18px;          /* как home-hero */
-  border: 1px solid rgba(15, 25, 35, 0.10);
-  background: #e9ecef;          /* как home-hero */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); /* как home-hero */
-
-  min-height: unset;            /* убрать раздувание */
-}
-
-/* текст */
-.promo-banner__text{
-  flex: 1;
-  min-width: 0;
-}
-
-.promo-banner__title{
-  margin: 0;
-  font-size: 18px;
-  font-weight: 900;
-  line-height: 1.1;
-}
-
-.promo-banner__subtitle{
-  margin: 4px 0 0;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(15, 25, 35, 0.60);
-}
-
-/* арт справа — НЕ absolute, чтобы не ломать размеры */
-.promo-banner__art{
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
-  object-fit: contain;
-  opacity: 0.95;
-  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.18));
-}
-
-/* кнопка (если включишь) */
-.promo-banner__btn{
-  border: none;
-  cursor: pointer;
-  border-radius: 14px;
-  padding: 12px 14px;
-  display: inline-flex;
-  gap: 10px;
-  align-items: center;
-
-  background: rgba(15, 25, 35, 0.88);
-  color: #fff;
-
-  font-weight: 800;
-  font-size: 14px;
-  transition: transform 0.12s ease, opacity 0.12s ease;
-}
-
-.promo-banner__btn:active{
-  transform: scale(0.98);
-}
-
-/* ===== Accent style сохраняем ===== */
-.promo-banner--accent .promo-banner__content{
-  color: #fff;
-  background: linear-gradient(135deg,
-    #ffb24a 0%,
-    #ff6a55 45%,
-    #ff3f66 100%
-  );
-  background-size: 180% 180%;
-  animation: promoShift 7s ease-in-out infinite;
-}
-
+/* делаем ВСЕ строки белыми */
+.promo-banner--accent .promo-banner__title,
 .promo-banner--accent .promo-banner__subtitle{
-  color: rgba(255,255,255,0.92);
+  color: #fff !important;
+  -webkit-text-stroke: 0 !important;
 }
 
+/* чуть читаемости */
+.promo-banner--accent .promo-banner__title{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.20);
+}
+.promo-banner--accent .promo-banner__subtitle{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.16);
+}
+
+/* анимация */
 @keyframes promoShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* мобилка: чуть меньше арт */
+/* мобилка */
 @media (max-width: 480px){
-  .promo-banner__art{
-    width: 56px;
-    height: 56px;
-    flex-basis: 56px;
-  }
-}
-/* Внешняя обёртка: убираем “лишнюю высоту” */
-.promo-banner{
-  margin: 6px 0 12px;     /* было 6 0 18 */
-  padding: 0;             /* на всякий случай */
-}
-
-/* Карточка: уменьшаем внутренние отступы */
-.promo-banner__content{
-  padding: 12px 14px;     /* было 16px */
-  gap: 10px;              /* было 14px */
-  border-radius: 18px;    /* оставляем */
-}
-
-/* Текст чуть компактнее */
-.promo-banner__title{
-  font-size: 16px;        /* было 18 */
-  line-height: 1.05;
-}
-
-.promo-banner__subtitle{
-  margin-top: 3px;        /* было 4 */
-  font-size: 12px;        /* было 13 */
-  line-height: 1.1;
-}
-
-/* Иконка: чтобы не раздувала по высоте */
-.promo-banner__art{
-  width: 52px;            /* было 64 */
-  height: 52px;
-  flex-basis: 52px;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.16));
-}
-
-/* Мобилка ещё чуть меньше */
-@media (max-width: 480px){
+  .promo-banner{ padding: 5px; }
   .promo-banner__content{ padding: 11px 12px; }
-  .promo-banner__art{ width: 48px; height: 48px; flex-basis: 48px; }
-}
-/* ВНЕШНИЙ (серый) блок — уменьшаем “рамку” */
-.promo-banner{
-  padding: 8px !important;          /* было 16px */
-  border-radius: 18px !important;
-  margin: 6px 0 12px !important;
-}
-
-/* ВНУТРЕННИЙ (градиент) блок — чуть меньше внутренних отступов */
-.promo-banner__content{
-  padding: 12px 14px !important;    /* было 22px 18px */
-  border-radius: 16px !important;   /* чуть меньше, чтобы смотрелось вложенно */
-  min-height: 0 !important;
-}
-
-/* На мобилке ещё плотнее */
-@media (max-width: 480px){
-  .promo-banner{ padding: 6px !important; }
-  .promo-banner__content{ padding: 11px 12px !important; }
+  .promo-banner__art{ width: 44px; height: 44px; flex-basis: 44px; }
 }
