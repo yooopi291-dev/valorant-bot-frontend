@@ -222,16 +222,29 @@ function App() {
   };
 
   const clearCart = () => {
-    if (cart.length > 0) {
-      if (window.confirm('Очистить всю корзину?')) {
-        setCart([]);
-        setDiscount(0);
-        setDiscountApplied(false);
-        setPromoCode('');
-        if (tg) tg.showAlert('🛒 Корзина очищена');
-      }
-    }
+  if (cart.length === 0) return;
+
+  const doClear = () => {
+    setCart([]);
+    setDiscount(0);
+    setDiscountApplied(false);
+    setPromoCode('');
+    tg?.showAlert?.('🛒 Корзина очищена');
   };
+
+  // Telegram confirm (если доступен)
+  if (tg?.showConfirm) {
+    tg.showConfirm('Очистить всю корзину?', (ok) => {
+      if (ok) doClear();
+    });
+    return;
+  }
+
+  // fallback
+  if (window.confirm('Очистить всю корзину?')) {
+    doClear();
+  }
+};
 
   // ========== ИЗБРАННОЕ ==========
   const toggleFavorite = (account) => {
@@ -624,12 +637,12 @@ function App() {
               const fallbackLetter = (item?.title || '?').charAt(0).toUpperCase();
 
               return (
-                <div key={item._id} className="product-card compact feed-card cart-feed-card">
-                  {/* ЛЕВЫЙ БАННЕР (как на главной) */}
-                  <div className="feed-banner" role="button" tabIndex={0}>
+                <div key={item._id} className="cart-vertical-card">
+                  {/* БАННЕР НА ВСЮ ШИРИНУ */}
+                  <div className="cart-vertical-banner">
                     {imageSrc ? (
                       <img
-                        className="feed-banner-main"
+                        className="cart-vertical-img"
                         src={imageSrc}
                         alt={item?.title || 'item'}
                         loading="lazy"
@@ -638,53 +651,57 @@ function App() {
                         }}
                       />
                     ) : (
-                      <div className="feed-banner-fallback">
+                      <div className="cart-vertical-fallback">
                         <span>{fallbackLetter}</span>
                       </div>
                     )}
                   </div>
 
-                  {/* ПРАВЫЙ СТОЛБИК: название + цена + qty + удалить */}
-                  <div className="feed-actions cart-feed-actions">
-                    <div className="cart-mini-title" title={item.title}>
-                      {item.title}
-                    </div>
-
-                    <div className="feed-price">
-                      <div className="feed-price-rub" title={`${item.price_rub} ₽`}>
-                        {item.price_rub} ₽
+                  {/* НИЗ: НАЗВАНИЕ + ЦЕНА + QTY + УДАЛИТЬ */}
+                  <div className="cart-vertical-bottom">
+                    <div className="cart-vertical-head">
+                      <div className="cart-vertical-title" title={item.title}>
+                        {item.title}
                       </div>
 
-                      {item?.price_usd ? (
-                        <div className="feed-price-usd" title={`$${item.price_usd}`}>
-                          ${item.price_usd}
+                      <div className="cart-vertical-price">
+                        <div className="cart-vertical-price-rub" title={`${item.price_rub} ₽`}>
+                          {item.price_rub} ₽
                         </div>
-                      ) : null}
 
-                      <div className="cart-mult">× {item.quantity}</div>
+                        {item?.price_usd ? (
+                          <div className="cart-vertical-price-usd" title={`$${item.price_usd}`}>
+                            ${item.price_usd}
+                          </div>
+                        ) : null}
+
+                        <div className="cart-vertical-mult">× {item.quantity}</div>
+                      </div>
                     </div>
 
-                    <div className="quantity-controls cart-qty">
+                    <div className="cart-vertical-actions">
+                      <div className="quantity-controls cart-vertical-qty">
+                        <button
+                          onClick={() => updateQuantity(item._id, -1)}
+                          disabled={item.quantity <= 1}
+                          type="button"
+                        >
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item._id, 1)} type="button">
+                          +
+                        </button>
+                      </div>
+
                       <button
-                        onClick={() => updateQuantity(item._id, -1)}
-                        disabled={item.quantity <= 1}
+                        className="remove-btn cart-vertical-remove"
+                        onClick={() => removeFromCart(item._id)}
                         type="button"
                       >
-                        −
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item._id, 1)} type="button">
-                        +
+                        Удалить
                       </button>
                     </div>
-
-                    <button
-                      className="remove-btn cart-remove"
-                      onClick={() => removeFromCart(item._id)}
-                      type="button"
-                    >
-                      Удалить
-                    </button>
                   </div>
                 </div>
               );
@@ -754,20 +771,13 @@ function App() {
               <button className="btn secondary" onClick={clearCart} type="button">
                 🗑️ Очистить корзину
               </button>
-              <button
-                className="btn secondary"
-                onClick={() => setActiveView('catalog')}
-                type="button"
-              >
-                ＋ Добавить ещё
-              </button>
             </div>
           </div>
         </>
       )}
     </div>
   );
-  
+
       case 'boost':
         return (
           <div className="boost-container">
