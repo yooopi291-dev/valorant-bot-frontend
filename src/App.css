@@ -1908,3 +1908,108 @@ body {
     height: 34px;
   }
 }
+/* ===== Cart V2 FIX: price fits + remove stays inside ===== */
+
+.cart-card-v2__footer{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(86px, 96px) minmax(92px, 110px);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.cart-card-v2__qty,
+.cart-card-v2__price,
+.cart-card-v2__remove{
+  min-width: 0; /* критично: разрешаем сжиматься */
+}
+
+/* price: делаем компактным и “двухстрочным” */
+.cart-card-v2__price{
+  height: auto;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 16px;
+  background: rgba(15,25,35,0.06);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  overflow: hidden;
+}
+
+.cart-card-v2__price-rub{
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.05;
+  color: #ff4655;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* нижняя строка в price: $ + ×qty */
+.cart-card-v2__price-sub{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.cart-card-v2__price-usd{
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(15,25,35,0.62);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cart-card-v2__mult{
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(15,25,35,0.55);
+  white-space: nowrap;
+}
+
+/* remove: чтобы не вылезал */
+.cart-card-v2__remove{
+  height: 44px;
+  width: 100%;
+  padding: 0 10px;
+  border-radius: 16px;
+
+  border: 1px solid rgba(255,70,85,0.22);
+  background: rgba(255,70,85,0.10);
+  color: #ff4655;
+
+  font-size: 13px;
+  font-weight: 900;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* если экран совсем узкий — переносим в 2 строки, чтобы ничего не вылезало */
+@media (max-width: 360px){
+  .cart-card-v2__footer{
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "qty qty"
+      "price remove";
+  }
+  .cart-card-v2__qty{ grid-area: qty; }
+  .cart-card-v2__price{ grid-area: price; }
+  .cart-card-v2__remove{ grid-area: remove; }
+}

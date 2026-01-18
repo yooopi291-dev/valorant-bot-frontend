@@ -682,10 +682,13 @@ function App() {
 
       <div className="cart-card-v2__price" title={`${item.price_rub} ₽`}>
         <div className="cart-card-v2__price-rub">{item.price_rub} ₽</div>
-        {item?.price_usd ? (
-          <div className="cart-card-v2__price-usd">${item.price_usd}</div>
-        ) : null}
-        <div className="cart-card-v2__mult">× {item.quantity}</div>
+        <div className="cart-card-v2__price-sub">
+  {item?.price_usd ? (
+    <span className="cart-card-v2__price-usd">${item.price_usd}</span>
+  ) : null}
+  <span className="cart-card-v2__mult">× {item.quantity}</span>
+</div>
+
       </div>
 
       <button
