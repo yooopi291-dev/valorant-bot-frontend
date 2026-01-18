@@ -29,6 +29,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
   transition: transform 0.3s ease;
 }
 
@@ -214,25 +216,6 @@
   transform: none;
 }
 
-/* Адаптивность */
-@media (max-width: 480px) {
-  .product-image-container {
-    height: 140px;
-  }
-  
-  .product-title {
-    font-size: 14px;
-    min-height: 36px;
-  }
-  
-  .price-amount {
-    font-size: 18px;
-  }
-  
-  .btn {
-    padding: 8px 14px;
-  }
-}
 .image-fallback {
   width: 100%;
   height: 100%;
@@ -244,36 +227,38 @@
   font-weight: bold;
   color: white;
 }
-/* Левый блок-картинка в “ленточной” карточке */
-.products-feed .product-image {
-  width: 110px;          /* у тебя уже есть, оставляем */
-  height: 110px;
-  border-radius: 14px;
-  margin: 12px;
-  overflow: hidden;      /* важно, чтобы cover не вылезал */
-  background: #0f1923;   /* чтобы не было белых дыр */
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .product-image-container {
+    height: 140px;
+  }
+
+  .product-title {
+    font-size: 14px;
+    min-height: 36px;
+  }
+
+  .price-amount {
+    font-size: 18px;
+  }
+
+  .btn {
+    padding: 8px 14px;
+  }
 }
 
-/* Если внутри product-image лежит <img> */
-.products-feed .product-image img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;     /* вот это решает масштабирование */
-  object-position: center;
-}
+/* ===============================
+   FEED (Популярное) — compact карточка
+   FIX: картинка заполняет блок, без серых/белых полос снизу
+   =============================== */
 
-/* Если картинка сделана как background-image */
-.products-feed .product-image {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-/* Карточка в ленте — добавляем объём */
+/* немного объёма в ленте, можно оставить */
 .products-feed .product-card {
   border: 1px solid rgba(15, 25, 35, 0.10);
   border-radius: 16px;
   background: #fff;
+  overflow: hidden;
 
   box-shadow:
     0 12px 28px rgba(15, 25, 35, 0.12),
@@ -288,88 +273,64 @@
     0 16px 36px rgba(15, 25, 35, 0.16),
     0 4px 12px rgba(15, 25, 35, 0.08);
 }
-/* ===== FEED CARD: левый баннер-картинка на всю площадь ===== */
-.products-feed .product-card {
-  overflow: hidden; /* чтобы cover не вылезал за скругления */
+
+/* делаем compact карточку горизонтальной */
+.products-feed .product-card.compact {
+  display: flex;
+  align-items: stretch;
 }
 
-.products-feed .product-image {
-  /* это и есть чёрная зона */
-  position: relative;
-  flex: 1 1 auto;
-
-  /* важно: убираем “квадратик” из-за отступов/ограничений */
-  padding: 0 !important;
-  margin: 0 !important;
-  width: auto !important;
-
-  height: 132px;                 /* размер баннера (desktop) */
-  background: #0f1923;
-  border-radius: 16px 0 0 16px;  /* слева скругление, справа стык с инфо */
+/* левый блок — это контейнер картинки */
+.products-feed .product-card.compact .product-image-container {
+  flex: 0 0 120px;
+  height: 120px;
+  border-radius: 16px 0 0 16px;
   overflow: hidden;
 }
 
-/* если внутри баннера есть <img> — растягиваем его на весь блок */
-.products-feed .product-image img {
-  position: absolute;
-  inset: 0;
+/* img занимает весь контейнер */
+.products-feed .product-card.compact .product-image {
   width: 100%;
   height: 100%;
   display: block;
-
   object-fit: cover;
   object-position: center;
-  border-radius: inherit;
 }
 
-/* mobile */
-@media (max-width: 480px) {
-  .products-feed .product-image {
-    height: 120px;               /* размер баннера (mobile) */
-  }
-}
-/* ===== Цена: спокойнее цвет + всё в одну строку ===== */
-.products-feed .product-price,
-.products-feed .price {
+/* правый блок тянется и убирает белую полосу снизу */
+.products-feed .product-card.compact .product-info {
+  flex: 1 1 auto;
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  white-space: nowrap;
-  line-height: 1;
+  flex-direction: column;
+  padding: 12px 14px;
 }
 
-.products-feed .product-price,
-.products-feed .price {
-  color: rgba(15, 25, 35, 0.88); /* вместо красного */
-  font-weight: 900;
-  font-size: 20px;
+/* футер вниз */
+.products-feed .product-card.compact .product-footer {
+  margin-top: auto;
 }
 
-/* если ₽ отдельно — не даём ему стать с новой строки */
-.products-feed .product-price span,
-.products-feed .price span {
-  white-space: nowrap;
+/* в compact убираем принудительную высоту заголовка (она делала пустоту) */
+.products-feed .product-card.compact .product-title {
+  min-height: unset;
 }
 
-/* ===== Кнопки “глаз” и “корзина”: одинаковый размер и баланс ===== */
+/* кнопки и цена можно оставить как у тебя, но если хочешь ровнее: */
+/*
 .products-feed .product-actions {
-  display: flex;
-  align-items: center;
   gap: 10px;
 }
-
-.products-feed .product-actions button {
+.products-feed .view-btn,
+.products-feed .cart-btn {
+  width: 42px;
   height: 42px;
-  min-width: 42px;
   border-radius: 14px;
 }
+*/
 
-/* если есть отдельные классы под кнопки — можно точнее */
-.products-feed .btn-view,
-.products-feed .btn-cart,
-.products-feed .product-btn-view,
-.products-feed .product-btn-cart {
-  height: 42px;
-  width: 42px;
-  border-radius: 14px;
+@media (max-width: 480px) {
+  .products-feed .product-card.compact .product-image-container {
+    flex-basis: 110px;
+    height: 110px;
+  }
 }
