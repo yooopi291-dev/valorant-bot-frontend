@@ -1317,3 +1317,29 @@ body {
   background: #e9ecef !important; /* темнее чем было */
   border: 1px solid rgba(15,25,35,.10) !important;
 }
+.favorites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.favorites-back {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.favorites-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.favorites-actions-spacer {
+  width: 36px;
+}

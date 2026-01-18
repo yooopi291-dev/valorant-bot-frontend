@@ -26,12 +26,9 @@ function App() {
   const [lang, setLang] = useState(localStorage.getItem('valorant_lang') || 'ru');
   const labels = t(lang);
 
-  // ❌ темная тема убрана полностью (ничего не пишем в body.classList и localStorage theme)
-  // Если у тебя где-то в Settings остался переключатель — он будет просто ни на что не влиять (позже удалим).
-
   // Состояния для навигации
   const [activeView, setActiveView] = useState('home');
-  const [profileSubView, setProfileSubView] = useState('menu'); // 'menu', 'orders', 'settings', 'viewed'
+  const [profileSubView, setProfileSubView] = useState('menu'); // 'menu', 'orders', 'settings', 'viewed', 'offer'
 
   // Состояния для данных
   const [accounts, setAccounts] = useState([]);
@@ -52,7 +49,7 @@ function App() {
     fromRank: '',
     toRank: '',
     region: '',
-    wishes: ''
+    wishes: '',
   });
 
   // Для истории заказов
@@ -78,51 +75,47 @@ function App() {
     }
   }, [lang]);
 
-  // ====== дальше файл без изменений: твои useEffect/init/loadLocalData/renderContent/return ======
-  // (просто оставь всё, что было ниже, как есть)
-
-  // ========== ИНИЦИАЛИЗАЦИЯ ==========
-  useEffect(() => {
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
-
-  // Загрузка данных из localStorage
-  loadLocalData();
-
-  // Загружаем каталог при переходе на него
-  if (activeView === 'catalog' || activeView === 'home') {
-    loadAccounts();
-  }
-
-  // Загружаем заказы при первом входе в профиль — чтобы бейдж "Заказы" появился сразу
-  if (activeView === 'profile' && !ordersPrefetchedRef.current) {
-    ordersPrefetchedRef.current = true;
-    loadUserOrders();
-  }
-
-  // Если вышли из профиля — сбрасываем флаг, чтобы при следующем входе обновить счетчик
-  if (activeView !== 'profile') {
-    ordersPrefetchedRef.current = false;
-  }
-}, [activeView, profileSubView]);
-  
   // Загрузка данных из localStorage
   const loadLocalData = () => {
     try {
       const savedCart = localStorage.getItem(`valorant_cart_${USER_ID}`);
       if (savedCart) setCart(JSON.parse(savedCart));
-      
+
       const savedFavorites = localStorage.getItem(`valorant_fav_${USER_ID}`);
       if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
-      
+
       const savedViewed = localStorage.getItem(`valorant_viewed_${USER_ID}`);
       if (savedViewed) setViewedItems(JSON.parse(savedViewed));
     } catch (e) {
       console.error('Ошибка загрузки данных:', e);
     }
   };
+
+  // ========== ИНИЦИАЛИЗАЦИЯ ==========
+  useEffect(() => {
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    loadLocalData();
+
+    // Загружаем каталог при переходе на него
+    if (activeView === 'catalog' || activeView === 'home') {
+      loadAccounts();
+    }
+
+    // Загружаем заказы при первом входе в профиль — чтобы бейдж "Заказы" появился сразу
+    if (activeView === 'profile' && !ordersPrefetchedRef.current) {
+      ordersPrefetchedRef.current = true;
+      loadUserOrders();
+    }
+
+    // Если вышли из профиля — сбрасываем флаг, чтобы при следующем входе обновить счетчик
+    if (activeView !== 'profile') {
+      ordersPrefetchedRef.current = false;
+    }
+  }, [activeView, profileSubView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Сохранение данных в localStorage
   useEffect(() => {
@@ -178,29 +171,30 @@ function App() {
 
   // ========== ФУНКЦИИ КОРЗИНЫ ==========
   const addToCart = (account) => {
-    const existing = cart.find(item => item._id === account._id);
-    
+    const existing = cart.find((item) => item._id === account._id);
+
     if (existing) {
-      const updatedCart = cart.map(item =>
-        item._id === account._id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+      const updatedCart = cart.map((item) =>
+        item._id === account._id ? { ...item, quantity: item.quantity + 1 } : item
       );
       setCart(updatedCart);
       if (tg) tg.showAlert(`✅ "${account.title}" (теперь: ${existing.quantity + 1} шт.)`);
     } else {
-      const newCart = [...cart, { 
-        ...account, 
-        quantity: 1,
-        addedAt: new Date().toISOString()
-      }];
+      const newCart = [
+        ...cart,
+        {
+          ...account,
+          quantity: 1,
+          addedAt: new Date().toISOString(),
+        },
+      ];
       setCart(newCart);
       if (tg) tg.showAlert(`✅ "${account.title}" добавлен в корзину!`);
     }
   };
-  
+
   const updateQuantity = (accountId, change) => {
-    const updatedCart = cart.map(item => {
+    const updatedCart = cart.map((item) => {
       if (item._id === accountId) {
         const newQuantity = Math.max(1, item.quantity + change);
         return { ...item, quantity: newQuantity };
@@ -209,16 +203,16 @@ function App() {
     });
     setCart(updatedCart);
   };
-  
+
   const removeFromCart = (accountId) => {
-    const itemToRemove = cart.find(item => item._id === accountId);
-    const newCart = cart.filter(item => item._id !== accountId);
+    const itemToRemove = cart.find((item) => item._id === accountId);
+    const newCart = cart.filter((item) => item._id !== accountId);
     setCart(newCart);
     if (tg && itemToRemove) {
       tg.showAlert(`🗑️ "${itemToRemove.title}" удален из корзины`);
     }
   };
-  
+
   const clearCart = () => {
     if (cart.length > 0) {
       if (window.confirm('Очистить всю корзину?')) {
@@ -230,12 +224,12 @@ function App() {
       }
     }
   };
-  
+
   // ========== ИЗБРАННОЕ ==========
   const toggleFavorite = (account) => {
-    const isFav = favorites.find(f => f._id === account._id);
+    const isFav = favorites.find((f) => f._id === account._id);
     if (isFav) {
-      const newFavs = favorites.filter(f => f._id !== account._id);
+      const newFavs = favorites.filter((f) => f._id !== account._id);
       setFavorites(newFavs);
       if (tg) tg.showAlert(`❤️ "${account.title}" удален из избранного`);
     } else {
@@ -244,59 +238,58 @@ function App() {
       if (tg) tg.showAlert(`⭐ "${account.title}" добавлен в избранное!`);
     }
   };
-  
+
   const isFavorite = (accountId) => {
-    return favorites.some(f => f._id === accountId);
-  };
-  
-  // ========== ПРОСМОТРЕННЫЕ ==========
-  // ========== ПРОСМОТРЕННЫЕ ==========
-const addToViewed = (account) => {
-  if (!account) return;
-
-  const normalized = {
-    ...account,
-    // гарантируем наличие поля для картинки
-    image_url:
-      account?.image_url ||
-      account?.image ||
-      account?.photo ||
-      (Array.isArray(account?.images) ? account.images[0] : undefined),
+    return favorites.some((f) => f._id === accountId);
   };
 
-  const filtered = viewedItems.filter(item => item._id !== normalized._id);
-  const updated = [normalized, ...filtered].slice(0, 20);
-  setViewedItems(updated);
-};
+  // ========== ПРОСМОТРЕННЫЕ ==========
+  const addToViewed = (account) => {
+    if (!account) return;
+
+    const normalized = {
+      ...account,
+      image_url:
+        account?.image_url ||
+        account?.image ||
+        account?.photo ||
+        (Array.isArray(account?.images) ? account.images[0] : undefined),
+    };
+
+    const filtered = viewedItems.filter((item) => item._id !== normalized._id);
+    const updated = [normalized, ...filtered].slice(0, 20);
+    setViewedItems(updated);
+  };
 
   const clearViewed = () => {
-  if (viewedItems.length === 0) return;
-  if (window.confirm('Очистить историю просмотров?')) {
-    setViewedItems([]);
-    try {
-      localStorage.removeItem(`valorant_viewed_${USER_ID}`);
-    } catch {
-      // ignore
+    if (viewedItems.length === 0) return;
+    if (window.confirm('Очистить историю просмотров?')) {
+      setViewedItems([]);
+      try {
+        localStorage.removeItem(`valorant_viewed_${USER_ID}`);
+      } catch {
+        // ignore
+      }
+      tg?.showAlert?.('🗑️ История просмотров очищена');
     }
-    tg?.showAlert?.('🗑️ История просмотров очищена');
-  }
-};
+  };
+
   // ========== ПРОМОКОДЫ ==========
   const applyPromoCode = async () => {
     if (!promoCode.trim()) {
       if (tg) tg.showAlert('Введите промокод');
       return;
     }
-    
+
     if (discountApplied) {
       if (tg) tg.showAlert('Скидка уже применена');
       return;
     }
-    
+
     if (promoCode.trim().toLowerCase() === 'start') {
-      const total = cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0);
+      const total = cart.reduce((sum, item) => sum + item.price_rub * item.quantity, 0);
       const calculatedDiscount = Math.floor(total * 0.05);
-      
+
       setDiscount(calculatedDiscount);
       setDiscountApplied(true);
       if (tg) tg.showAlert(`✅ Промокод применен! Скидка: ${calculatedDiscount} ₽`);
@@ -304,42 +297,42 @@ const addToViewed = (account) => {
       if (tg) tg.showAlert('❌ Неверный промокод');
     }
   };
-  
+
   // ========== ОФОРМЛЕНИЕ ЗАКАЗА ==========
   const checkoutCart = async () => {
     if (cart.length === 0) {
       if (tg) tg.showAlert('Корзина пуста');
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const orderPayload = {
         userId: USER_ID,
-        items: cart.map(item => ({
+        items: cart.map((item) => ({
           accountId: item._id,
           quantity: item.quantity,
           price_rub: item.price_rub,
-          title: item.title
+          title: item.title,
         })),
         promoCode: discountApplied ? promoCode : null,
         discount: discount,
-        total: cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0) - discount
+        total: cart.reduce((sum, item) => sum + item.price_rub * item.quantity, 0) - discount,
       };
-      
+
       const res = await axios.post(`${BACKEND_URL}/api/orders/cart`, orderPayload);
-      
+
       if (res.data.success) {
         if (tg) tg.showAlert(`✅ Заказ оформлен! Сумма: ${res.data.total} ₽`);
-        
+
         setCart([]);
         setDiscount(0);
         setDiscountApplied(false);
         setPromoCode('');
-        
+
         await loadUserOrders();
-        
+
         setActiveView('profile');
         setProfileSubView('orders');
       } else {
@@ -352,14 +345,14 @@ const addToViewed = (account) => {
       setLoading(false);
     }
   };
-  
+
   // ========== БУСТ ==========
   const submitBoost = async () => {
     if (!boostForm.fromRank || !boostForm.toRank || !boostForm.region) {
       if (tg) tg.showAlert('Заполните все поля');
       return;
     }
-    
+
     setLoading(true);
     try {
       const payload = {
@@ -367,9 +360,9 @@ const addToViewed = (account) => {
         fromRank: boostForm.fromRank,
         toRank: boostForm.toRank,
         region: boostForm.region,
-        wishes: boostForm.wishes
+        wishes: boostForm.wishes,
       };
-      
+
       const res = await axios.post(`${BACKEND_URL}/api/orders/boost`, payload);
       if (res.data.success) {
         if (tg) tg.showAlert('✅ Заказ буста создан! Свяжитесь с менеджером.');
@@ -387,16 +380,16 @@ const addToViewed = (account) => {
       setLoading(false);
     }
   };
-  
+
   // ========== ВСПОМОГАТЕЛЬНЫЕ ==========
   const getCartTotal = () => {
-    return cart.reduce((sum, item) => sum + (item.price_rub * item.quantity), 0);
+    return cart.reduce((sum, item) => sum + item.price_rub * item.quantity, 0);
   };
-  
+
   const getFinalTotal = () => {
     return Math.max(0, getCartTotal() - discount);
   };
-  
+
   const handleViewDetails = (account) => {
     setSelectedAccount(account);
     addToViewed(account);
@@ -404,106 +397,94 @@ const addToViewed = (account) => {
   };
 
   const handleProfileAction = (action) => {
-  switch (action) {
-    case 'orders':
-      loadUserOrders();
-      setProfileSubView('orders');
-      break;
+    switch (action) {
+      case 'orders':
+        loadUserOrders();
+        setProfileSubView('orders');
+        break;
 
-    case 'settings':
-      setProfileSubView('settings');
-      break;
+      case 'settings':
+        setProfileSubView('settings');
+        break;
 
-    case 'viewed':
-      setProfileSubView('viewed');
-      break;
+      case 'viewed':
+        setProfileSubView('viewed');
+        break;
 
-    case 'favorites':
-      setActiveView('favorites');
-      break;
+      case 'favorites':
+        setActiveView('favorites');
+        break;
 
-    case 'reviews':
-      tg?.showAlert?.('⭐ Отзывы будут добавлены позже');
-      break;
+      case 'reviews':
+        tg?.showAlert?.('⭐ Отзывы будут добавлены позже');
+        break;
 
-    case 'support':
-      tg?.openLink?.('https://t.me/ricksxxx');
-      break;
+      case 'support':
+        tg?.openLink?.('https://t.me/ricksxxx');
+        break;
 
-    case 'community':
-      tg?.openLink?.('https://t.me/valorant_servicebot');
-      break;
+      case 'community':
+        tg?.openLink?.('https://t.me/valorant_servicebot');
+        break;
 
-    case 'offer':
-      setProfileSubView('offer');
-      break;
+      case 'offer':
+        setProfileSubView('offer');
+        break;
 
-    default:
-      setProfileSubView('menu');
-      break;
-  }
-};
-
+      default:
+        setProfileSubView('menu');
+        break;
+    }
+  };
 
   // ========== RENDER ==========
   const renderContent = () => {
     switch (activeView) {
       case 'home':
-  return (
-    <div className="home-container">
-      {/* HERO / шапка */}
-      <div className="home-hero">
-        <div className="home-hero-logo" aria-hidden="true">
-  <img className="home-hero-logo-img" src={sageOrb} alt="" />
-</div>
+        return (
+          <div className="home-container">
+            <div className="home-hero">
+              <div className="home-hero-logo" aria-hidden="true">
+                <img className="home-hero-logo-img" src={sageOrb} alt="" />
+              </div>
 
-        <div className="home-hero-text">
-          <h1 className="home-hero-title">Valorant Service</h1>
-          <p className="home-hero-subtitle">Аккаунты и бусты</p>
-        </div>
-      </div>
+              <div className="home-hero-text">
+                <h1 className="home-hero-title">Valorant Service</h1>
+                <p className="home-hero-subtitle">Аккаунты и бусты</p>
+              </div>
+            </div>
 
+            <PromoBanner
+              title="Скидка на первый товар"
+              subtitle="-5% по промокоду START"
+              accent
+              hideButton={true}
+              artSrc={vpIcon}
+            />
 
-      <PromoBanner
-  title="Скидка на первый товар"
-  subtitle="-5% по промокоду START"
-  accent
-  hideButton={true}
-  artSrc={vpIcon}
-/>
+            <div className="section-header section-header--popular">
+              <h2 className="section-title-inline">🔥 Популярное</h2>
+              <button className="see-all-btn" onClick={() => setActiveView('catalog')} type="button">
+                Смотреть всё →
+              </button>
+            </div>
 
-
-      {/* Заголовок ленты */}
-      <div className="section-header section-header--popular">
-        <h2 className="section-title-inline">🔥 Популярное</h2>
-        <button
-          className="see-all-btn"
-          onClick={() => setActiveView('catalog')}
-        >
-          Смотреть всё →
-        </button>
-      </div>
-
-      {/* Лента (не grid) */}
-      <div className="products-feed">
-        {accounts.slice(0, 4).map((account) => (
-          <ProductCard
-            key={account._id}
-            account={account}
-            backendUrl={BACKEND_URL}
-            onAddToCart={addToCart}
-            onToggleFavorite={toggleFavorite}
-            onViewDetails={handleViewDetails}
-            isFavorite={isFavorite(account._id)}
-            compact
-          />
-        ))}
-      </div>
-
-      {/* Убрали кнопку "Весь каталог" */}
-    </div>
-  );
-
+            <div className="products-feed">
+              {accounts.slice(0, 4).map((account) => (
+                <ProductCard
+                  key={account._id}
+                  account={account}
+                  backendUrl={BACKEND_URL}
+                  onAddToCart={addToCart}
+                  onToggleFavorite={toggleFavorite}
+                  onViewDetails={handleViewDetails}
+                  isFavorite={isFavorite(account._id)}
+                  compact
+                />
+              ))}
+            </div>
+          </div>
+        );
 
       case 'catalog':
         return (
@@ -515,22 +496,19 @@ const addToViewed = (account) => {
                 <span>В корзине: {cart.length}</span>
               </div>
             </div>
-            
+
             {loading ? (
               <div className="loading">Загрузка...</div>
             ) : accounts.length === 0 ? (
               <div className="empty-state">
                 <p>😔 Каталог пуст</p>
-                <button 
-                  className="btn primary"
-                  onClick={loadAccounts}
-                >
+                <button className="btn primary" onClick={loadAccounts} type="button">
                   Обновить
                 </button>
               </div>
             ) : (
               <div className="products-grid">
-                {accounts.map(account => (
+                {accounts.map((account) => (
                   <ProductCard
                     key={account._id}
                     account={account}
@@ -545,29 +523,37 @@ const addToViewed = (account) => {
             )}
           </div>
         );
-        
+
       case 'favorites':
         return (
           <div className="favorites-container">
-            <div className="page-header">
-              <h2>⭐ Избранное</h2>
-              <p className="subtitle">{favorites.length} товаров</p>
+            <div className="favorites-header">
+              <button
+                className="favorites-back"
+                type="button"
+                onClick={() => setActiveView('profile')}
+              >
+                ‹
+              </button>
+
+              <h2 className="favorites-title">⭐ Избранное</h2>
+
+              <div className="favorites-actions-spacer" />
             </div>
-            
+
+            <p className="subtitle">{favorites.length} товаров</p>
+
             {favorites.length === 0 ? (
               <div className="empty-state">
                 <p>Тут пока пусто</p>
                 <p className="hint">Добавляйте сюда понравившиеся аккаунты</p>
-                <button 
-                  className="btn primary"
-                  onClick={() => setActiveView('catalog')}
-                >
+                <button className="btn primary" onClick={() => setActiveView('catalog')} type="button">
                   В каталог
                 </button>
               </div>
             ) : (
               <div className="products-grid">
-                {favorites.map(account => (
+                {favorites.map((account) => (
                   <ProductCard
                     key={account._id}
                     account={account}
@@ -582,7 +568,10 @@ const addToViewed = (account) => {
             )}
           </div>
         );
-        
+
+      // ... дальше оставь остальные case (cart/boost/profile/default) как у тебя
+   
+
       case 'cart':
         return (
           <div className="cart-container">
