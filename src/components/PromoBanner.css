@@ -390,3 +390,22 @@
   .promo-banner__content{ padding: 11px 12px; }
   .promo-banner__art{ width: 48px; height: 48px; flex-basis: 48px; }
 }
+/* ВНЕШНИЙ (серый) блок — уменьшаем “рамку” */
+.promo-banner{
+  padding: 8px !important;          /* было 16px */
+  border-radius: 18px !important;
+  margin: 6px 0 12px !important;
+}
+
+/* ВНУТРЕННИЙ (градиент) блок — чуть меньше внутренних отступов */
+.promo-banner__content{
+  padding: 12px 14px !important;    /* было 22px 18px */
+  border-radius: 16px !important;   /* чуть меньше, чтобы смотрелось вложенно */
+  min-height: 0 !important;
+}
+
+/* На мобилке ещё плотнее */
+@media (max-width: 480px){
+  .promo-banner{ padding: 6px !important; }
+  .promo-banner__content{ padding: 11px 12px !important; }
+}
