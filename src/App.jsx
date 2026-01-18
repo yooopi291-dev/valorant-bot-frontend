@@ -665,10 +665,11 @@ function App() {
                       </div>
                     )}
 
-                    <div className="cart-badges">
-                      {item?.rank ? <span className="cart-badge">🏆 {item.rank}</span> : null}
-                      {item?.region ? <span className="cart-badge">🌍 {item.region}</span> : null}
-                    </div>
+                    <div className="cartcard-badges">
+  {item?.rank ? <span className="cartcard-badge">🏆 {item.rank}</span> : null}
+  {item?.region ? <span className="cartcard-badge">🌍 {item.region}</span> : null}
+</div>
+
                   </div>
 
                   {/* ПРАВАЯ часть: инфо + твой функционал */}

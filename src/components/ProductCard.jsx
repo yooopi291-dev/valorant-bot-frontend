@@ -94,18 +94,7 @@ export default function ProductCard({
                 </div>
               ))}
             </div>
-          ) : null}
-
-          {/* плашки */}
-          <div className="feed-badges">
-            {account?.rank ? (
-              <span className="feed-badge">🏆 {account.rank}</span>
-            ) : null}
-            {account?.region ? (
-              <span className="feed-badge">🌍 {account.region}</span>
-            ) : null}
-          </div>
-
+          ) : null}        
           {/* сердечко в compact убрано */}
           {account?.is_sold && <div className="sold-badge">ПРОДАН</div>}
         </div>
