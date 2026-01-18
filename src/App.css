@@ -845,3 +845,63 @@ body {
   font-size: 12px;   /* было 11 */
   font-weight: 800;
 }
+/* =========================
+   CART empty state (centered + big CTA)
+   ========================= */
+.cart-empty{
+  /* почти весь экран, с учетом нижнего навбара */
+  min-height: calc(100vh - 70px - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 0;
+}
+
+.cart-empty__center{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 14px;
+}
+
+.cart-empty__title{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f1923;
+}
+
+.cart-empty__hint{
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(15, 25, 35, 0.60);
+}
+
+/* большая “объемная” кнопка */
+.btn.cart-empty__cta{
+  width: 100%;
+  border-radius: 18px;
+  padding: 18px 18px;
+  font-size: 16px;
+  font-weight: 900;
+
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid rgba(255, 70, 85, 0.35);
+
+  box-shadow:
+    0 14px 26px rgba(255, 70, 85, 0.25),
+    0 6px 14px rgba(15, 25, 35, 0.10),
+    inset 0 0 0 1px rgba(255,255,255,0.22);
+
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.btn.cart-empty__cta:active{
+  transform: scale(0.985);
+  filter: brightness(0.98);
+}

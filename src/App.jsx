@@ -611,18 +611,22 @@ const loadLocalData = () => {
 </div>
 
       {cart.length === 0 ? (
-        <div className="empty-state">
-          <p>Корзина пуста</p>
-          <button
-            className="btn primary"
-            onClick={() => setActiveView('catalog')}
-            type="button"
-          >
-            В каталог
-          </button>
-        </div>
-      ) : (
-        <>
+  <div className="cart-empty">
+    <div className="cart-empty__center">
+      <p className="cart-empty__title">Корзина пуста</p>
+      <p className="cart-empty__hint">Добавь аккаунт из каталога</p>
+    </div>
+
+    <button
+      className="btn cart-empty__cta"
+      onClick={() => setActiveView('catalog')}
+      type="button"
+    >
+      В каталог
+    </button>
+  </div>
+) : (
+  <>
           <div className="cart-items">
             {cart.map((item) => {
               const resolveImg = (img) => {
