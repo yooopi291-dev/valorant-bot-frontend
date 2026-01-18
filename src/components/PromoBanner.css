@@ -205,3 +205,47 @@
   .promo-banner__content{ padding: 11px 12px; }
   .promo-banner__art{ width: 44px; height: 44px; flex-basis: 44px; }
 }
+/* ===== PromoBanner: more volume text + bigger right icon (put at VERY END) ===== */
+
+/* 1) Текст более “объёмный” */
+.promo-banner--accent .promo-banner__title{
+  letter-spacing: -0.2px !important;
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.18),
+    0 4px 14px rgba(0,0,0,0.22) !important;
+  -webkit-text-stroke: 0.35px rgba(15,25,35,0.22) !important;
+}
+
+.promo-banner--accent .promo-banner__subtitle{
+  text-shadow:
+    0 1px 0 rgba(0,0,0,0.14),
+    0 3px 12px rgba(0,0,0,0.18) !important;
+  -webkit-text-stroke: 0.25px rgba(15,25,35,0.18) !important;
+}
+
+/* 2) Иконка справа — больше, но не ломает высоту */
+.promo-banner__content{
+  align-items: center !important;      /* на всякий */
+}
+
+.promo-banner__art{
+  width: 64px !important;
+  height: 64px !important;
+  flex: 0 0 64px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.22)) !important;
+}
+
+/* если вдруг текст начинает тесниться — чуть меньше gap */
+.promo-banner__content{
+  gap: 12px !important;
+}
+
+/* мобилка: тоже увеличили, но умеренно */
+@media (max-width: 480px){
+  .promo-banner__art{
+    width: 56px !important;
+    height: 56px !important;
+    flex-basis: 56px !important;
+  }
+}
