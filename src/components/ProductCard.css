@@ -249,84 +249,69 @@
 }
 
 /* ===============================
-   FEED (Популярное) — compact карточка
-   FIX: картинка заполняет блок, без серых/белых полос снизу
+   FEED (Популярное) — compact карточка (горизонтальная)
+   FIX: картинка занимает весь блок + убираем “пустое место”
    =============================== */
 
-/* немного объёма в ленте, можно оставить */
-.products-feed .product-card {
-  border: 1px solid rgba(15, 25, 35, 0.10);
-  border-radius: 16px;
-  background: #fff;
-  overflow: hidden;
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.12),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-
-.products-feed .product-card:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 16px 36px rgba(15, 25, 35, 0.16),
-    0 4px 12px rgba(15, 25, 35, 0.08);
-}
-
-/* делаем compact карточку горизонтальной */
 .products-feed .product-card.compact {
   display: flex;
   align-items: stretch;
+  overflow: hidden;
 }
 
-/* левый блок — это контейнер картинки */
+/* Левый блок (контейнер картинки) */
 .products-feed .product-card.compact .product-image-container {
   flex: 0 0 120px;
   height: 120px;
   border-radius: 16px 0 0 16px;
   overflow: hidden;
+  background: #0f1923;
 }
 
-/* img занимает весь контейнер */
-.products-feed .product-card.compact .product-image {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
+/* ВАЖНО: <img class="product-image"> — убиваем любые старые margin/padding */
+.products-feed .product-card.compact img.product-image {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: inherit;
 }
 
-/* правый блок тянется и убирает белую полосу снизу */
+/* Правый блок — делаем плотным, без раздувания пустоты */
 .products-feed .product-card.compact .product-info {
   flex: 1 1 auto;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  padding: 12px 14px;
+  justify-content: center; /* центрируем контент по высоте */
 }
 
-/* футер вниз */
-.products-feed .product-card.compact .product-footer {
-  margin-top: auto;
-}
-
-/* в compact убираем принудительную высоту заголовка (она делала пустоту) */
+/* В compact убираем фиксированную высоту заголовка */
 .products-feed .product-card.compact .product-title {
   min-height: unset;
+  margin-bottom: 6px;
 }
 
-/* кнопки и цена можно оставить как у тебя, но если хочешь ровнее: */
-/*
-.products-feed .product-actions {
-  gap: 10px;
+/* Чуть плотнее мета */
+.products-feed .product-card.compact .product-meta {
+  margin-bottom: 8px;
 }
-.products-feed .view-btn,
-.products-feed .cart-btn {
+
+/* Футер идёт сразу после цены (без margin-top:auto) */
+.products-feed .product-card.compact .product-footer {
+  margin-top: 10px;
+}
+
+/* Кнопки чуть компактнее */
+.products-feed .product-card.compact .view-btn,
+.products-feed .product-card.compact .cart-btn {
   width: 42px;
   height: 42px;
   border-radius: 14px;
 }
-*/
 
 @media (max-width: 480px) {
   .products-feed .product-card.compact .product-image-container {
