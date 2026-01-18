@@ -601,27 +601,9 @@ function App() {
           <div className="cart-items">
             {cart.map((item) => {
               const resolveImg = (img) => {
-                if (!img) return '';
-
-                // если вдруг объект
-                if (typeof img === 'object') {
-                  img = img.image_url || img.url || img.src || img.path;
-                }
                 if (!img || typeof img !== 'string') return '';
-
                 if (img.startsWith('http')) return img;
                 if (img.startsWith('/')) return `${BACKEND_URL}${img}`;
-
-                // относительный без "/" (uploads/..)
-                if (
-                  img.startsWith('uploads/') ||
-                  img.startsWith('images/') ||
-                  img.startsWith('static/')
-                ) {
-                  return `${BACKEND_URL}/${img}`;
-                }
-
-                // telegram file_id
                 return `${BACKEND_URL}/api/images/${img}`;
               };
 
@@ -633,91 +615,76 @@ function App() {
                 (Array.isArray(item?.skins_images) ? item.skins_images[0] : undefined) ||
                 (Array.isArray(item?.skins) ? item.skins[0] : undefined);
 
-              const imageSrc = resolveImg(mainImgRaw);
+              const imageSrc = resolveImg(
+                typeof mainImgRaw === 'string'
+                  ? mainImgRaw
+                  : mainImgRaw?.image_url || mainImgRaw?.url || mainImgRaw?.src
+              );
 
               const fallbackLetter = (item?.title || '?').charAt(0).toUpperCase();
 
               return (
-                <div key={item._id} className="cart-item cart-card">
-                  {/* БАННЕР слева */}
-                  <div className="cart-banner" role="button" tabIndex={0}>
+                <div key={item._id} className="product-card compact feed-card cart-feed-card">
+                  {/* ЛЕВЫЙ БАННЕР (как на главной) */}
+                  <div className="feed-banner" role="button" tabIndex={0}>
                     {imageSrc ? (
-                      <>
-                        <img
-                          className="cart-banner-img"
-                          src={imageSrc}
-                          alt={item?.title || 'item'}
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            const fb =
-                              e.currentTarget.parentElement?.querySelector('.cart-banner-fallback');
-                            if (fb) fb.style.display = 'flex';
-                          }}
-                        />
-                        <div className="cart-banner-fallback" style={{ display: 'none' }}>
-                          <span>{fallbackLetter}</span>
-                        </div>
-                      </>
+                      <img
+                        className="feed-banner-main"
+                        src={imageSrc}
+                        alt={item?.title || 'item'}
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
                     ) : (
-                      <div className="cart-banner-fallback">
+                      <div className="feed-banner-fallback">
                         <span>{fallbackLetter}</span>
                       </div>
                     )}
-
-                    <div className="cartcard-badges">
-  {item?.rank ? <span className="cartcard-badge">🏆 {item.rank}</span> : null}
-  {item?.region ? <span className="cartcard-badge">🌍 {item.region}</span> : null}
-</div>
-
                   </div>
 
-                  {/* ПРАВАЯ часть: инфо + твой функционал */}
-                  <div className="cart-right">
-                    <div className="cart-top">
-                      <div className="cart-title" title={item.title}>
-                        {item.title}
-                      </div>
-
-                      <div className="cart-pricebox">
-                        <div className="cart-price-rub" title={`${item.price_rub} ₽`}>
-                          {item.price_rub} ₽
-                        </div>
-
-                        {item?.price_usd ? (
-                          <div className="cart-price-usd" title={`$${item.price_usd}`}>
-                            ${item.price_usd}
-                          </div>
-                        ) : null}
-
-                        <div className="cart-mult">× {item.quantity}</div>
-                      </div>
+                  {/* ПРАВЫЙ СТОЛБИК: название + цена + qty + удалить */}
+                  <div className="feed-actions cart-feed-actions">
+                    <div className="cart-mini-title" title={item.title}>
+                      {item.title}
                     </div>
 
-                    {/* НИЖЕ — функционал корзины НЕ трогаем */}
-                    <div className="cart-item-actions">
-                      <div className="quantity-controls">
-                        <button
-                          onClick={() => updateQuantity(item._id, -1)}
-                          disabled={item.quantity <= 1}
-                          type="button"
-                        >
-                          −
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item._id, 1)} type="button">
-                          +
-                        </button>
+                    <div className="feed-price">
+                      <div className="feed-price-rub" title={`${item.price_rub} ₽`}>
+                        {item.price_rub} ₽
                       </div>
 
+                      {item?.price_usd ? (
+                        <div className="feed-price-usd" title={`$${item.price_usd}`}>
+                          ${item.price_usd}
+                        </div>
+                      ) : null}
+
+                      <div className="cart-mult">× {item.quantity}</div>
+                    </div>
+
+                    <div className="quantity-controls cart-qty">
                       <button
-                        className="remove-btn"
-                        onClick={() => removeFromCart(item._id)}
+                        onClick={() => updateQuantity(item._id, -1)}
+                        disabled={item.quantity <= 1}
                         type="button"
                       >
-                        Удалить
+                        −
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item._id, 1)} type="button">
+                        +
                       </button>
                     </div>
+
+                    <button
+                      className="remove-btn cart-remove"
+                      onClick={() => removeFromCart(item._id)}
+                      type="button"
+                    >
+                      Удалить
+                    </button>
                   </div>
                 </div>
               );
@@ -800,8 +767,7 @@ function App() {
       )}
     </div>
   );
-
-        
+  
       case 'boost':
         return (
           <div className="boost-container">

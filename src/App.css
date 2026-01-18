@@ -865,3 +865,56 @@ body {
     height: 124px;
   }
 }
+/* ===== CART as FEED CARD tweaks ===== */
+
+.cart-feed-card {
+  /* на всякий случай, чтобы не раздувало */
+  padding: 12px;
+}
+
+/* если оставил название */
+.cart-mini-title {
+  font-weight: 800;
+  font-size: 12px;
+  color: #0f1923;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  margin-top: -2px;
+}
+
+/* множитель */
+.cart-feed-actions .cart-mult {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(15, 25, 35, 0.55);
+}
+
+/* количество внутри правой колонки */
+.cart-qty {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: rgba(15, 25, 35, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cart-qty button {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+
+/* удалить — как кнопка под колонкой */
+.cart-remove {
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px 10px;
+  margin-top: 0;
+}
