@@ -259,8 +259,7 @@ body {
 }
 
 /* =========================
-   FEED (Популярное) containers
-   ProductCard стилизуется в ProductCard.css — тут только контейнер
+   FEED containers
    ========================= */
 .products-feed {
   display: flex;
@@ -300,7 +299,6 @@ body {
 
 /* =========================
    GRID containers
-   Card стилизуется в ProductCard.css
    ========================= */
 .products-grid {
   display: grid;
@@ -339,210 +337,13 @@ body {
 }
 
 /* =========================
-   CART (compact card like Home)
-   ВАЖНО: СКОУПИМ badge, чтобы не ломать NavigationBar .cart-badge
+   CART list
    ========================= */
 .cart-items {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 24px;
-}
-
-/* ВАЖНО: рассчитываем на class="cart-item cart-card" */
-.cart-item.cart-card {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 12px;
-
-  padding: 12px;
-  border-radius: 18px;
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.10),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-}
-
-.cart-item.cart-card .cart-banner {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #0f1923;
-}
-
-.cart-item.cart-card .cart-banner-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cart-item.cart-card .cart-banner-fallback {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
-  color: #fff;
-  font-size: 40px;
-  font-weight: 900;
-}
-
-/* badges — СКОПИМ ТОЛЬКО ВНУТРИ cart-card */
-.cart-item.cart-card .cart-badges {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 2;
-}
-
-.cart-item.cart-card .cart-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  max-width: 104px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  font-size: 11px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.9);
-  background: rgba(255, 255, 255, 0.88);
-
-  padding: 5px 8px;
-  border-radius: 999px;
-}
-
-.cart-item.cart-card .cart-right {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-}
-
-.cart-item.cart-card .cart-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.cart-item.cart-card .cart-title {
-  font-size: 14px;
-  font-weight: 900;
-  color: #0f1923;
-  line-height: 1.2;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.cart-item.cart-card .cart-pricebox {
-  flex: 0 0 92px;
-  border-radius: 14px;
-  background: rgba(15, 25, 35, 0.06);
-  padding: 8px 8px;
-  text-align: center;
-}
-
-.cart-item.cart-card .cart-price-rub {
-  font-weight: 900;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  color: #ff4655;
-  line-height: 1.1;
-}
-
-.cart-item.cart-card .cart-price-usd {
-  font-weight: 700;
-  font-size: 11px;
-  color: rgba(15, 25, 35, 0.65);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-item.cart-card .cart-mult {
-  font-weight: 800;
-  font-size: 11px;
-  color: rgba(15, 25, 35, 0.65);
-  margin-top: 4px;
-}
-
-.cart-item.cart-card .cart-item-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cart-item.cart-card .quantity-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-
-  background: rgba(15, 25, 35, 0.05);
-  border-radius: 14px;
-  padding: 8px 10px;
-}
-
-.cart-item.cart-card .quantity-controls button {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  color: #0f1923;
-  font-size: 18px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.cart-item.cart-card .quantity-controls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.cart-item.cart-card .quantity-controls span {
-  font-size: 18px;
-  font-weight: 900;
-  color: #0f1923;
-  min-width: 28px;
-  text-align: center;
-}
-
-.cart-item.cart-card .remove-btn {
-  width: 100%;
-  height: 38px;
-  border-radius: 12px;
-  border: 1px solid rgba(220, 53, 69, 0.25);
-  background: rgba(220, 53, 69, 0.10);
-  color: #dc3545;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
 }
 
 /* =========================
@@ -658,1067 +459,9 @@ body {
 }
 
 /* =========================
-   RESPONSIVE
-   ========================= */
-@media (max-width: 768px) {
-  .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .catalog-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .catalog-stats {
-    flex-direction: row;
-    gap: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .promo-input-group {
-    flex-direction: column;
-  }
-
-  .secondary-actions {
-    flex-direction: column;
-  }
-
-  .cart-item.cart-card {
-    grid-template-columns: 110px 1fr;
-  }
-
-  .cart-item.cart-card .cart-banner {
-    width: 110px;
-    height: 110px;
-  }
-
-  .cart-item.cart-card .cart-pricebox {
-    flex-basis: 88px;
-  }
-}
-/* =========================
-   CART CARD — как на главной (feed style)
-   ========================= */
-
-/* список */
-.cart-items {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* карточка: баннер + узкий столбик справа */
-.cart-item.cart-card {
-  display: grid;
-  grid-template-columns: 1fr 96px; /* как у feed-card */
-  gap: 12px;
-
-  padding: 12px !important;       /* перебиваем старые padding */
-  margin-bottom: 0 !important;    /* gap уже есть */
-  border-radius: 18px;
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.10),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-
-  overflow: hidden;
-  align-items: stretch;
-}
-
-/* баннер слева */
-.cart-item.cart-card .cart-banner {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #0f1923;
-  height: 132px;                 /* как на главной */
-}
-
-/* картинка cover */
-.cart-item.cart-card .cart-banner-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* fallback */
-.cart-item.cart-card .cart-banner-fallback {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
-  color: #fff;
-  font-size: 42px;
-  font-weight: 900;
-}
-
-/* правая колонка */
-.cart-item.cart-card .cart-right {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  min-width: 0;
-}
-
-/* название компактно (чтобы не раздувало карточку) */
-.cart-item.cart-card .cart-title {
-  font-weight: 800;
-  font-size: 13px;
-  color: #0f1923;
-  line-height: 1.15;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* прайс-бокс — чтобы 5 цифр не вылезали */
-.cart-item.cart-card .cart-pricebox {
-  background: rgba(15, 25, 35, 0.06);
-  border-radius: 14px;
-  padding: 10px 8px;
-  text-align: center;
-}
-
-.cart-item.cart-card .cart-price-rub {
-  font-weight: 900;
-  font-size: 15px;
-  color: #ff4655;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-item.cart-card .cart-price-usd {
-  font-weight: 700;
-  font-size: 12px;
-  color: rgba(15, 25, 35, 0.65);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-item.cart-card .cart-mult {
-  margin-top: 4px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-/* блок количества делаем компактнее */
-.cart-item.cart-card .cart-item-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 0 !important;
-}
-
-.cart-item.cart-card .quantity-controls {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: rgba(15, 25, 35, 0.04);
-  border-radius: 14px;
-  padding: 10px 10px;
-}
-
-.cart-item.cart-card .quantity-controls button {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-}
-
-/* удалить — во всю ширину */
-.cart-item.cart-card .remove-btn {
-  width: 100%;
-  border-radius: 14px;
-  padding: 12px 10px;
-}
-
-/* mobile */
-@media (max-width: 480px) {
-  .cart-item.cart-card {
-    grid-template-columns: 1fr 92px;
-  }
-  .cart-item.cart-card .cart-banner {
-    height: 124px;
-  }
-}
-/* ===== CART as FEED CARD tweaks ===== */
-
-.cart-feed-card {
-  /* на всякий случай, чтобы не раздувало */
-  padding: 12px;
-}
-
-/* если оставил название */
-.cart-mini-title {
-  font-weight: 800;
-  font-size: 12px;
-  color: #0f1923;
-  line-height: 1.1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: center;
-  margin-top: -2px;
-}
-
-/* множитель */
-.cart-feed-actions .cart-mult {
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-/* количество внутри правой колонки */
-.cart-qty {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 14px;
-  background: rgba(15, 25, 35, 0.04);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.cart-qty button {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-}
-
-/* удалить — как кнопка под колонкой */
-.cart-remove {
-  width: 100%;
-  border-radius: 14px;
-  padding: 12px 10px;
-  margin-top: 0;
-}
-/* =========================
-   CART = same card as HOME feed-card
-   (fix: banner height + right column visible)
-   ========================= */
-
-.cart-container {
-  padding-bottom: 90px; /* чтобы не упиралось в навбар */
-}
-
-.cart-items {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* Карточка корзины = feed-card */
-.cart-feed-card {
-  display: grid !important;
-  grid-template-columns: 1fr 110px !important; /* баннер + компактная колонка */
-  gap: 12px;
-  padding: 12px;
-
-  border-radius: 18px;
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.10),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-
-  overflow: hidden;
-  align-items: stretch;
-}
-
-/* Баннер фиксируем по высоте (как на главной) */
-.cart-feed-card .feed-banner {
-  position: relative;
-  height: 132px !important;
-  min-height: 132px !important;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #0f1923;
-}
-
-/* Картинка всегда cover */
-.cart-feed-card .feed-banner-main {
-  position: absolute;
-  inset: 0;
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  object-fit: cover !important;
-  object-position: center !important;
-}
-
-/* Правая колонка */
-.cart-feed-actions {
-  display: flex !important;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  align-items: stretch;
-  min-width: 0;
-}
-
-/* Название */
-.cart-mini-title {
-  font-weight: 900;
-  font-size: 13px;
-  line-height: 1.15;
-  color: #0f1923;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Внутри price-box — не даём вылезать 5 цифрам */
-.cart-feed-actions .feed-price-rub,
-.cart-feed-actions .feed-price-usd {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* × количество */
-.cart-feed-actions .cart-mult {
-  margin-top: 4px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-/* qty — делаем компактнее */
-.cart-qty {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  background: rgba(15, 25, 35, 0.04);
-  border-radius: 14px;
-  padding: 10px 10px;
-}
-
-.cart-qty button {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-}
-
-/* удалить — компактно, как кнопка */
-.cart-remove {
-  width: 100%;
-  border-radius: 14px;
-  padding: 12px 10px;
-}
-
-@media (max-width: 480px) {
-  .cart-feed-card {
-    grid-template-columns: 1fr 104px !important;
-  }
-  .cart-feed-card .feed-banner {
-    height: 124px !important;
-    min-height: 124px !important;
-  }
-}
-/* =========================
-   CART (vertical card): banner full width + actions bottom
-   ========================= */
-
-.cart-vertical-card {
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-  border-radius: 18px;
-  overflow: hidden;
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.10),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-}
-
-/* баннер сверху */
-.cart-vertical-banner {
-  position: relative;
-  width: 100%;
-  height: 160px; /* можно 150-180, это “герой” */
-  background: #0f1923;
-}
-
-.cart-vertical-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cart-vertical-fallback {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
-  color: #fff;
-  font-size: 44px;
-  font-weight: 900;
-}
-
-/* низ карточки */
-.cart-vertical-bottom {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cart-vertical-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.cart-vertical-title {
-  flex: 1;
-  min-width: 0;
-
-  font-weight: 900;
-  font-size: 14px;
-  color: #0f1923;
-  line-height: 1.2;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* прайс компактный справа */
-.cart-vertical-price {
-  width: 98px;
-  flex: 0 0 98px;
-
-  background: rgba(15, 25, 35, 0.06);
-  border-radius: 14px;
-  padding: 10px 8px;
-  text-align: center;
-}
-
-.cart-vertical-price-rub,
-.cart-vertical-price-usd {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-vertical-price-rub {
-  font-weight: 900;
-  font-size: 15px;
-  color: #ff4655;
-  line-height: 1.1;
-}
-
-.cart-vertical-price-usd {
-  font-weight: 700;
-  font-size: 12px;
-  color: rgba(15, 25, 35, 0.65);
-  margin-top: 2px;
-}
-
-.cart-vertical-mult {
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-/* кнопки снизу в ряд */
-.cart-vertical-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  align-items: center;
-}
-
-/* qty компакт */
-.cart-vertical-qty {
-  background: rgba(15, 25, 35, 0.04);
-  border-radius: 14px;
-  padding: 10px 10px;
-  justify-content: space-between;
-}
-
-.cart-vertical-qty button {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-}
-
-/* удалить */
-.cart-vertical-remove {
-  width: 100%;
-  border-radius: 14px;
-  padding: 12px 10px;
-}
-
-/* mobile */
-@media (max-width: 480px) {
-  .cart-vertical-banner {
-    height: 150px;
-  }
-  .cart-vertical-price {
-    width: 92px;
-    flex-basis: 92px;
-  }
-}
-/* =========================
-   CART (vertical): banner full width + actions bottom
-   ========================= */
-
-.cart-vertical-card {
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-  border-radius: 18px;
-  overflow: hidden;
-
-  box-shadow:
-    0 12px 28px rgba(15, 25, 35, 0.10),
-    0 2px 8px rgba(15, 25, 35, 0.06);
-}
-
-.cart-vertical-banner {
-  position: relative;
-  width: 100%;
-  height: 160px;
-  background: #0f1923;
-}
-
-.cart-vertical-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cart-vertical-fallback {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
-  color: #fff;
-  font-size: 44px;
-  font-weight: 900;
-}
-
-.cart-vertical-bottom {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cart-vertical-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.cart-vertical-title {
-  flex: 1;
-  min-width: 0;
-
-  font-weight: 900;
-  font-size: 14px;
-  color: #0f1923;
-  line-height: 1.2;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.cart-vertical-price {
-  width: 98px;
-  flex: 0 0 98px;
-
-  background: rgba(15, 25, 35, 0.06);
-  border-radius: 14px;
-  padding: 10px 8px;
-  text-align: center;
-}
-
-.cart-vertical-price-rub,
-.cart-vertical-price-usd {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-vertical-price-rub {
-  font-weight: 900;
-  font-size: 15px;
-  color: #ff4655;
-  line-height: 1.1;
-}
-
-.cart-vertical-price-usd {
-  font-weight: 700;
-  font-size: 12px;
-  color: rgba(15, 25, 35, 0.65);
-  margin-top: 2px;
-}
-
-.cart-vertical-mult {
-  margin-top: 6px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-.cart-vertical-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  align-items: center;
-}
-
-.cart-vertical-qty {
-  background: rgba(15, 25, 35, 0.04);
-  border-radius: 14px;
-  padding: 10px 10px;
-  justify-content: space-between;
-}
-
-.cart-vertical-qty button {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-}
-
-.cart-vertical-remove {
-  width: 100%;
-  border-radius: 14px;
-  padding: 12px 10px;
-}
-
-@media (max-width: 480px) {
-  .cart-vertical-banner {
-    height: 150px;
-  }
-  .cart-vertical-price {
-    width: 92px;
-    flex-basis: 92px;
-  }
-}
-/* =========================
-   CART (vertical compact): harmonious layout
-   ========================= */
-
-.cart-vertical-card {
-  background: #fff;
-  border: 1px solid rgba(15, 25, 35, 0.10);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 10px 24px rgba(15, 25, 35, 0.10), 0 2px 8px rgba(15, 25, 35, 0.06);
-}
-
-/* баннер компактнее, но "cover" сохраняем */
-.cart-vertical-banner {
-  position: relative;
-  width: 100%;
-  height: 132px; /* было 160 — убрали пустоту */
-  background: #0f1923;
-}
-
-.cart-vertical-img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-}
-
-.cart-vertical-fallback {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
-  color: #fff;
-  font-size: 40px;
-  font-weight: 900;
-}
-
-.cart-vertical-bottom {
-  padding: 10px 12px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* 1-я строка: название + цена */
-.cart-vertical-head {
-  display: grid;
-  grid-template-columns: 1fr 92px; /* компактнее */
-  gap: 10px;
-  align-items: start;
-}
-
-.cart-vertical-title {
-  min-width: 0;
-  font-weight: 900;
-  font-size: 14px;
-  color: #0f1923;
-  line-height: 1.15;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.cart-vertical-price {
-  width: 92px;
-  background: rgba(15, 25, 35, 0.06);
-  border-radius: 14px;
-  padding: 8px 8px;
-  text-align: center;
-}
-
-.cart-vertical-price-rub,
-.cart-vertical-price-usd {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cart-vertical-price-rub {
-  font-weight: 900;
-  font-size: 14px;
-  color: #ff4655;
-  line-height: 1.05;
-}
-
-.cart-vertical-price-usd {
-  font-weight: 700;
-  font-size: 12px;
-  color: rgba(15, 25, 35, 0.62);
-  margin-top: 2px;
-}
-
-.cart-vertical-mult {
-  margin-top: 5px;
-  font-size: 12px;
-  font-weight: 800;
-  color: rgba(15, 25, 35, 0.55);
-}
-
-/* 2-я строка: qty + удалить */
-.cart-vertical-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  align-items: center;
-}
-
-/* IMPORTANT: приводим qty к единому виду, перебиваем старые .quantity-controls */
-.quantity-controls.cart-vertical-qty {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-
-  background: rgba(15, 25, 35, 0.05) !important;
-  border-radius: 14px !important;
-  padding: 8px 10px !important;
-}
-
-/* кнопки минус/плюс одинаковые и аккуратные */
-.quantity-controls.cart-vertical-qty button {
-  width: 36px !important;
-  height: 36px !important;
-
-  border-radius: 12px !important;
-  border: 1px solid rgba(15, 25, 35, 0.14) !important;
-  background: #fff !important;
-
-  color: #0f1923 !important;
-  font-size: 18px !important;
-  font-weight: 900 !important;
-
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-
-  cursor: pointer !important;
-  transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
-}
-
-.quantity-controls.cart-vertical-qty button:active {
-  transform: scale(0.97);
-}
-
-.quantity-controls.cart-vertical-qty button:disabled {
-  opacity: 0.45 !important;
-  cursor: not-allowed !important;
-}
-
-.quantity-controls.cart-vertical-qty span {
-  min-width: 24px !important;
-  text-align: center !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  color: #0f1923 !important;
-}
-
-/* удалить — делаем "кнопкой" а не рамкой */
-.remove-btn.cart-vertical-remove {
-  width: 100% !important;
-  height: 44px !important;
-
-  border-radius: 14px !important;
-  border: 1px solid rgba(255, 70, 85, 0.22) !important;
-  background: rgba(255, 70, 85, 0.10) !important;
-
-  color: #ff4655 !important;
-  font-size: 14px !important;
-  font-weight: 900 !important;
-
-  cursor: pointer !important;
-  transition: transform 0.12s ease, background 0.12s ease;
-}
-
-.remove-btn.cart-vertical-remove:active {
-  transform: scale(0.98);
-}
-
-@media (max-width: 480px) {
-  .cart-vertical-banner { height: 124px; }
-  .cart-vertical-head { grid-template-columns: 1fr 88px; }
-  .cart-vertical-price { width: 88px; }
-}
-/* =========================
-   CART (vertical) — title сверху, price снизу, actions внизу
-   (PASTE AT VERY END of App.css)
-   ========================= */
-
-.cart-vertical-bottom {
-  padding: 10px 12px 12px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-}
-
-/* title отдельно */
-.cart-vertical-title {
-  font-weight: 900 !important;
-  font-size: 14px !important;
-  color: #0f1923 !important;
-  line-height: 1.15 !important;
-
-  display: -webkit-box !important;
-  -webkit-line-clamp: 2 !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  min-width: 0 !important;
-}
-
-/* price как "нижняя плашка", во всю ширину */
-.cart-vertical-price {
-  width: 100% !important;
-  background: rgba(15, 25, 35, 0.06) !important;
-  border-radius: 14px !important;
-  padding: 10px 12px !important;
-
-  display: flex !important;
-  align-items: baseline !important;
-  justify-content: space-between !important;
-  gap: 10px !important;
-}
-
-.cart-vertical-price-rub {
-  font-weight: 900 !important;
-  font-size: 15px !important;
-  color: #ff4655 !important;
-  line-height: 1.05 !important;
-
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 48% !important;
-}
-
-.cart-vertical-price-usd {
-  font-weight: 700 !important;
-  font-size: 12px !important;
-  color: rgba(15, 25, 35, 0.62) !important;
-
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 28% !important;
-}
-
-.cart-vertical-mult {
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  color: rgba(15, 25, 35, 0.55) !important;
-  white-space: nowrap !important;
-}
-
-/* actions: qty + delete ровной строкой */
-.cart-vertical-actions {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important;
-  align-items: center !important;
-}
-
-/* перебиваем старые qty-стили (как мы уже делали) */
-.quantity-controls.cart-vertical-qty {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-
-  background: rgba(15, 25, 35, 0.05) !important;
-  border-radius: 14px !important;
-  padding: 8px 10px !important;
-  height: 44px !important;
-}
-
-.quantity-controls.cart-vertical-qty button {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(15, 25, 35, 0.14) !important;
-  background: #fff !important;
-  color: #0f1923 !important;
-  font-size: 18px !important;
-  font-weight: 900 !important;
-}
-
-.quantity-controls.cart-vertical-qty span {
-  min-width: 24px !important;
-  text-align: center !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  color: #0f1923 !important;
-}
-
-/* delete такой же высоты, выглядит как “primary danger soft” */
-.remove-btn.cart-vertical-remove {
-  width: 100% !important;
-  height: 44px !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255, 70, 85, 0.22) !important;
-  background: rgba(255, 70, 85, 0.10) !important;
-  color: #ff4655 !important;
-  font-size: 14px !important;
-  font-weight: 900 !important;
-}
-
-/* баннер остаётся cover и компактный */
-.cart-vertical-banner { height: 132px !important; }
-@media (max-width: 480px) { .cart-vertical-banner { height: 124px !important; } }
-/* === CART price row (compact, above buttons) === */
-.cart-vertical-price{
-  width: 100% !important;
-
-  /* меньше высота */
-  padding: 6px 10px !important;
-  border-radius: 12px !important;
-
-  background: rgba(15,25,35,0.05) !important;
-
-  /* выравнивание как строка */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-}
-
-/* делаем элементы "одной строкой" и компактно */
-.cart-vertical-price-rub{
-  font-weight: 900 !important;
-  font-size: 14px !important;
-  line-height: 1 !important;
-  color: #ff4655 !important;
-
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 44% !important;
-}
-
-.cart-vertical-price-usd{
-  font-weight: 800 !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  color: rgba(15,25,35,0.62) !important;
-
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  max-width: 30% !important;
-}
-
-.cart-vertical-mult{
-  font-weight: 800 !important;
-  font-size: 12px !important;
-  line-height: 1 !important;
-  color: rgba(15,25,35,0.55) !important;
-  white-space: nowrap !important;
-}
-
-/* чуть меньше вертикальные отступы всего блока */
-.cart-vertical-bottom{
-  gap: 8px !important;
-}
-/* =========================
-   CART CARD V2 (по схеме)
+   CART CARD V2 (актуальная)
    картинка -> текст -> нижняя строка (qty | price | remove)
    ========================= */
-
 .cart-card-v2{
   background: #fff;
   border: 1px solid rgba(15, 25, 35, 0.10);
@@ -1735,11 +478,11 @@ body {
   gap: 10px;
 }
 
-/* 1) banner */
+/* banner */
 .cart-card-v2__banner{
   position: relative;
   width: 100%;
-  height: 140px;            /* компактно и красиво */
+  height: 140px;
   border-radius: 16px;
   overflow: hidden;
   background: #0f1923;
@@ -1767,7 +510,7 @@ body {
   font-weight: 900;
 }
 
-/* 2) text block */
+/* text */
 .cart-card-v2__text{
   width: 100%;
   background: rgba(15,25,35,0.04);
@@ -1787,12 +530,19 @@ body {
   overflow: hidden;
 }
 
-/* 3) footer row: qty | price | remove */
+/* footer: qty | price | remove */
 .cart-card-v2__footer{
   display: grid;
-  grid-template-columns: 1fr 96px 110px; /* qty растягивается, price компакт, remove компакт */
+  grid-template-columns: minmax(0, 1fr) minmax(86px, 96px) minmax(92px, 110px);
   gap: 10px;
   align-items: center;
+  width: 100%;
+}
+
+.cart-card-v2__qty,
+.cart-card-v2__price,
+.cart-card-v2__remove{
+  min-width: 0;
 }
 
 /* qty */
@@ -1837,96 +587,8 @@ body {
   color: #0f1923;
 }
 
-/* price (тонкий блок) */
+/* price: 2 строки (₽ сверху, $ + ×qty снизу) */
 .cart-card-v2__price{
-  height: 44px;
-  background: rgba(15,25,35,0.06);
-  border-radius: 16px;
-  padding: 6px 8px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-
-  overflow: hidden;
-}
-
-.cart-card-v2__price-rub{
-  font-size: 13px;
-  font-weight: 900;
-  line-height: 1;
-  color: #ff4655;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.cart-card-v2__price-usd{
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  color: rgba(15,25,35,0.62);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.cart-card-v2__mult{
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1;
-  color: rgba(15,25,35,0.55);
-  white-space: nowrap;
-}
-
-/* remove */
-.cart-card-v2__remove{
-  height: 44px;
-  width: 100%;
-  border-radius: 16px;
-
-  border: 1px solid rgba(255,70,85,0.22);
-  background: rgba(255,70,85,0.10);
-  color: #ff4655;
-
-  font-size: 14px;
-  font-weight: 900;
-}
-
-/* mobile */
-@media (max-width: 380px){
-  .cart-card-v2__banner{ height: 128px; }
-  .cart-card-v2__footer{
-    grid-template-columns: 1fr 88px 96px;
-  }
-  .cart-card-v2__qty button{
-    width: 34px;
-    height: 34px;
-  }
-}
-/* ===== Cart V2 FIX: price fits + remove stays inside ===== */
-
-.cart-card-v2__footer{
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(86px, 96px) minmax(92px, 110px);
-  gap: 10px;
-  align-items: center;
-  width: 100%;
-}
-
-.cart-card-v2__qty,
-.cart-card-v2__price,
-.cart-card-v2__remove{
-  min-width: 0; /* критично: разрешаем сжиматься */
-}
-
-/* price: делаем компактным и “двухстрочным” */
-.cart-card-v2__price{
-  height: auto;
   min-height: 44px;
   padding: 6px 8px;
   border-radius: 16px;
@@ -1953,7 +615,6 @@ body {
   max-width: 100%;
 }
 
-/* нижняя строка в price: $ + ×qty */
 .cart-card-v2__price-sub{
   display: inline-flex;
   align-items: center;
@@ -1982,7 +643,7 @@ body {
   white-space: nowrap;
 }
 
-/* remove: чтобы не вылезал */
+/* remove */
 .cart-card-v2__remove{
   height: 44px;
   width: 100%;
@@ -2001,7 +662,7 @@ body {
   text-overflow: ellipsis;
 }
 
-/* если экран совсем узкий — переносим в 2 строки, чтобы ничего не вылезало */
+/* narrow screens: перенос footer в 2 строки */
 @media (max-width: 360px){
   .cart-card-v2__footer{
     grid-template-columns: 1fr 1fr;
@@ -2012,4 +673,40 @@ body {
   .cart-card-v2__qty{ grid-area: qty; }
   .cart-card-v2__price{ grid-area: price; }
   .cart-card-v2__remove{ grid-area: remove; }
+  .cart-card-v2__banner{ height: 128px; }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .catalog-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .catalog-stats {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .promo-input-group {
+    flex-direction: column;
+  }
+
+  .secondary-actions {
+    flex-direction: column;
+  }
 }
