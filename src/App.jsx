@@ -204,25 +204,6 @@ const loadLocalData = () => {
   tg?.showAlert?.(`✅ "${account.title}" добавлен в корзину!`);
 };
 
-  if (exists) {
-    tg?.showAlert?.('Этот аккаунт уже в корзине');
-    // если хочешь сразу открыть корзину при повторном добавлении — раскомментируй:
-    // setActiveView('cart');
-    return;
-  }
-
-  const newCart = [
-    ...cart,
-    {
-      ...account,
-      quantity: 1, // можно оставить, но теперь всегда 1
-      addedAt: new Date().toISOString(),
-    },
-  ];
-
-  setCart(newCart);
-  tg?.showAlert?.(`✅ "${account.title}" добавлен в корзину!`);
-};
 
   const updateQuantity = (accountId, change) => {
     const updatedCart = cart.map((item) => {
@@ -959,6 +940,6 @@ const loadLocalData = () => {
       />
     </div>
   );
-
+}
 
 export default App;
