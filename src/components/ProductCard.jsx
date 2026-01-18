@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import './ProductCard.css';
 
 /**
@@ -21,12 +21,15 @@ export default function ProductCard({
 }) {
   const [imgError, setImgError] = useState(false);
 
-  const resolveImg = (img) => {
-    if (!img || typeof img !== 'string') return '';
-    if (img.startsWith('http')) return img;
-    if (img.startsWith('/')) return `${backendUrl || ''}${img}`;
-    return `${backendUrl || ''}/api/images/${img}`; // telegram file_id fallback
-  };
+  const resolveImg = useCallback(
+    (img) => {
+      if (!img || typeof img !== 'string') return '';
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `${backendUrl || ''}${img}`;
+      return `${backendUrl || ''}/api/images/${img}`; // telegram file_id fallback
+    },
+    [backendUrl]
+  );
 
   const fallbackLetter = (account?.title || '?').charAt(0).toUpperCase();
 
@@ -34,7 +37,7 @@ export default function ProductCard({
   const mainImageSrc = useMemo(() => {
     const img = account?.image_url || account?.image || account?.photo;
     return resolveImg(img);
-  }, [account, backendUrl]);
+  }, [account, resolveImg]);
 
   // массив скинов (для баннера в compact)
   const skinImages = useMemo(() => {
@@ -55,12 +58,13 @@ export default function ProductCard({
     if (normalized.length === 0 && mainImageSrc) return [mainImageSrc];
 
     return normalized.slice(0, 4);
-  }, [account, backendUrl, mainImageSrc]);
+  }, [account, resolveImg, mainImageSrc]);
 
   const priceRub = account?.price_rub ?? '';
   const priceUsd = account?.price_usd ?? '';
 
   // ===== COMPACT (лента “Популярное”) =====
+  // ВАЖНО: в compact УБРАНЫ бейджи (ранг/регион) и сердечко, как ты просил.
   if (compact) {
     return (
       <div className="product-card compact feed-card">
@@ -68,6 +72,9 @@ export default function ProductCard({
         <div
           className="feed-banner"
           onClick={() => onViewDetails(account)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onViewDetails(account);
+          }}
           role="button"
           tabIndex={0}
         >
@@ -87,15 +94,15 @@ export default function ProductCard({
 
           {/* мини-галерея */}
           {skinImages.length > 1 ? (
-            <div className="feed-skins-strip">
+            <div className="feed-skins-strip" aria-hidden="true">
               {skinImages.slice(0, 4).map((src, i) => (
                 <div className="feed-skin-thumb" key={`${src}-${i}`}>
-                  <img src={src} alt={`skin-${i}`} loading="lazy" />
+                  <img src={src} alt="" loading="lazy" />
                 </div>
               ))}
             </div>
-          ) : null}        
-          {/* сердечко в compact убрано */}
+          ) : null}
+
           {account?.is_sold && <div className="sold-badge">ПРОДАН</div>}
         </div>
 
@@ -177,28 +184,22 @@ export default function ProductCard({
           <span className="meta-item">🌍 {account?.region}</span>
         </div>
 
-        {!compact && account?.description && (
+        {account?.description ? (
           <p className="product-description">
             {String(account.description || '').length > 70
               ? String(account.description || '').slice(0, 70) + '...'
               : String(account.description || '')}
           </p>
-        )}
+        ) : null}
 
         <div className="product-footer">
           <div className="product-price">
             <span className="price-amount">{account?.price_rub} ₽</span>
-            {account?.price_usd ? (
-              <span className="price-usd">${account.price_usd}</span>
-            ) : null}
+            {account?.price_usd ? <span className="price-usd">${account.price_usd}</span> : null}
           </div>
 
           <div className="product-actions">
-            <button
-              className="btn view-btn"
-              onClick={() => onViewDetails(account)}
-              type="button"
-            >
+            <button className="btn view-btn" onClick={() => onViewDetails(account)} type="button">
               👁️
             </button>
             <button
