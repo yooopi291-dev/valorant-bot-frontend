@@ -705,23 +705,24 @@ body {
   }
 }
 /* =========================
-   CART CARD — compact like Home feed
-   (без бейджей ранга/региона)
+   CART CARD — как на главной (feed style)
    ========================= */
 
+/* список */
 .cart-items {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* сама карточка */
+/* карточка: баннер + узкий столбик справа */
 .cart-item.cart-card {
   display: grid;
-  grid-template-columns: 1fr 140px; /* баннер + правая колонка */
+  grid-template-columns: 1fr 96px; /* как у feed-card */
   gap: 12px;
 
-  padding: 12px;
+  padding: 12px !important;       /* перебиваем старые padding */
+  margin-bottom: 0 !important;    /* gap уже есть */
   border-radius: 18px;
   background: #fff;
   border: 1px solid rgba(15, 25, 35, 0.10);
@@ -729,19 +730,22 @@ body {
   box-shadow:
     0 12px 28px rgba(15, 25, 35, 0.10),
     0 2px 8px rgba(15, 25, 35, 0.06);
+
+  overflow: hidden;
+  align-items: stretch;
 }
 
-/* левый баннер */
-.cart-banner {
+/* баннер слева */
+.cart-item.cart-card .cart-banner {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
   background: #0f1923;
-
-  height: 120px; /* компактнее, как на главной */
+  height: 132px;                 /* как на главной */
 }
 
-.cart-banner-img {
+/* картинка cover */
+.cart-item.cart-card .cart-banner-img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -751,7 +755,8 @@ body {
   object-position: center;
 }
 
-.cart-banner-fallback {
+/* fallback */
+.cart-item.cart-card .cart-banner-fallback {
   position: absolute;
   inset: 0;
   display: flex;
@@ -764,7 +769,7 @@ body {
 }
 
 /* правая колонка */
-.cart-right {
+.cart-item.cart-card .cart-right {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -772,63 +777,62 @@ body {
   min-width: 0;
 }
 
-/* заголовок */
-.cart-title {
+/* название компактно (чтобы не раздувало карточку) */
+.cart-item.cart-card .cart-title {
   font-weight: 800;
-  font-size: 14px;
+  font-size: 13px;
   color: #0f1923;
-  line-height: 1.2;
+  line-height: 1.15;
 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* цена — чтобы 5 цифр не вылезали */
-.cart-pricebox {
+/* прайс-бокс — чтобы 5 цифр не вылезали */
+.cart-item.cart-card .cart-pricebox {
   background: rgba(15, 25, 35, 0.06);
   border-radius: 14px;
   padding: 10px 8px;
   text-align: center;
 }
 
-.cart-price-rub {
+.cart-item.cart-card .cart-price-rub {
   font-weight: 900;
   font-size: 15px;
   color: #ff4655;
   line-height: 1.1;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cart-price-usd {
+.cart-item.cart-card .cart-price-usd {
   font-weight: 700;
   font-size: 12px;
   color: rgba(15, 25, 35, 0.65);
   margin-top: 2px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.cart-mult {
+.cart-item.cart-card .cart-mult {
   margin-top: 4px;
   font-size: 12px;
   font-weight: 800;
   color: rgba(15, 25, 35, 0.55);
 }
 
-/* блок количества + удалить — функционал не трогаем, только размеры */
-.cart-item-actions {
+/* блок количества делаем компактнее */
+.cart-item.cart-card .cart-item-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 0 !important;
 }
 
-.quantity-controls {
+.cart-item.cart-card .quantity-controls {
   width: 100%;
   display: flex;
   align-items: center;
@@ -839,13 +843,14 @@ body {
   padding: 10px 10px;
 }
 
-.quantity-controls button {
-  width: 38px;
-  height: 38px;
+.cart-item.cart-card .quantity-controls button {
+  width: 36px;
+  height: 36px;
   border-radius: 12px;
 }
 
-.remove-btn {
+/* удалить — во всю ширину */
+.cart-item.cart-card .remove-btn {
   width: 100%;
   border-radius: 14px;
   padding: 12px 10px;
@@ -854,10 +859,9 @@ body {
 /* mobile */
 @media (max-width: 480px) {
   .cart-item.cart-card {
-    grid-template-columns: 1fr 132px;
+    grid-template-columns: 1fr 92px;
   }
-
-  .cart-banner {
-    height: 112px;
+  .cart-item.cart-card .cart-banner {
+    height: 124px;
   }
 }
