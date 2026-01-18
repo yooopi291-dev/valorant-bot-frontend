@@ -62,9 +62,17 @@ function App() {
   const FIRST_NAME = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
 
   const handleNavigate = (view) => {
-    setActiveView(view);
-    if (view !== 'profile') setProfileSubView('menu');
-  };
+  setActiveView(view);
+
+  // Если жмём "Профиль" внизу — всегда открываем меню профиля
+  if (view === 'profile') {
+    setProfileSubView('menu');
+    return;
+  }
+
+  // Если ушли из профиля — сбрасываем подстраницы профиля
+  setProfileSubView('menu');
+};
 
   // сохраняем язык
   useEffect(() => {
