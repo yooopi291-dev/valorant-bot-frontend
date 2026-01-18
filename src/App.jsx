@@ -578,129 +578,228 @@ function App() {
    
 
       case 'cart':
-        return (
-          <div className="cart-container">
-            <div className="page-header">
-              <h2>🛍️ Корзина</h2>
-              <p className="subtitle">{cart.length} товаров</p>
-            </div>
-            
-            {cart.length === 0 ? (
-              <div className="empty-state">
-                <p>Корзина пуста</p>
-                <button 
-                  className="btn primary"
-                  onClick={() => setActiveView('catalog')}
-                >
-                  В каталог
-                </button>
-              </div>
-            ) : (
-              <>
-                <div className="cart-items">
-                  {cart.map(item => (
-                    <div key={item._id} className="cart-item">
-                      <div className="cart-item-info">
-                        <h4>{item.title}</h4>
-                        <p className="cart-item-meta">{item.rank} • {item.region}</p>
-                        <p className="cart-item-price">{item.price_rub} ₽ × {item.quantity}</p>
-                      </div>
-                      
-                      <div className="cart-item-actions">
-                        <div className="quantity-controls">
-                          <button 
-                            onClick={() => updateQuantity(item._id, -1)}
-                            disabled={item.quantity <= 1}
-                          >
-                            −
-                          </button>
-                          <span>{item.quantity}</span>
-                          <button onClick={() => updateQuantity(item._id, 1)}>+</button>
+  return (
+    <div className="cart-container">
+      <div className="page-header">
+        <h2>🛍️ Корзина</h2>
+        <p className="subtitle">{cart.length} товаров</p>
+      </div>
+
+      {cart.length === 0 ? (
+        <div className="empty-state">
+          <p>Корзина пуста</p>
+          <button
+            className="btn primary"
+            onClick={() => setActiveView('catalog')}
+            type="button"
+          >
+            В каталог
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="cart-items">
+            {cart.map((item) => {
+              const resolveImg = (img) => {
+                if (!img) return '';
+
+                // если вдруг объект
+                if (typeof img === 'object') {
+                  img = img.image_url || img.url || img.src || img.path;
+                }
+                if (!img || typeof img !== 'string') return '';
+
+                if (img.startsWith('http')) return img;
+                if (img.startsWith('/')) return `${BACKEND_URL}${img}`;
+
+                // относительный без "/" (uploads/..)
+                if (
+                  img.startsWith('uploads/') ||
+                  img.startsWith('images/') ||
+                  img.startsWith('static/')
+                ) {
+                  return `${BACKEND_URL}/${img}`;
+                }
+
+                // telegram file_id
+                return `${BACKEND_URL}/api/images/${img}`;
+              };
+
+              const mainImgRaw =
+                item?.image_url ||
+                item?.image ||
+                item?.photo ||
+                (Array.isArray(item?.images) ? item.images[0] : undefined) ||
+                (Array.isArray(item?.skins_images) ? item.skins_images[0] : undefined) ||
+                (Array.isArray(item?.skins) ? item.skins[0] : undefined);
+
+              const imageSrc = resolveImg(mainImgRaw);
+
+              const fallbackLetter = (item?.title || '?').charAt(0).toUpperCase();
+
+              return (
+                <div key={item._id} className="cart-item cart-card">
+                  {/* БАННЕР слева */}
+                  <div className="cart-banner" role="button" tabIndex={0}>
+                    {imageSrc ? (
+                      <>
+                        <img
+                          className="cart-banner-img"
+                          src={imageSrc}
+                          alt={item?.title || 'item'}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            const fb =
+                              e.currentTarget.parentElement?.querySelector('.cart-banner-fallback');
+                            if (fb) fb.style.display = 'flex';
+                          }}
+                        />
+                        <div className="cart-banner-fallback" style={{ display: 'none' }}>
+                          <span>{fallbackLetter}</span>
                         </div>
-                        <button 
-                          className="remove-btn"
-                          onClick={() => removeFromCart(item._id)}
+                      </>
+                    ) : (
+                      <div className="cart-banner-fallback">
+                        <span>{fallbackLetter}</span>
+                      </div>
+                    )}
+
+                    <div className="cart-badges">
+                      {item?.rank ? <span className="cart-badge">🏆 {item.rank}</span> : null}
+                      {item?.region ? <span className="cart-badge">🌍 {item.region}</span> : null}
+                    </div>
+                  </div>
+
+                  {/* ПРАВАЯ часть: инфо + твой функционал */}
+                  <div className="cart-right">
+                    <div className="cart-top">
+                      <div className="cart-title" title={item.title}>
+                        {item.title}
+                      </div>
+
+                      <div className="cart-pricebox">
+                        <div className="cart-price-rub" title={`${item.price_rub} ₽`}>
+                          {item.price_rub} ₽
+                        </div>
+
+                        {item?.price_usd ? (
+                          <div className="cart-price-usd" title={`$${item.price_usd}`}>
+                            ${item.price_usd}
+                          </div>
+                        ) : null}
+
+                        <div className="cart-mult">× {item.quantity}</div>
+                      </div>
+                    </div>
+
+                    {/* НИЖЕ — функционал корзины НЕ трогаем */}
+                    <div className="cart-item-actions">
+                      <div className="quantity-controls">
+                        <button
+                          onClick={() => updateQuantity(item._id, -1)}
+                          disabled={item.quantity <= 1}
+                          type="button"
                         >
-                          Удалить
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item._id, 1)} type="button">
+                          +
                         </button>
                       </div>
+
+                      <button
+                        className="remove-btn"
+                        onClick={() => removeFromCart(item._id)}
+                        type="button"
+                      >
+                        Удалить
+                      </button>
                     </div>
-                  ))}
-                </div>
-                
-                {/* Промокод */}
-                <div className="promo-section">
-                  <h4>Промокод</h4>
-                  <div className="promo-input-group">
-                    <input
-                      type="text"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
-                      placeholder="Введите промокод"
-                      disabled={discountApplied}
-                    />
-                    <button 
-                      onClick={applyPromoCode}
-                      disabled={discountApplied}
-                      className={discountApplied ? 'applied' : ''}
-                    >
-                      {discountApplied ? '✅' : 'Применить'}
-                    </button>
-                  </div>
-                  {discountApplied && (
-                    <p className="discount-applied">
-                      Скидка по промокоду: <strong>-{discount} ₽</strong>
-                    </p>
-                  )}
-                </div>
-                
-                {/* Итого */}
-                <div className="cart-summary">
-                  <div className="summary-row">
-                    <span>Товары ({cart.length})</span>
-                    <span>{getCartTotal()} ₽</span>
-                  </div>
-                  {discount > 0 && (
-                    <div className="summary-row discount">
-                      <span>Скидка</span>
-                      <span>-{discount} ₽</span>
-                    </div>
-                  )}
-                  <div className="summary-row total">
-                    <span>Итого</span>
-                    <span>{getFinalTotal()} ₽</span>
                   </div>
                 </div>
-                
-                {/* Кнопки */}
-                <div className="cart-actions">
-                  <button 
-                    className="btn checkout-btn"
-                    onClick={checkoutCart}
-                    disabled={loading}
-                  >
-                    {loading ? 'Оформляем...' : `💳 Оплатить ${getFinalTotal()} ₽`}
-                  </button>
-                  
-                  <div className="secondary-actions">
-                    <button 
-                      className="btn secondary"
-                      onClick={clearCart}
-                    >
-                      🗑️ Очистить корзину
-                    </button>
-                    <button 
-                      className="btn secondary"
-                      onClick={() => setActiveView('catalog')}
-                    >
-                      ＋ Добавить ещё
-                    </button>
-                  </div>
-                </div>
-              </>
+              );
+            })}
+          </div>
+
+          {/* Промокод */}
+          <div className="promo-section">
+            <h4>Промокод</h4>
+            <div className="promo-input-group">
+              <input
+                type="text"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                placeholder="Введите промокод"
+                disabled={discountApplied}
+              />
+              <button
+                onClick={applyPromoCode}
+                disabled={discountApplied}
+                className={discountApplied ? 'applied' : ''}
+                type="button"
+              >
+                {discountApplied ? '✅' : 'Применить'}
+              </button>
+            </div>
+
+            {discountApplied && (
+              <p className="discount-applied">
+                Скидка по промокоду: <strong>-{discount} ₽</strong>
+              </p>
             )}
           </div>
-        );
+
+          {/* Итого */}
+          <div className="cart-summary">
+            <div className="summary-row">
+              <span>Товары ({cart.length})</span>
+              <span>{getCartTotal()} ₽</span>
+            </div>
+
+            {discount > 0 && (
+              <div className="summary-row discount">
+                <span>Скидка</span>
+                <span>-{discount} ₽</span>
+              </div>
+            )}
+
+            <div className="summary-row total">
+              <span>Итого</span>
+              <span>{getFinalTotal()} ₽</span>
+            </div>
+          </div>
+
+          {/* Кнопки */}
+          <div className="cart-actions">
+            <button
+              className="btn checkout-btn"
+              onClick={checkoutCart}
+              disabled={loading}
+              type="button"
+            >
+              {loading ? 'Оформляем...' : `💳 Оплатить ${getFinalTotal()} ₽`}
+            </button>
+
+            <div className="secondary-actions">
+              <button className="btn secondary" onClick={clearCart} type="button">
+                🗑️ Очистить корзину
+              </button>
+              <button
+                className="btn secondary"
+                onClick={() => setActiveView('catalog')}
+                type="button"
+              >
+                ＋ Добавить ещё
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+
         
       case 'boost':
         return (

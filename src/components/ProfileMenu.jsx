@@ -142,7 +142,6 @@ const ProfileMenu = ({
         <div className="menu-item-header">
           <h4 className="menu-item-title">Поддержка</h4>
         </div>
-        <p className="menu-item-subtitle">@ricksxxx</p>
       </div>
       <div className="menu-item-arrow">›</div>
     </div>
