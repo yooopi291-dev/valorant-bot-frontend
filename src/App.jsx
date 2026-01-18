@@ -659,50 +659,49 @@ function App() {
 
                   {/* НИЗ: НАЗВАНИЕ + ЦЕНА + QTY + УДАЛИТЬ */}
                   <div className="cart-vertical-bottom">
-                    <div className="cart-vertical-head">
-                      <div className="cart-vertical-title" title={item.title}>
-                        {item.title}
-                      </div>
+  <div className="cart-vertical-title" title={item.title}>
+    {item.title}
+  </div>
 
-                      <div className="cart-vertical-price">
-                        <div className="cart-vertical-price-rub" title={`${item.price_rub} ₽`}>
-                          {item.price_rub} ₽
-                        </div>
+  <div className="cart-vertical-price" aria-label="price">
+    <div className="cart-vertical-price-rub" title={`${item.price_rub} ₽`}>
+      {item.price_rub} ₽
+    </div>
 
-                        {item?.price_usd ? (
-                          <div className="cart-vertical-price-usd" title={`$${item.price_usd}`}>
-                            ${item.price_usd}
-                          </div>
-                        ) : null}
+    {item?.price_usd ? (
+      <div className="cart-vertical-price-usd" title={`$${item.price_usd}`}>
+        ${item.price_usd}
+      </div>
+    ) : null}
 
-                        <div className="cart-vertical-mult">× {item.quantity}</div>
-                      </div>
-                    </div>
+    <div className="cart-vertical-mult">× {item.quantity}</div>
+  </div>
 
-                    <div className="cart-vertical-actions">
-                      <div className="quantity-controls cart-vertical-qty">
-                        <button
-                          onClick={() => updateQuantity(item._id, -1)}
-                          disabled={item.quantity <= 1}
-                          type="button"
-                        >
-                          −
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item._id, 1)} type="button">
-                          +
-                        </button>
-                      </div>
+  <div className="cart-vertical-actions">
+    <div className="quantity-controls cart-vertical-qty">
+      <button
+        onClick={() => updateQuantity(item._id, -1)}
+        disabled={item.quantity <= 1}
+        type="button"
+      >
+        −
+      </button>
+      <span>{item.quantity}</span>
+      <button onClick={() => updateQuantity(item._id, 1)} type="button">
+        +
+      </button>
+    </div>
 
-                      <button
-                        className="remove-btn cart-vertical-remove"
-                        onClick={() => removeFromCart(item._id)}
-                        type="button"
-                      >
-                        Удалить
-                      </button>
-                    </div>
-                  </div>
+    <button
+      className="remove-btn cart-vertical-remove"
+      onClick={() => removeFromCart(item._id)}
+      type="button"
+    >
+      Удалить
+    </button>
+  </div>
+</div>
+
                 </div>
               );
             })}

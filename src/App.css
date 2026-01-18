@@ -1537,3 +1537,126 @@ body {
   .cart-vertical-head { grid-template-columns: 1fr 88px; }
   .cart-vertical-price { width: 88px; }
 }
+/* =========================
+   CART (vertical) — title сверху, price снизу, actions внизу
+   (PASTE AT VERY END of App.css)
+   ========================= */
+
+.cart-vertical-bottom {
+  padding: 10px 12px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+}
+
+/* title отдельно */
+.cart-vertical-title {
+  font-weight: 900 !important;
+  font-size: 14px !important;
+  color: #0f1923 !important;
+  line-height: 1.15 !important;
+
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+}
+
+/* price как "нижняя плашка", во всю ширину */
+.cart-vertical-price {
+  width: 100% !important;
+  background: rgba(15, 25, 35, 0.06) !important;
+  border-radius: 14px !important;
+  padding: 10px 12px !important;
+
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+}
+
+.cart-vertical-price-rub {
+  font-weight: 900 !important;
+  font-size: 15px !important;
+  color: #ff4655 !important;
+  line-height: 1.05 !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 48% !important;
+}
+
+.cart-vertical-price-usd {
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  color: rgba(15, 25, 35, 0.62) !important;
+
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 28% !important;
+}
+
+.cart-vertical-mult {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  color: rgba(15, 25, 35, 0.55) !important;
+  white-space: nowrap !important;
+}
+
+/* actions: qty + delete ровной строкой */
+.cart-vertical-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+/* перебиваем старые qty-стили (как мы уже делали) */
+.quantity-controls.cart-vertical-qty {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  background: rgba(15, 25, 35, 0.05) !important;
+  border-radius: 14px !important;
+  padding: 8px 10px !important;
+  height: 44px !important;
+}
+
+.quantity-controls.cart-vertical-qty button {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(15, 25, 35, 0.14) !important;
+  background: #fff !important;
+  color: #0f1923 !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+.quantity-controls.cart-vertical-qty span {
+  min-width: 24px !important;
+  text-align: center !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  color: #0f1923 !important;
+}
+
+/* delete такой же высоты, выглядит как “primary danger soft” */
+.remove-btn.cart-vertical-remove {
+  width: 100% !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 70, 85, 0.22) !important;
+  background: rgba(255, 70, 85, 0.10) !important;
+  color: #ff4655 !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+/* баннер остаётся cover и компактный */
+.cart-vertical-banner { height: 132px !important; }
+@media (max-width: 480px) { .cart-vertical-banner { height: 124px !important; } }
