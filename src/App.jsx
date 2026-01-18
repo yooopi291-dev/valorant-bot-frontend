@@ -84,20 +84,31 @@ function App() {
   }, [lang]);
 
   // Загрузка данных из localStorage
-  const loadLocalData = () => {
-    try {
-      const savedCart = localStorage.getItem(`valorant_cart_${USER_ID}`);
-      if (savedCart) setCart(JSON.parse(savedCart));
+  // Загрузка данных из localStorage
+const loadLocalData = () => {
+  try {
+    const savedCart = localStorage.getItem(`valorant_cart_${USER_ID}`);
+    if (savedCart) {
+      const parsed = JSON.parse(savedCart);
 
-      const savedFavorites = localStorage.getItem(`valorant_fav_${USER_ID}`);
-      if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+      // убрать дубли по _id и принудительно сделать quantity = 1
+      const unique = Array.from(
+        new Map(parsed.map((x) => [x._id, { ...x, quantity: 1 }])).values()
+      );
 
-      const savedViewed = localStorage.getItem(`valorant_viewed_${USER_ID}`);
-      if (savedViewed) setViewedItems(JSON.parse(savedViewed));
-    } catch (e) {
-      console.error('Ошибка загрузки данных:', e);
+      setCart(unique);
     }
-  };
+
+    const savedFavorites = localStorage.getItem(`valorant_fav_${USER_ID}`);
+    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+
+    const savedViewed = localStorage.getItem(`valorant_viewed_${USER_ID}`);
+    if (savedViewed) setViewedItems(JSON.parse(savedViewed));
+  } catch (e) {
+    console.error('Ошибка загрузки данных:', e);
+  }
+};
+
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
@@ -179,27 +190,39 @@ function App() {
 
   // ========== ФУНКЦИИ КОРЗИНЫ ==========
   const addToCart = (account) => {
-    const existing = cart.find((item) => item._id === account._id);
+  const exists = cart.some((item) => item._id === account._id);
+  if (exists) {
+    tg?.showAlert?.('Этот аккаунт уже в корзине');
+    return;
+  }
 
-    if (existing) {
-      const updatedCart = cart.map((item) =>
-        item._id === account._id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-      setCart(updatedCart);
-      if (tg) tg.showAlert(`✅ "${account.title}" (теперь: ${existing.quantity + 1} шт.)`);
-    } else {
-      const newCart = [
-        ...cart,
-        {
-          ...account,
-          quantity: 1,
-          addedAt: new Date().toISOString(),
-        },
-      ];
-      setCart(newCart);
-      if (tg) tg.showAlert(`✅ "${account.title}" добавлен в корзину!`);
-    }
-  };
+  setCart([
+    ...cart,
+    { ...account, quantity: 1, addedAt: new Date().toISOString() },
+  ]);
+
+  tg?.showAlert?.(`✅ "${account.title}" добавлен в корзину!`);
+};
+
+  if (exists) {
+    tg?.showAlert?.('Этот аккаунт уже в корзине');
+    // если хочешь сразу открыть корзину при повторном добавлении — раскомментируй:
+    // setActiveView('cart');
+    return;
+  }
+
+  const newCart = [
+    ...cart,
+    {
+      ...account,
+      quantity: 1, // можно оставить, но теперь всегда 1
+      addedAt: new Date().toISOString(),
+    },
+  ];
+
+  setCart(newCart);
+  tg?.showAlert?.(`✅ "${account.title}" добавлен в корзину!`);
+};
 
   const updateQuantity = (accountId, change) => {
     const updatedCart = cart.map((item) => {
@@ -936,6 +959,6 @@ function App() {
       />
     </div>
   );
-}
+
 
 export default App;
