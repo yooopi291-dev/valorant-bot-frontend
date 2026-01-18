@@ -27,7 +27,7 @@ const ProfileMenu = ({
         id: 'orders',
         icon: '📦',
         title: 'Заказы',
-        badge: ordersCount > 0 ? ordersCount : null,
+        badge: (ordersCount ?? 0),
         arrow: true
       },
       {

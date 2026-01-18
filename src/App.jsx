@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 import sageOrb from './assets/sage-orb.png';
@@ -57,6 +57,7 @@ function App() {
 
   // Для истории заказов
   const [ordersLoading, setOrdersLoading] = useState(false);
+  const ordersPrefetchedRef = useRef(false);
 
   const BACKEND_URL = 'https://valorant-bot-backend.onrender.com';
   const USER_ID = String(tg?.initDataUnsafe?.user?.id ?? 'unknown');
@@ -95,11 +96,16 @@ function App() {
       loadAccounts();
     }
     
-    // Загружаем заказы если в профиле
-    if (activeView === 'profile' && profileSubView === 'orders') {
-      loadUserOrders();
-    }
-  }, [activeView, profileSubView]);
+   // Загружаем заказы при первом входе в профиль — чтобы бейдж "Заказы" появился сразу
+if (activeView === 'profile' && !ordersPrefetchedRef.current) {
+  ordersPrefetchedRef.current = true;
+  loadUserOrders();
+}
+
+// Если вышли из профиля — сбрасываем флаг, чтобы при следующем входе обновить счетчик
+if (activeView !== 'profile') {
+  ordersPrefetchedRef.current = false;
+}
   
   // Загрузка данных из localStorage
   const loadLocalData = () => {
