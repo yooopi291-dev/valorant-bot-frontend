@@ -251,8 +251,8 @@
 /* мобилка: тоже увеличили, но умеренно */
 @media (max-width: 480px){
   .promo-banner__art{
-    width: 56px !important;
-    height: 56px !important;
-    flex-basis: 56px !important;
+    width: 84px !important;
+    height: 84px !important;
+    flex-basis: 84px !important;
   }
 }
