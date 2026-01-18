@@ -3,8 +3,7 @@ import axios from 'axios';
 import './App.css';
 import sageOrb from './assets/sage-orb.png';
 import PublicOffer from './components/PublicOffer';
-import vpIcon from './assets/vp-icon.png';
-
+import pepeArt from './assets/pepe.png';
 // Компоненты
 import NavigationBar from './components/NavigationBar';
 import ProductCard from './components/ProductCard';
@@ -484,7 +483,7 @@ const loadLocalData = () => {
               subtitle="-5% по промокоду START"
               accent
               hideButton={true}
-              artSrc={vpIcon}
+              artSrc={pepeArt}
             />
 
             <div className="section-header section-header--popular">
