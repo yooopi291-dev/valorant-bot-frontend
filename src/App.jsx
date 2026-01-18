@@ -540,9 +540,6 @@ function App() {
 
               <div className="favorites-actions-spacer" />
             </div>
-
-            <p className="subtitle">{favorites.length} товаров</p>
-
             {favorites.length === 0 ? (
               <div className="empty-state">
                 <p>Тут пока пусто</p>
