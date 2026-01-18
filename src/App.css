@@ -824,7 +824,7 @@ body {
 .cart-hero-label {
   font-size: 13px;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .cart-hero-value {
