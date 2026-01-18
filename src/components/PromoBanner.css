@@ -246,3 +246,109 @@
   height: 56px !important;
   object-fit: contain !important;
 }
+/* ===== PromoBanner = same outer size as .home-hero ===== */
+
+.promo-banner{
+  margin: 6px 0 18px; /* как home-hero */
+}
+
+/* карточка */
+.promo-banner__content{
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 16px;               /* как home-hero */
+  border-radius: 18px;          /* как home-hero */
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  background: #e9ecef;          /* как home-hero */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06); /* как home-hero */
+
+  min-height: unset;            /* убрать раздувание */
+}
+
+/* текст */
+.promo-banner__text{
+  flex: 1;
+  min-width: 0;
+}
+
+.promo-banner__title{
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.promo-banner__subtitle{
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(15, 25, 35, 0.60);
+}
+
+/* арт справа — НЕ absolute, чтобы не ломать размеры */
+.promo-banner__art{
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  object-fit: contain;
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.18));
+}
+
+/* кнопка (если включишь) */
+.promo-banner__btn{
+  border: none;
+  cursor: pointer;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+
+  background: rgba(15, 25, 35, 0.88);
+  color: #fff;
+
+  font-weight: 800;
+  font-size: 14px;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.promo-banner__btn:active{
+  transform: scale(0.98);
+}
+
+/* ===== Accent style сохраняем ===== */
+.promo-banner--accent .promo-banner__content{
+  color: #fff;
+  background: linear-gradient(135deg,
+    #ffb24a 0%,
+    #ff6a55 45%,
+    #ff3f66 100%
+  );
+  background-size: 180% 180%;
+  animation: promoShift 7s ease-in-out infinite;
+}
+
+.promo-banner--accent .promo-banner__subtitle{
+  color: rgba(255,255,255,0.92);
+}
+
+@keyframes promoShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* мобилка: чуть меньше арт */
+@media (max-width: 480px){
+  .promo-banner__art{
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+}
