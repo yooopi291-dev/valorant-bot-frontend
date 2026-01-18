@@ -516,7 +516,7 @@ const loadLocalData = () => {
     <div className="catalog-container">
       {/* HERO-блок как на главной */}
       <div className="catalog-hero">
-        <h2 className="catalog-hero-title">Каталог аккаунтов</h2>
+        <h2 className="catalog-hero-title">📋 Каталог аккаунтов</h2>
         <p className="catalog-hero-subtitle">Выбирайте аккаунт и добавляйте в корзину</p>
       </div>
 

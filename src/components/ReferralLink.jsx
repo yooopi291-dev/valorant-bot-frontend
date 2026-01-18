@@ -64,7 +64,7 @@ const ReferralLink = ({ userId }) => {
             onClick={handleCopy}
             type="button"
           >
-            {copied ? '✓' : '📋'}
+            {copied ? '✓' : '🗐'}
           </button>
         </div>
         <div className="link-hint">
