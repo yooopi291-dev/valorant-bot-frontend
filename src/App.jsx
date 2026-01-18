@@ -83,29 +83,30 @@ function App() {
 
   // ========== ИНИЦИАЛИЗАЦИЯ ==========
   useEffect(() => {
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-    
-    // Загрузка данных из localStorage
-    loadLocalData();
-    
-    // Загружаем каталог при переходе на него
-    if (activeView === 'catalog' || activeView === 'home') {
-      loadAccounts();
-    }
-    
-   // Загружаем заказы при первом входе в профиль — чтобы бейдж "Заказы" появился сразу
-if (activeView === 'profile' && !ordersPrefetchedRef.current) {
-  ordersPrefetchedRef.current = true;
-  loadUserOrders();
-}
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
 
-// Если вышли из профиля — сбрасываем флаг, чтобы при следующем входе обновить счетчик
-if (activeView !== 'profile') {
-  ordersPrefetchedRef.current = false;
-}
+  // Загрузка данных из localStorage
+  loadLocalData();
+
+  // Загружаем каталог при переходе на него
+  if (activeView === 'catalog' || activeView === 'home') {
+    loadAccounts();
+  }
+
+  // Загружаем заказы при первом входе в профиль — чтобы бейдж "Заказы" появился сразу
+  if (activeView === 'profile' && !ordersPrefetchedRef.current) {
+    ordersPrefetchedRef.current = true;
+    loadUserOrders();
+  }
+
+  // Если вышли из профиля — сбрасываем флаг, чтобы при следующем входе обновить счетчик
+  if (activeView !== 'profile') {
+    ordersPrefetchedRef.current = false;
+  }
+}, [activeView, profileSubView]);
   
   // Загрузка данных из localStorage
   const loadLocalData = () => {
