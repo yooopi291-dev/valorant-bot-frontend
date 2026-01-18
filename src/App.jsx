@@ -529,8 +529,8 @@ const loadLocalData = () => {
           </div>
 
           <div className="catalog-empty-bottom">
-            <button className="btn primary" onClick={loadAccounts} type="button">
-              Обновить
+            <button className="btn primary catalog-refresh-btn" onClick={loadAccounts} type="button">
+  Обновить
             </button>
           </div>
         </div>

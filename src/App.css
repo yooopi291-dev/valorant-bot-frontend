@@ -905,3 +905,67 @@ body {
   transform: scale(0.985);
   filter: brightness(0.98);
 }
+/* ===== BIG RED CTA (Referral) ===== */
+.referral-cta-btn{
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 16px;
+
+  background: var(--accent);
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow:
+    0 14px 28px rgba(255, 70, 85, 0.28),
+    0 6px 14px rgba(15, 25, 35, 0.10);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.referral-cta-btn:active{
+  transform: scale(0.985);
+  box-shadow:
+    0 10px 18px rgba(255, 70, 85, 0.22),
+    0 4px 10px rgba(15, 25, 35, 0.08);
+}
+
+.referral-cta-btn:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+/* ===== BIG RED CTA (Catalog Refresh) ===== */
+.catalog-refresh-btn{
+  padding: 18px 18px;
+  border-radius: 18px;
+
+  background: var(--accent);
+  color: #fff;
+
+  font-size: 17px;
+  font-weight: 900;
+
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow:
+    0 16px 32px rgba(255, 70, 85, 0.30),
+    0 6px 16px rgba(15, 25, 35, 0.10);
+
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.catalog-refresh-btn:active{
+  transform: scale(0.985);
+  box-shadow:
+    0 12px 22px rgba(255, 70, 85, 0.22),
+    0 4px 12px rgba(15, 25, 35, 0.08);
+}
