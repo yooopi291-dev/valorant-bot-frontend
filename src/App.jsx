@@ -665,40 +665,32 @@ function App() {
     </div>
 
     {/* 3) НИЖНЯЯ СТРОКА: qty | price | remove */}
-    <div className="cart-card-v2__footer">
-      <div className="cart-card-v2__qty">
-        <button
-          onClick={() => updateQuantity(item._id, -1)}
-          disabled={item.quantity <= 1}
-          type="button"
-        >
-          −
-        </button>
-        <span>{item.quantity}</span>
-        <button onClick={() => updateQuantity(item._id, 1)} type="button">
-          +
-        </button>
-      </div>
-
-      <div className="cart-card-v2__price" title={`${item.price_rub} ₽`}>
-        <div className="cart-card-v2__price-rub">{item.price_rub} ₽</div>
-        <div className="cart-card-v2__price-sub">
-  {item?.price_usd ? (
-    <span className="cart-card-v2__price-usd">${item.price_usd}</span>
-  ) : null}
-  <span className="cart-card-v2__mult">× {item.quantity}</span>
-</div>
-
-      </div>
-
-      <button
-        className="cart-card-v2__remove"
-        onClick={() => removeFromCart(item._id)}
-        type="button"
-      >
-        Удалить
-      </button>
+    <div className="cart-card-v2__footer cart-card-v2__footer--noqty">
+  <div className="cart-card-v2__price">
+    <div className="cart-card-v2__price-rub" title_attach={`${item.price_rub} ₽`}>
+      {item.price_rub} ₽
     </div>
+
+    <div className="cart-card-v2__price-sub">
+      {item?.price_usd ? (
+        <div className="cart-card-v2__price-usd" title={`$${item.price_usd}`}>
+          ${item.price_usd}
+        </div>
+      ) : null}
+
+      {/* можно оставить ×1 или вообще убрать */}
+      <div className="cart-card-v2__mult">× 1</div>
+    </div>
+  </div>
+
+  <button
+    className="cart-card-v2__remove"
+    onClick={() => removeFromCart(item._id)}
+    type="button"
+  >
+    Удалить
+  </button>
+</div>
   </div>
 );                        
             })}

@@ -710,3 +710,20 @@ body {
     flex-direction: column;
   }
 }
+/* cart v2: footer without quantity */
+.cart-card-v2__footer--noqty{
+  grid-template-columns: minmax(0, 1fr) minmax(110px, 140px);
+}
+
+/* цена становится “плашкой” по центру и ниже */
+.cart-card-v2__footer--noqty .cart-card-v2__price{
+  height: 44px;
+  padding: 8px 12px;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cart-card-v2__footer--noqty .cart-card-v2__price-sub{
+  justify-content: flex-end;
+}
