@@ -352,3 +352,41 @@
     flex-basis: 56px;
   }
 }
+/* Внешняя обёртка: убираем “лишнюю высоту” */
+.promo-banner{
+  margin: 6px 0 12px;     /* было 6 0 18 */
+  padding: 0;             /* на всякий случай */
+}
+
+/* Карточка: уменьшаем внутренние отступы */
+.promo-banner__content{
+  padding: 12px 14px;     /* было 16px */
+  gap: 10px;              /* было 14px */
+  border-radius: 18px;    /* оставляем */
+}
+
+/* Текст чуть компактнее */
+.promo-banner__title{
+  font-size: 16px;        /* было 18 */
+  line-height: 1.05;
+}
+
+.promo-banner__subtitle{
+  margin-top: 3px;        /* было 4 */
+  font-size: 12px;        /* было 13 */
+  line-height: 1.1;
+}
+
+/* Иконка: чтобы не раздувала по высоте */
+.promo-banner__art{
+  width: 52px;            /* было 64 */
+  height: 52px;
+  flex-basis: 52px;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.16));
+}
+
+/* Мобилка ещё чуть меньше */
+@media (max-width: 480px){
+  .promo-banner__content{ padding: 11px 12px; }
+  .promo-banner__art{ width: 48px; height: 48px; flex-basis: 48px; }
+}
