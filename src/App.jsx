@@ -255,7 +255,18 @@ function App() {
     const updated = [account, ...filtered].slice(0, 20);
     setViewedItems(updated);
   };
-  
+  const clearViewed = () => {
+  if (viewedItems.length === 0) return;
+  if (window.confirm('Очистить историю просмотров?')) {
+    setViewedItems([]);
+    try {
+      localStorage.removeItem(`valorant_viewed_${USER_ID}`);
+    } catch {
+      // ignore
+    }
+    tg?.showAlert?.('🗑️ История просмотров очищена');
+  }
+};
   // ========== ПРОМОКОДЫ ==========
   const applyPromoCode = async () => {
     if (!promoCode.trim()) {
@@ -788,11 +799,14 @@ function App() {
           case 'viewed':
             return (
               <ProfileViewed 
-                items={viewedItems}
-                onViewDetails={handleViewDetails}
-                onAddToCart={addToCart}
-                onBack={() => setProfileSubView('menu')}
-              />
+  items={viewedItems}
+  onViewDetails={handleViewDetails}
+  onAddToCart={addToCart}
+  onClear={clearViewed}
+  backendUrl={BACKEND_URL}
+  onBack={() => setProfileSubView('menu')}
+/>
+
             );
             case 'offer':
   return (
