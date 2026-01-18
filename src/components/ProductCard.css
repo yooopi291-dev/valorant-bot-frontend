@@ -1,3 +1,7 @@
+/* ===========================
+   BASE (каталог / избранное)
+   =========================== */
+
 .product-card {
   background: white;
   border-radius: 16px;
@@ -248,135 +252,44 @@
   }
 }
 
-/* ===============================
-   FEED (Популярное) — compact карточка (горизонтальная)
-   FIX: картинка занимает весь блок + убираем “пустое место”
-   =============================== */
+/* =========================================
+   FEED / COMPACT CARD (Популярное) — НОВЫЙ МАКЕТ
+   ВАЖНО: НЕ ИСПОЛЬЗУЕМ product-image-container/product-info
+   ========================================= */
 
-.products-feed .product-card.compact {
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
-}
-
-/* Левый блок (контейнер картинки) */
-.products-feed .product-card.compact .product-image-container {
-  flex: 0 0 120px;
-  height: 120px;
-  border-radius: 16px 0 0 16px;
-  overflow: hidden;
-  background: #0f1923;
-}
-
-/* ВАЖНО: <img class="product-image"> — убиваем любые старые margin/padding */
-.products-feed .product-card.compact img.product-image {
-  width: 100% !important;
-  height: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  display: block !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  border-radius: inherit;
-}
-
-/* Правый блок — делаем плотным, без раздувания пустоты */
-.products-feed .product-card.compact .product-info {
-  flex: 1 1 auto;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* центрируем контент по высоте */
-}
-
-/* В compact убираем фиксированную высоту заголовка */
-.products-feed .product-card.compact .product-title {
-  min-height: unset;
-  margin-bottom: 6px;
-}
-
-/* Чуть плотнее мета */
-.products-feed .product-card.compact .product-meta {
-  margin-bottom: 8px;
-}
-
-/* Футер идёт сразу после цены (без margin-top:auto) */
-.products-feed .product-card.compact .product-footer {
-  margin-top: 10px;
-}
-
-/* Кнопки чуть компактнее */
-.products-feed .product-card.compact .view-btn,
-.products-feed .product-card.compact .cart-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-}
-
-@media (max-width: 480px) {
-  .products-feed .product-card.compact .product-image-container {
-    flex-basis: 110px;
-    height: 110px;
-  }
-}
-/* ===========================
-   FEED / COMPACT CARD (Популярное)
-   =========================== */
-
-.product-card.compact.feed-card {
+.products-feed .product-card.compact.feed-card {
   display: grid;
-  grid-template-columns: 1fr 92px; /* баннер + узкий столбик */
-  gap: 12px;
-
-  padding: 12px;
+  grid-template-columns: 1fr 84px; /* баннер + узкий столбик */
+  gap: 10px;
+  padding: 10px;
   border-radius: 18px;
   align-items: stretch;
-  position: relative;
-}
-
-/* заголовок поверх баннера/правой части */
-.product-card.compact.feed-card .feed-title {
-  position: absolute;
-  left: 16px;
-  right: 120px; /* чтобы не заходило под кнопки справа */
-  top: 14px;
-
-  font-weight: 800;
-  font-size: 16px;
-  color: #0f1923;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-
-  cursor: pointer;
-  z-index: 3;
 }
 
 /* баннер */
-.feed-banner {
+.products-feed .feed-banner {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
   background: #0f1923;
-  min-height: 140px;
+  min-height: 120px;
   cursor: pointer;
 }
 
 /* главная картинка баннера */
-.feed-banner-main {
+.products-feed .feed-banner-main {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
-  object-position: center;
+  object-fit: cover;        /* ВОТ ГЛАВНОЕ: cover */
+  object-position: center;  /* центр */
 }
 
 /* fallback */
-.feed-banner-fallback {
+.products-feed .feed-banner-fallback {
   position: absolute;
   inset: 0;
   display: flex;
@@ -384,141 +297,156 @@
   justify-content: center;
   background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
   color: #fff;
-  font-size: 48px;
+  font-size: 44px;
   font-weight: 900;
 }
 
-/* полоска мини-скинов снизу */
-.feed-skins-strip {
+/* мини-галерея снизу */
+.products-feed .feed-skins-strip {
   position: absolute;
-  left: 10px;
-  right: 10px;
-  bottom: 10px;
-  height: 34px;
-
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  height: 30px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-
   z-index: 3;
 }
 
-.feed-skin-thumb {
+.products-feed .feed-skin-thumb {
   border-radius: 10px;
   overflow: hidden;
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
 }
 
-.feed-skin-thumb img {
+.products-feed .feed-skin-thumb img {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: cover;        /* cover для мини-скинов */
   object-position: center;
 }
 
 /* плашки ранга/региона */
-.feed-badges {
+.products-feed .feed-badges {
   position: absolute;
-  left: 10px;
-  top: 46px; /* ниже заголовка */
+  left: 8px;
+  top: 8px;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   z-index: 3;
 }
 
-.feed-badge {
+.products-feed .feed-badge {
   font-size: 12px;
-  font-weight: 700;
-  color: rgba(15, 25, 35, 0.9);
-  background: rgba(255, 255, 255, 0.88);
+  font-weight: 800;
+  color: rgba(15, 25, 35, 0.92);
+  background: rgba(255, 255, 255, 0.9);
   padding: 6px 10px;
   border-radius: 999px;
+  line-height: 1;
 }
 
-/* переносим favorite btn на баннер и уменьшаем визуально */
-.product-card.compact.feed-card .favorite-btn {
-  top: 10px;
-  right: 10px;
-  z-index: 4;
+/* sold */
+.products-feed .feed-banner .sold-badge {
+  top: 8px;
+  left: auto;
+  right: 8px;
 }
 
-/* правый столбик действий */
-.feed-actions {
+/* правый столбик */
+.products-feed .feed-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-
+  gap: 8px;
   justify-content: center;
   align-items: stretch;
 }
 
-.feed-price {
+/* цена — компактно, и НЕ вылезает */
+.products-feed .feed-price {
   background: rgba(15, 25, 35, 0.06);
   border-radius: 14px;
-  padding: 10px 8px;
+  padding: 8px 6px;
   text-align: center;
+  overflow: hidden;
 }
 
-.feed-price-rub {
+.products-feed .feed-price-rub {
   font-weight: 900;
-  font-size: 16px;
+  font-size: 14px;
   color: #ff4655;
   line-height: 1.1;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* если 99999 ₽ — обрежется */
 }
 
-.feed-price-usd {
+.products-feed .feed-price-usd {
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(15, 25, 35, 0.65);
   margin-top: 2px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.feed-btn {
-  height: 44px;
+/* кнопки */
+.products-feed .feed-btn {
+  height: 40px;
   border-radius: 14px;
   border: none;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.12s ease, background 0.12s ease;
+  padding: 0;
 }
 
-.feed-btn:active {
+.products-feed .feed-btn:active {
   transform: scale(0.97);
 }
 
-.feed-btn-view {
+.products-feed .feed-btn-view {
   background: #f0f2f5;
   color: #0f1923;
 }
 
-.feed-btn-cart {
+.products-feed .feed-btn-cart {
   background: #ff4655;
   color: #fff;
 }
 
-.feed-btn-cart:disabled {
+.products-feed .feed-btn-cart:disabled {
   background: #6c757d;
   cursor: not-allowed;
 }
 
 /* mobile tweaks */
 @media (max-width: 480px) {
-  .product-card.compact.feed-card {
-    grid-template-columns: 1fr 88px;
+  .products-feed .product-card.compact.feed-card {
+    grid-template-columns: 1fr 78px;
+    gap: 8px;
+    padding: 10px;
   }
 
-  .product-card.compact.feed-card .feed-title {
-    right: 112px;
-    font-size: 15px;
+  .products-feed .feed-banner {
+    min-height: 112px;
   }
 
-  .feed-banner {
-    min-height: 132px;
+  .products-feed .feed-btn {
+    height: 38px;
+  }
+
+  .products-feed .feed-price-rub {
+    font-size: 13px;
   }
 }

@@ -30,7 +30,7 @@ export default function ProductCard({
 
   const fallbackLetter = (account?.title || '?').charAt(0).toUpperCase();
 
-  // главная картинка (если нужна)
+  // главная картинка
   const mainImageSrc = useMemo(() => {
     const img = account?.image_url || account?.image || account?.photo;
     return resolveImg(img);
@@ -54,7 +54,6 @@ export default function ProductCard({
     // если скинов нет — используем main image как один “скин”
     if (normalized.length === 0 && mainImageSrc) return [mainImageSrc];
 
-    // максимум 4 штуки для красивого коллажа
     return normalized.slice(0, 4);
   }, [account, backendUrl, mainImageSrc]);
 
@@ -65,9 +64,13 @@ export default function ProductCard({
   if (compact) {
     return (
       <div className="product-card compact feed-card">
-        {/* БАННЕР СКИНОВ */}
-        <div className="feed-banner" onClick={() => onViewDetails(account)} role="button" tabIndex={0}>
-          {/* фон/большая картинка */}
+        {/* БАННЕР */}
+        <div
+          className="feed-banner"
+          onClick={() => onViewDetails(account)}
+          role="button"
+          tabIndex={0}
+        >
           {!imgError && skinImages[0] ? (
             <img
               className="feed-banner-main"
@@ -82,7 +85,7 @@ export default function ProductCard({
             </div>
           )}
 
-          {/* мини-галерея скинов (полоска снизу) */}
+          {/* мини-галерея */}
           {skinImages.length > 1 ? (
             <div className="feed-skins-strip">
               {skinImages.slice(0, 4).map((src, i) => (
@@ -95,34 +98,37 @@ export default function ProductCard({
 
           {/* плашки */}
           <div className="feed-badges">
-            {account?.rank ? <span className="feed-badge">🏆 {account.rank}</span> : null}
-            {account?.region ? <span className="feed-badge">🌍 {account.region}</span> : null}
+            {account?.rank ? (
+              <span className="feed-badge">🏆 {account.rank}</span>
+            ) : null}
+            {account?.region ? (
+              <span className="feed-badge">🌍 {account.region}</span>
+            ) : null}
           </div>
 
-          {/* избранное */}
-          <button
-            className={`favorite-btn ${isFavorite ? 'active' : ''}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite(account);
-            }}
-            aria-label="favorite"
-            type="button"
-          >
-            {isFavorite ? '❤️' : '🤍'}
-          </button>
-
+          {/* сердечко в compact убрано */}
           {account?.is_sold && <div className="sold-badge">ПРОДАН</div>}
         </div>
 
-        {/* ПРАВЫЙ СТОЛБИК ДЕЙСТВИЙ */}
+        {/* ПРАВЫЙ СТОЛБИК */}
         <div className="feed-actions">
           <div className="feed-price">
-            <div className="feed-price-rub">{priceRub} ₽</div>
-            {priceUsd ? <div className="feed-price-usd">${priceUsd}</div> : null}
+            <div className="feed-price-rub" title={`${priceRub} ₽`}>
+              {priceRub} ₽
+            </div>
+            {priceUsd ? (
+              <div className="feed-price-usd" title={`$${priceUsd}`}>
+                ${priceUsd}
+              </div>
+            ) : null}
           </div>
 
-          <button className="feed-btn feed-btn-view" onClick={() => onViewDetails(account)} type="button">
+          <button
+            className="feed-btn feed-btn-view"
+            onClick={() => onViewDetails(account)}
+            type="button"
+            aria-label="details"
+          >
             👁️
           </button>
 
@@ -131,16 +137,10 @@ export default function ProductCard({
             onClick={() => onAddToCart(account)}
             disabled={account?.is_sold}
             type="button"
+            aria-label="add to cart"
           >
             🛒
           </button>
-        </div>
-
-        {/* ТЕКСТ (название) — поверх/под баннером не делаем, чтобы не забивать место,
-            но можно оставить небольшим под баннером через absolute/overlay если захочешь.
-            Сейчас оставил справа сверху заголовок через overlay: */}
-        <div className="feed-title" onClick={() => onViewDetails(account)} role="button" tabIndex={0}>
-          {account?.title}
         </div>
       </div>
     );
@@ -188,7 +188,7 @@ export default function ProductCard({
           <span className="meta-item">🌍 {account?.region}</span>
         </div>
 
-        {account?.description && (
+        {!compact && account?.description && (
           <p className="product-description">
             {String(account.description || '').length > 70
               ? String(account.description || '').slice(0, 70) + '...'
@@ -199,14 +199,25 @@ export default function ProductCard({
         <div className="product-footer">
           <div className="product-price">
             <span className="price-amount">{account?.price_rub} ₽</span>
-            {account?.price_usd ? <span className="price-usd">${account.price_usd}</span> : null}
+            {account?.price_usd ? (
+              <span className="price-usd">${account.price_usd}</span>
+            ) : null}
           </div>
 
           <div className="product-actions">
-            <button className="btn view-btn" onClick={() => onViewDetails(account)} type="button">
+            <button
+              className="btn view-btn"
+              onClick={() => onViewDetails(account)}
+              type="button"
+            >
               👁️
             </button>
-            <button className="btn cart-btn" onClick={() => onAddToCart(account)} disabled={account?.is_sold} type="button">
+            <button
+              className="btn cart-btn"
+              onClick={() => onAddToCart(account)}
+              disabled={account?.is_sold}
+              type="button"
+            >
               🛒
             </button>
           </div>
