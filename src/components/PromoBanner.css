@@ -367,8 +367,9 @@
 @media (max-width: 480px){
   .promo-banner__text{ padding-right: 100px !important; }
   .promo-banner__art{
-    width: 92px !important;
+    width: 85px !important;
     height: 92px !important;
-    right: 8px !important;
+    right: 85px !important;
+    filter: drop-shadow(0 15px 18px rgba(0,0,0,0.22)) !important;
   }
 }
