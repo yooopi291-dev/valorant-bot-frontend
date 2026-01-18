@@ -508,42 +508,46 @@ function App() {
         );
 
       case 'catalog':
-        return (
-          <div className="catalog-container">
-            <div className="catalog-header">
-              <h2>Каталог аккаунтов</h2>
-              <div className="catalog-stats">
-                <span>{accounts.length} товаров</span>
-                <span>В корзине: {cart.length}</span>
-              </div>
-            </div>
+  return (
+    <div className="catalog-container">
+      {/* HERO-блок как на главной */}
+      <div className="catalog-hero">
+        <h2 className="catalog-hero-title">Каталог аккаунтов</h2>
+        <p className="catalog-hero-subtitle">Выбирайте аккаунт и добавляйте в корзину</p>
+      </div>
 
-            {loading ? (
-              <div className="loading">Загрузка...</div>
-            ) : accounts.length === 0 ? (
-              <div className="empty-state">
-                <p>😔 Каталог пуст</p>
-                <button className="btn primary" onClick={loadAccounts} type="button">
-                  Обновить
-                </button>
-              </div>
-            ) : (
-              <div className="products-grid">
-                {accounts.map((account) => (
-                  <ProductCard
-                    key={account._id}
-                    account={account}
-                    backendUrl={BACKEND_URL}
-                    onAddToCart={addToCart}
-                    onToggleFavorite={toggleFavorite}
-                    onViewDetails={handleViewDetails}
-                    isFavorite={isFavorite(account._id)}
-                  />
-                ))}
-              </div>
-            )}
+      {loading ? (
+        <div className="loading">Загрузка...</div>
+      ) : accounts.length === 0 ? (
+        <div className="catalog-empty-layout">
+          <div className="catalog-empty-center">
+            <p className="catalog-empty-title">😔 Каталог пуст</p>
           </div>
-        );
+
+          <div className="catalog-empty-bottom">
+            <button className="btn primary" onClick={loadAccounts} type="button">
+              Обновить
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="products-grid">
+          {accounts.map((account) => (
+            <ProductCard
+              key={account._id}
+              account={account}
+              backendUrl={BACKEND_URL}
+              onAddToCart={addToCart}
+              onToggleFavorite={toggleFavorite}
+              onViewDetails={handleViewDetails}
+              isFavorite={isFavorite(account._id)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
 
       case 'favorites':
         return (

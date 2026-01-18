@@ -727,3 +727,62 @@ body {
 .cart-card-v2__footer--noqty .cart-card-v2__price-sub{
   justify-content: flex-end;
 }
+/* =========================
+   CATALOG HERO (как блок на главной)
+   ========================= */
+.catalog-hero {
+  padding: 16px;
+  margin: 6px 0 18px;
+
+  background: #e9ecef;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 18px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.catalog-hero-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.catalog-hero-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: rgba(15, 25, 35, 0.6);
+  font-weight: 600;
+}
+
+/* =========================
+   EMPTY CATALOG: текст по центру, кнопка внизу
+   ========================= */
+.catalog-empty-layout {
+  display: flex;
+  flex-direction: column;
+
+  /* чтобы центрирование работало по высоте экрана */
+  min-height: calc(100dvh - 210px); 
+  /* 210px — безопасный запас под отступы/хедер/навигацию */
+}
+
+.catalog-empty-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.catalog-empty-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #76808c;
+}
+
+.catalog-empty-bottom {
+  padding-top: 12px;
+}
