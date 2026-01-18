@@ -209,3 +209,40 @@
   height: 44px !important;
   object-fit: contain;
 }
+/* PromoBanner = same size/style as .home-hero */
+.promo-banner {
+  padding: 16px !important;                /* как home-hero */
+  margin: 6px 0 18px !important;           /* как home-hero */
+  border-radius: 18px !important;          /* как home-hero */
+  border: 1px solid rgba(15, 25, 35, 0.10) !important;
+  background: #e9ecef !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06) !important;
+
+  min-height: auto !important;             /* убираем ограничения высоты */
+}
+
+/* внутренние отступы/интервалы чуть компактнее, чтобы не раздувалось */
+.promo-banner__content {
+  gap: 8px !important;
+}
+
+.promo-banner__title {
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  margin: 0 !important;
+}
+
+.promo-banner__subtitle {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin: 4px 0 0 !important;
+  color: rgba(15, 25, 35, 0.6) !important;
+}
+
+/* арт делаем как иконка, чтобы не увеличивал высоту */
+.promo-banner__art,
+.promo-banner img {
+  width: 56px !important;
+  height: 56px !important;
+  object-fit: contain !important;
+}
