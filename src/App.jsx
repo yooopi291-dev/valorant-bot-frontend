@@ -636,74 +636,68 @@ function App() {
 
               const fallbackLetter = (item?.title || '?').charAt(0).toUpperCase();
 
-              return (
-                <div key={item._id} className="cart-vertical-card">
-                  {/* БАННЕР НА ВСЮ ШИРИНУ */}
-                  <div className="cart-vertical-banner">
-                    {imageSrc ? (
-                      <img
-                        className="cart-vertical-img"
-                        src={imageSrc}
-                        alt={item?.title || 'item'}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    ) : (
-                      <div className="cart-vertical-fallback">
-                        <span>{fallbackLetter}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* НИЗ: НАЗВАНИЕ + ЦЕНА + QTY + УДАЛИТЬ */}
-                  <div className="cart-vertical-bottom">
-  <div className="cart-vertical-title" title={item.title}>
-    {item.title}
-  </div>
-
-  <div className="cart-vertical-price" aria-label="price">
-    <div className="cart-vertical-price-rub" title={`${item.price_rub} ₽`}>
-      {item.price_rub} ₽
+              return (              
+  <div key={item._id} className="cart-card-v2">
+    {/* 1) КАРТИНКА */}
+    <div className="cart-card-v2__banner">
+      {imageSrc ? (
+        <img
+          className="cart-card-v2__img"
+          src={imageSrc}
+          alt={item?.title || 'item'}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
+      ) : (
+        <div className="cart-card-v2__fallback">
+          <span>{fallbackLetter}</span>
+        </div>
+      )}
     </div>
 
-    {item?.price_usd ? (
-      <div className="cart-vertical-price-usd" title={`$${item.price_usd}`}>
-        ${item.price_usd}
+    {/* 2) БЛОК С ТЕКСТОМ */}
+    <div className="cart-card-v2__text">
+      <div className="cart-card-v2__title" title={item.title}>
+        {item.title}
       </div>
-    ) : null}
+    </div>
 
-    <div className="cart-vertical-mult">× {item.quantity}</div>
-  </div>
+    {/* 3) НИЖНЯЯ СТРОКА: qty | price | remove */}
+    <div className="cart-card-v2__footer">
+      <div className="cart-card-v2__qty">
+        <button
+          onClick={() => updateQuantity(item._id, -1)}
+          disabled={item.quantity <= 1}
+          type="button"
+        >
+          −
+        </button>
+        <span>{item.quantity}</span>
+        <button onClick={() => updateQuantity(item._id, 1)} type="button">
+          +
+        </button>
+      </div>
 
-  <div className="cart-vertical-actions">
-    <div className="quantity-controls cart-vertical-qty">
+      <div className="cart-card-v2__price" title={`${item.price_rub} ₽`}>
+        <div className="cart-card-v2__price-rub">{item.price_rub} ₽</div>
+        {item?.price_usd ? (
+          <div className="cart-card-v2__price-usd">${item.price_usd}</div>
+        ) : null}
+        <div className="cart-card-v2__mult">× {item.quantity}</div>
+      </div>
+
       <button
-        onClick={() => updateQuantity(item._id, -1)}
-        disabled={item.quantity <= 1}
+        className="cart-card-v2__remove"
+        onClick={() => removeFromCart(item._id)}
         type="button"
       >
-        −
-      </button>
-      <span>{item.quantity}</span>
-      <button onClick={() => updateQuantity(item._id, 1)} type="button">
-        +
+        Удалить
       </button>
     </div>
-
-    <button
-      className="remove-btn cart-vertical-remove"
-      onClick={() => removeFromCart(item._id)}
-      type="button"
-    >
-      Удалить
-    </button>
   </div>
-</div>
-
-                </div>
-              );
+);                        
             })}
           </div>
 

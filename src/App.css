@@ -1714,3 +1714,197 @@ body {
 .cart-vertical-bottom{
   gap: 8px !important;
 }
+/* =========================
+   CART CARD V2 (по схеме)
+   картинка -> текст -> нижняя строка (qty | price | remove)
+   ========================= */
+
+.cart-card-v2{
+  background: #fff;
+  border: 1px solid rgba(15, 25, 35, 0.10);
+  border-radius: 18px;
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 24px rgba(15, 25, 35, 0.10),
+    0 2px 8px rgba(15, 25, 35, 0.06);
+
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 1) banner */
+.cart-card-v2__banner{
+  position: relative;
+  width: 100%;
+  height: 140px;            /* компактно и красиво */
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0f1923;
+}
+
+.cart-card-v2__img{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cart-card-v2__fallback{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff4655 0%, #ff6b7a 100%);
+  color: #fff;
+  font-size: 40px;
+  font-weight: 900;
+}
+
+/* 2) text block */
+.cart-card-v2__text{
+  width: 100%;
+  background: rgba(15,25,35,0.04);
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+
+.cart-card-v2__title{
+  font-size: 14px;
+  font-weight: 900;
+  color: #0f1923;
+  line-height: 1.2;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 3) footer row: qty | price | remove */
+.cart-card-v2__footer{
+  display: grid;
+  grid-template-columns: 1fr 96px 110px; /* qty растягивается, price компакт, remove компакт */
+  gap: 10px;
+  align-items: center;
+}
+
+/* qty */
+.cart-card-v2__qty{
+  height: 44px;
+  background: rgba(15,25,35,0.04);
+  border-radius: 16px;
+  padding: 6px 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cart-card-v2__qty button{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,25,35,0.14);
+  background: #fff;
+
+  font-size: 18px;
+  font-weight: 900;
+  color: #0f1923;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-card-v2__qty button:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cart-card-v2__qty span{
+  min-width: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 900;
+  color: #0f1923;
+}
+
+/* price (тонкий блок) */
+.cart-card-v2__price{
+  height: 44px;
+  background: rgba(15,25,35,0.06);
+  border-radius: 16px;
+  padding: 6px 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+
+  overflow: hidden;
+}
+
+.cart-card-v2__price-rub{
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  color: #ff4655;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cart-card-v2__price-usd{
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(15,25,35,0.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.cart-card-v2__mult{
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(15,25,35,0.55);
+  white-space: nowrap;
+}
+
+/* remove */
+.cart-card-v2__remove{
+  height: 44px;
+  width: 100%;
+  border-radius: 16px;
+
+  border: 1px solid rgba(255,70,85,0.22);
+  background: rgba(255,70,85,0.10);
+  color: #ff4655;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* mobile */
+@media (max-width: 380px){
+  .cart-card-v2__banner{ height: 128px; }
+  .cart-card-v2__footer{
+    grid-template-columns: 1fr 88px 96px;
+  }
+  .cart-card-v2__qty button{
+    width: 34px;
+    height: 34px;
+  }
+}
